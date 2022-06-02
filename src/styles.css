@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+/* *
+{
+  transition: unset !important;
+}
+
+body
+{
+  opacity: 0;
+} */
+
+/* @import 'ngx-toastr/toastr-bs4-alert'; */
+@import url('assets/css/toast.css');
+.navbar-fixed>.main {
+  padding-top: 3.875rem;
+} 
+
+.navbar-fixed-main {
+  padding-top: 3.875rem;
+} 
+
+

@@ -1,0 +1,313 @@
+    <!-- Content -->
+    <div class="content container-fluid">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="row align-items-end">
+          <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb breadcrumb-no-gutter">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Pages</a></li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Customers</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Transactions</li>
+              </ol>
+            </nav>
+
+            <h1 class="page-header-title" *ngIf="allRecords[0]">
+                <span> {{allRecords[0]?.firstName | titlecase}} {{allRecords[0]?.lastName | titlecase}} - </span>
+                <span> {{allRecords[0]?.accountNo }}</span>
+            </h1>
+          </div>
+          <!-- End Col -->
+
+          <div class="col-sm-auto">
+            <!-- Nav -->
+            <ul class="nav nav-segment" id="leaderboardTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="all-tab" data-bs-toggle="tab" href="#all" role="tab">
+                  All
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="savings-tab" data-bs-toggle="tab" href="#savings" role="tab">
+                  Savings
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="withdrawal-tab" data-bs-toggle="tab" href="#withdrawal" role="tab">
+                  Withdrawals
+                </a>
+              </li>
+            </ul>
+            <!-- End Nav -->
+          </div>
+          <!-- End Col -->
+        </div>
+        <!-- End Row -->
+      </div>
+      <!-- End Page Header -->
+
+      <!-- Stats -->
+      <div class="row">
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Balance</h6>
+
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-5 text-dark">{{totalSum | currency: '₦' }}</span>
+                  <!-- <span class="text-body fs-5 ms-1">from 22</span> -->
+                </div>
+                <!-- End Col -->
+
+                <div class="col-auto">
+                  <span class="badge bg-soft-success text-success p-1">
+                    <i class="bi-graph-up"></i> 5.0%
+                  </span>
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Savings</h6>
+
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-5 text-dark">{{savingsSum | currency: '₦' }}</span>
+                </div>
+
+                <div class="col-auto">
+                  <span class="badge bg-soft-success text-success p-1">
+                    <i class="bi-graph-up"></i> 1.2%
+                  </span>
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Withdrawal</h6>
+
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-5 text-dark">{{withdrawalSum | currency: '₦' }}</span>
+                </div>
+
+                <div class="col-auto">
+                  <span class="badge bg-soft-danger text-danger p-1">
+                    <i class="bi-graph-down"></i> 2.8%
+                  </span>
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total commission</h6>
+
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-5 text-dark">{{commissionSum | currency: '₦' }}</span>
+                </div>
+
+                <div class="col-auto">
+                  <span class="badge bg-soft-secondary text-secondary p-1">0.0%</span>
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+      </div>
+      <!-- End Stats -->
+
+      <!-- Card -->
+      <div class="card overflow-hidden">
+        <!-- Tab Content -->
+        <div class="tab-content" id="transactionsTabContent">
+          <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+            <!-- Table -->
+            <div class="table-responsive">
+              <table class="table table-borderless table-thead-bordered table-nowrap table-text-center table-align-middle card-table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">S/N</th>
+                    <th scope="col" class="table-text-start">Transaction ID</th>                    
+                    <th scope="col">Amount</th>
+                    <th scope="col">Plan</th>                    
+                    <th scope="col">Status</th>
+                    <th scope="col">TransType</th>
+                    <th scope="col">Transaction Date</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let record of allRecords; let i = index;">
+                    <td><span>{{i + 1}}</span></td>
+                    <td class="table-text-start">
+                      <a class="d-flex align-items-center" href="./">
+                        <div class="ms-3">
+                          <span class="d-block h5 text-inherit mb-0">{{record?.transref}}</span>
+                        </div>
+                      </a>
+                    </td>
+                    
+                    <td>{{record?.transAmount | currency: '₦'}}</td>
+                    <td>{{record?.plan_name}}</td>
+                    <td><span class="badge bg-soft-success text-success p-1"><i class="bi-check"></i> Success</span></td>
+                    <td>
+                        <span *ngIf="record?.transType === 'S' ">{{'Savings' | titlecase}}</span>
+                        <span *ngIf="record?.transType === 'W' ">{{'Withdraw' | titlecase}}</span>
+                        <span *ngIf="record?.transType === 'commission' ">{{record?.transType | titlecase}}</span>
+                    </td>
+                    <td>{{record?.createdDate | date:'medium'}}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" (click)="viewReceipt(record)">
+                          <i class="bi-download me-1"></i> Download Receipt
+                        </button>
+                      </td>
+                  </tr>
+
+                  
+
+
+                </tbody>
+              </table>
+            </div>
+            <!-- End Table -->
+          </div>
+
+          <div class="tab-pane fade" id="savings" role="tabpanel" aria-labelledby="savings-tab">
+            <!-- Table -->
+            <div class="table-responsive">
+              <table class="table table-borderless table-thead-bordered table-nowrap table-text-center table-align-middle card-table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">S/N</th>
+                    <th scope="col" class="table-text-start">Transaction ID</th>                    
+                    <th scope="col">Amount</th>
+                    <th scope="col">Plan</th>                    
+                    <th scope="col">Status</th>
+                    <th scope="col">TransType</th>
+                    <th scope="col">Transaction Date</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let record of savingsRecords ; let i = index;">
+                    <td><span >{{i + 1}}</span></td>
+                    <td class="table-text-start">
+                      <a class="d-flex align-items-center" href="./">
+                        <div class="avatar avatar-soft-info avatar-circle">
+                            <span class="avatar-initials">S</span>
+                          </div>
+                        <div class="ms-3">
+                          <span class="d-block h5 text-inherit mb-0">{{record?.transref}} </span>
+                        </div>
+                      </a>
+                    </td>                    
+                    <td>{{record?.transAmount | currency: '₦'}}</td>
+                    <td>{{record?.plan_name}}</td>
+                    <td>
+                      <span class="badge bg-soft-success text-success p-1">
+                        <i class="bi-check"></i> Success
+                      </span>
+                    </td>
+                    <td><span *ngIf="record?.transType === 'S' ">{{'Savings' | titlecase}}</span></td>
+                    <td> {{record?.createdDate | date:'medium'}}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" (click)="viewReceipt(record)">
+                          <i class="bi-download me-1"></i> Download Receipt
+                        </button>
+                      </td>
+                  </tr>
+                  
+
+                </tbody>
+              </table>
+            </div>
+            <!-- End Table -->
+          </div>
+
+          <div class="tab-pane fade" id="withdrawal" role="tabpanel" aria-labelledby="withdrawal-tab">
+            <!-- Table -->
+            <div class="table-responsive">
+              <table class="table table-borderless table-thead-bordered table-nowrap table-text-center table-align-middle card-table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">S/N</th>
+                    <th scope="col" class="table-text-start">Transaction ID</th>                    
+                    <th scope="col">Amount</th>
+                    <th scope="col">Plan</th>                    
+                    <th scope="col">Status</th>
+                    <th scope="col">TransType</th>
+                    <th scope="col">Transaction Date</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let record of withdrawalRecords; let i = index;" >
+                    <td><span>{{i + 1}}</span></td>
+                    <td class="table-text-start">
+                      <a class="d-flex align-items-center" href="" >
+                        <div class="avatar avatar-soft-info avatar-circle">
+                          <span class="avatar-initials">W</span>
+                        </div>
+                        <div class="ms-3">
+                          <span class="d-block h5 text-inherit mb-0">{{record?.firstName | titlecase}} {{record?.lastName | titlecase}}</span>
+                        </div>
+                      </a>
+                    </td>
+                    
+                    <td class="text-left">{{record?.transAmount | currency: '₦'}}</td>
+                    <td>{{record?.plan_name}}</td>
+                    <td>
+                      <span class="badge bg-soft-success text-success p-1"> <i class="bi-check"></i>
+                        Success
+                      </span>
+                    </td>
+                    <td>
+                        <span *ngIf="record?.transType === 'W' ">{{'Withdraw' | titlecase}}</span></td>
+                    <td> {{record?.createdDate | date:'medium'}}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" (click)="viewReceipt(record)">
+                          <i class="bi-download me-1"></i> Download Receipt
+                        </button>
+                      </td>
+                  </tr>
+                  
+
+                </tbody>
+              </table>
+            </div>
+            <!-- End Table -->
+          </div>
+        </div>
+        <!-- End Tab Content -->
+      </div>
+      <!-- End Card -->
+    </div>
+    <!-- End Content -->

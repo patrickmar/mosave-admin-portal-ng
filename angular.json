@@ -24,25 +24,74 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/_redirects"
             ],
             "styles": [
+              "./src/assets/vendor/bootstrap-icons/font/bootstrap-icons.css",
+              "./src/assets/vendor/daterangepicker/daterangepicker.css",
+              "./src/assets/vendor/tom-select/dist/css/tom-select.bootstrap5.css",
+              "./src/assets/vendor/jsvectormap/dist/css/jsvectormap.min.css",
+              "./src/assets/vendor/swiper/swiper-bundle.min.css",   
+              "./src/assets/css/theme.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+                   
+              "./src/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js",
+              "./src/assets/vendor/jquery/dist/jquery.min.js",
+              "./src/assets/vendor/jquery-migrate/dist/jquery-migrate.min.js",
+              "./src/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js",
+
+              "./src/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js",            
+              "./src/assets/vendor/hs-toggle-password/dist/js/hs-toggle-password.js",
+              "./src/assets/vendor/hs-file-attach/dist/hs-file-attach.min.js",
+              "./src/assets/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js",
+              "./src/assets/vendor/hs-step-form/dist/hs-step-form.min.js",
+              "./src/assets/vendor/hs-add-field/dist/hs-add-field.min.js",
+              "./src/assets/vendor/hs-counter/dist/hs-counter.min.js",
+              "./src/assets/vendor/appear/dist/appear.min.js",
+              "./src/assets/vendor/imask/dist/imask.min.js",              
+              "./src/assets/vendor/datatables/media/js/jquery.dataTables.min.js",
+              "./src/assets/vendor/datatables.net.extensions/select/select.min.js",
+              "./src/assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js",
+              "./src/assets/vendor/datatables.net-buttons/js/buttons.flash.min.js",
+              "./src/assets/vendor/jszip/dist/jszip.min.js",
+              "./src/assets/vendor/pdfmake/build/pdfmake.min.js",
+              "./src/assets/vendor/pdfmake/build/vfs_fonts.js",
+              "./src/assets/vendor/datatables.net-buttons/js/buttons.html5.min.js",
+              "./src/assets/vendor/datatables.net-buttons/js/buttons.print.min.js",
+              "./src/assets/vendor/datatables.net-buttons/js/buttons.colVis.min.js",
+
+              
+              "./src/assets/vendor/hs-form-search/dist/hs-form-search.min.js",
+              "./src/assets/vendor/daterangepicker/moment.min.js",
+              "./src/assets/vendor/daterangepicker/daterangepicker.js",
+              "./src/assets/vendor/jsvectormap/dist/js/jsvectormap.min.js",
+              "./src/assets/vendor/jsvectormap/dist/maps/world.js",
+
+              "./src/assets/vendor/hs-sticky-block/dist/hs-sticky-block.min.js",
+              "./src/assets/vendor/hs-scrollspy/dist/hs-scrollspy.min.js",
+              "./src/assets/vendor/swiper/swiper-bundle.min.js",
+              "./src/assets/vendor/tom-select/dist/js/tom-select.complete.min.js",
+
+              "./src/assets/vendor/clipboard/dist/clipboard.min.js",
+
+              "./src/assets/js/theme.min.js"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kb",
+                  "maximumError": "10kb"
                 }
               ],
               "fileReplacements": [
