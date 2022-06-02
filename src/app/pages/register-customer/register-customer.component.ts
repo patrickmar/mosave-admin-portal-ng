@@ -174,7 +174,7 @@ export class RegisterCustomerComponent implements OnInit, iDeactivateComponent {
 
       // INITIALIZATION OF SELECT
       // =======================================================
-      HSCore.components.HSTomSelect.init('.js-select', {
+      HSCore.components.HSTomSelect.init('.js-select', {  
         render: {
           'option': function (data: any, escape: any) {
             return data.optionTemplate || `<div>${data.text}</div>>`
