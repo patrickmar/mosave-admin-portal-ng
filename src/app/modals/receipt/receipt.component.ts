@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-receipt',
@@ -6,6 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./receipt.component.css']
 })
 export class ReceiptComponent implements OnInit {
+  img = environment.mini_logo;
   @Input() customerId?: number;
   @Input() fullName?: string;
   @Input() firstName?: string;
@@ -16,6 +18,7 @@ export class ReceiptComponent implements OnInit {
   @Input() transAmount?: number;
   @Input() accountNo?: number;
   @Input() userId?: string;
+  @Input() planName?: string;
   @Input() value?: string;
   @Input() content?: any;
   @Output() onOpenPdfContent: EventEmitter<any> = new EventEmitter();

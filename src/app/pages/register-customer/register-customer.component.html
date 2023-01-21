@@ -63,7 +63,7 @@
                         <label class="avatar avatar-xl avatar-circle avatar-uploader me-5" for="avatarUploader">
                           <img id="avatarImg" class="avatar-img" src="./assets/img/160x160/img1.jpg" alt="Image Description">
 
-                          <input type="file" class="js-file-attach avatar-uploader-input" formControlName="image" id="avatarUploader" data-hs-file-attach-options='{
+                          <input type="file" class="js-file-attach avatar-uploader-input" (change)="checkImg()" formControlName="img" id="avatarUploader" data-hs-file-attach-options='{
                                     "textTarget": "#avatarImg",
                                     "mode": "image",
                                     "targetAttr": "src",
@@ -109,7 +109,7 @@
 
                   <!-- Form -->
                   <div class="js-add-field row mb-4">
-                    <label for="phoneLabel" class="col-sm-3 col-form-label form-label">Phone <span class="form-label-secondary">(Optional)</span></label>
+                    <label for="phoneLabel" class="col-sm-3 col-form-label form-label">Phone</label>
 
                     <div class="col-sm-9">
                       <div class="input-group input-group-sm-vertical">
@@ -135,6 +135,16 @@
                       </div>
 
                       
+                    </div>
+                  </div>
+                  <!-- End Form -->
+
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="bvnLabel" class="col-sm-3 col-form-label form-label">BVN</label>
+
+                    <div class="col-sm-9">
+                      <input type="number" class="form-control" formControlName="BVN_num" id="bvnLabel" placeholder="12345678901" aria-label="">
                     </div>
                   </div>
                   <!-- End Form -->
@@ -219,7 +229,7 @@
 
                 <!-- Footer -->
                 <div class="card-footer d-flex justify-content-end align-items-center">
-                  <button type="button" class="btn btn-primary" data-hs-step-form-next-options='{
+                  <button type="button" (click)="checkImg()" class="btn btn-primary" data-hs-step-form-next-options='{
                             "targetSelector": "#addUserStepBillingAddress"
                           }'>
                     Next <i class="bi-chevron-right"></i>
@@ -299,7 +309,8 @@
 
                 <!-- Avatar -->
                 <div class="avatar avatar-xxl avatar-circle avatar-border-lg profile-cover-avatar">
-                  <img class="avatar-img" id="avatarImg" src="./assets/img/160x160/img1.jpg" alt="Image Description">
+                  <img class="avatar-img" id="avatarImg" *ngIf="img" src="{{img}}" alt="Image exist">
+                  <img class="avatar-img" id="avatarImg" *ngIf="!img" src="./assets/img/160x160/img1.jpg" alt="Image not exist">
                 </div>
                 <!-- End Avatar -->
 
@@ -314,6 +325,9 @@
 
                     <dt class="col-sm-6 text-sm-end">Phone:</dt>
                     <dd class="col-sm-6">{{registerForm.value?.phoneno ? registerForm.value.phoneno : '-'}}</dd>
+
+                    <dt class="col-sm-6 text-sm-end">BVN:</dt>
+                    <dd class="col-sm-6">{{registerForm.value?.BVN_num ? registerForm.value.BVN_num : '-'}}</dd>
 
                     <dt class="col-sm-6 text-sm-end">Gender:</dt>
                     <dd class="col-sm-6">{{registerForm.value?.gender ? registerForm.value.gender : '-'}}</dd>

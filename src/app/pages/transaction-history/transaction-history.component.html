@@ -12,14 +12,51 @@
               </ol>
             </nav>
 
-            <h1 class="page-header-title" *ngIf="allRecords[0]">
-                <span> {{allRecords[0]?.firstName | titlecase}} {{allRecords[0]?.lastName | titlecase}} - </span>
-                <span> {{allRecords[0]?.accountNo }}</span>
+            <h1 class="page-header-title" *ngIf="customerInfo">
+                <span> {{customerInfo[0]?.firstName | titlecase}} {{customerInfo[0]?.lastName | titlecase}} - </span>
+                <span> {{customerInfo[0]?.account_num }}</span>
             </h1>
           </div>
           <!-- End Col -->
 
           <div class="col-sm-auto">
+            <!-- Dropdown -->
+            <div class="dropdown">
+              <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi-download me-2"></i> Export
+              </button>
+
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
+                <span class="dropdown-header">Options</span>
+                <a id="export-copy" class="dropdown-item" href="javascript:;">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg" alt="Image Description">
+                  Copy
+                </a>
+                <a id="export-print" class="dropdown-item" href="javascript:;">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg" alt="Image Description">
+                  Print
+                </a>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-header">Download options</span>
+                <a id="export-excel" class="dropdown-item" href="javascript:;">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg" alt="Image Description">
+                  Excel
+                </a>
+                <a id="export-csv" class="dropdown-item" href="javascript:;">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
+                  .CSV
+                </a>
+                <a id="export-pdf" class="dropdown-item" href="javascript:;">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg" alt="Image Description">
+                  PDF
+                </a>
+              </div>
+            </div>
+            <!-- End Dropdown -->
+          </div>
+
+          <div class="col-sm-auto">            
+
             <!-- Nav -->
             <ul class="nav nav-segment" id="leaderboardTab" role="tablist">
               <li class="nav-item">
@@ -63,7 +100,7 @@
 
                 <div class="col-auto">
                   <span class="badge bg-soft-success text-success p-1">
-                    <i class="bi-graph-up"></i> 5.0%
+                    <i class="bi-graph-up"></i> {{((totalSum) / convertNum(savingsSum) * 100).toFixed(2) }}%
                   </span>
                 </div>
                 <!-- End Col -->
@@ -87,7 +124,7 @@
 
                 <div class="col-auto">
                   <span class="badge bg-soft-success text-success p-1">
-                    <i class="bi-graph-up"></i> 1.2%
+                    <i class="bi-graph-up"></i> {{(convertNum(savingsSum) / convertNum(savingsSum) * 100) }}%
                   </span>
                 </div>
               </div>
@@ -110,7 +147,7 @@
 
                 <div class="col-auto">
                   <span class="badge bg-soft-danger text-danger p-1">
-                    <i class="bi-graph-down"></i> 2.8%
+                    <i class="bi-graph-down"></i> {{((withdrawalSum) / convertNum(savingsSum) * 100).toFixed(2) }}%
                   </span>
                 </div>
               </div>
@@ -132,7 +169,7 @@
                 </div>
 
                 <div class="col-auto">
-                  <span class="badge bg-soft-secondary text-secondary p-1">0.0%</span>
+                  <span class="badge bg-soft-danger text-danger p-1">{{((commissionSum) / convertNum(savingsSum) * 100).toFixed(2) }}%</span>
                 </div>
               </div>
               <!-- End Row -->
@@ -150,7 +187,7 @@
           <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
             <!-- Table -->
             <div class="table-responsive">
-              <table class="table table-borderless table-thead-bordered table-nowrap table-text-center table-align-middle card-table">
+              <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-text-center table-align-middle card-table">
                 <thead class="thead-light">
                   <tr>
                     <th scope="col">S/N</th>

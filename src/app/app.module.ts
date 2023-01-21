@@ -5,6 +5,9 @@ import { RouterModule, Routes } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DataTablesModule } from 'angular-datatables';
+import { NgOtpInputModule } from 'ng-otp-input';
+
 import { DatePipe } from '@angular/common';
 import { UserDataResolver } from './resolvers/userData.resolvers';
 
@@ -16,6 +19,7 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { TimeAgoPipe } from 'time-ago-pipe'
 import { CustomersComponent } from './pages/customers/customers.component';
 import { EditCustomerComponent } from './modals/edit-customer/edit-customer.component';
 import { TransactionHistoryComponent } from './pages/transaction-history/transaction-history.component';
@@ -29,6 +33,10 @@ import { ReceiptComponent } from './modals/receipt/receipt.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NonAuthGuard } from './guards/non-auth.guard';
 import { FormCheckService } from './services/form-check.service';
+import { PinComponent } from './modals/pin/pin.component';
+import { TransactionsTableComponent } from './components/transactions-table/transactions-table.component';
+import { TransactionsHeaderComponent } from './components/transactions-header/transactions-header.component';
+import { TransactionsFooterComponent } from './components/transactions-footer/transactions-footer.component';
 
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
@@ -43,7 +51,7 @@ const appRoutes: Routes = [
   {path: "customer/:sn/trans-history", component: TransactionHistoryComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "customer/:sn/details", component: DetailsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "profile", component: ProfileComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
-  {path: "transactions", component: TransactionsComponent, resolve:{userData: UserDataResolver}},
+  {path: "transactions", component: TransactionsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "page-not-found", component: PageNotFoundComponent},
   { path: '**', redirectTo: 'page-not-found'},
 ]
@@ -58,6 +66,7 @@ const appRoutes: Routes = [
     RegisterComponent,
     SidebarComponent,
     DateAgoPipe,
+    //TimeAgoPipe,
     CustomersComponent,
     EditCustomerComponent,
     TransactionHistoryComponent,
@@ -67,9 +76,15 @@ const appRoutes: Routes = [
     TransactionsComponent,
     PageNotFoundComponent,
     ReceiptComponent,
+    PinComponent,
+    TransactionsTableComponent,
+    TransactionsHeaderComponent,
+    TransactionsFooterComponent,
   ],
   imports: [
     BrowserModule,
+    DataTablesModule,
+    NgOtpInputModule,
     FormsModule,
     ReactiveFormsModule, 
     HttpClientModule,
@@ -78,7 +93,7 @@ const appRoutes: Routes = [
     ToastrModule.forRoot(),
     RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled'})
   ],
-  providers: [DatePipe, FormCheckService],
+  providers: [DatePipe, DateAgoPipe, FormCheckService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,33 @@
+<!-- Modal -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Enter PIN</h5>
+          <button type="button" class="btn-close" (click)="modalDismiss(value)" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p>Enter your secure PIN to complete this transaction.</p>
+            <!-- <ng-otp-input #ngOtpInput 
+            (onInputChange)="onOtpChange($event)"
+            *ngIf="showOtpComponent"
+            [config]="config">
+            </ng-otp-input> -->
+
+            <ng-otp-input #ngOtpInput 
+            (onInputChange)="pinChange($event)"
+            *ngIf="showOtpComponent"
+            [config]="config">
+            </ng-otp-input>
+
+            
+            <!-- <span *ngIf="otp" class="o-t-p">Entered pin :-{{otp}}</span> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" (click)="modalDismiss(value)">Cancel</button>
+          <button type="button" class="btn btn-primary" [disabled]="loading || otpLength == undefined || otpLength == 0 || otpLength < 4" (click)="submit(content)">Submit
+            <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+          </button>
+        </div>
+      </div>
+<!-- End Modal -->

@@ -13,7 +13,7 @@
               </a>
 
               <!-- Dropdown -->
-              <div class="dropdowm">
+              <!-- <div class="dropdowm">
                 <a class="text-body" href="javascript:;" id="moreOptionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                   More options <i class="bi-chevron-down"></i>
                 </a>
@@ -29,23 +29,21 @@
                     <i class="bi-folder dropdown-item-icon"></i> New order - Staging
                   </a>
                 </div>
-              </div>
+              </div> -->
               <!-- End Dropdown -->
             </div>
           </div>
           <!-- End Col -->
 
-          <div class="col-auto">
-            <!-- Daterangepicker -->
+          <!-- <div class="col-auto">
             <button id="js-daterangepicker-predefined" class="btn btn-ghost-secondary btn-sm dropdown-toggle">
               <i class="bi-calendar-week"></i>
               <span class="js-daterangepicker-predefined-preview ms-1"></span>
             </button>
-            <!-- End Daterangepicker -->
-          </div>
+          </div> -->
           <!-- End Col -->
 
-          <div class="col-auto">
+          <!-- <div class="col-auto">
             <input type="text" class="js-daterangepicker-clear form-control daterangepicker-custom-input" placeholder="Select custom dates"
         data-hs-daterangepicker-options='{
          "autoUpdateInput": false,
@@ -53,7 +51,7 @@
            "cancelLabel": "Clear"
          }
        }'>
-          </div>
+          </div> -->
           <!-- End Col -->
 
         </div>
@@ -73,20 +71,20 @@
 
             <div class="row col-divider">
               <div class="col text-end">
-                <span class="d-block fw-semi-bold text-success">{{savingsSumDaily | currency: '₦'}}
+                <span class="d-block fw-semi-bold text-info">{{savingsSumDaily | currency: '₦'}}
                 </span>
                 <span class="d-block">Today</span>
               </div>
               <!-- End Col -->
 
               <div class="col text-center">
-                <span class="d-block fw-semi-bold text-dark">{{savingsSumWeekly  | currency: '₦'}}</span>
+                <span class="d-block fw-semi-bold text-info">{{savingsSumWeekly  | currency: '₦'}}</span>
                 <span class="d-block">This week</span>
               </div>
               <!-- End Col -->
 
               <div class="col text-start">
-                <span class="d-block fw-semi-bold text-success">{{savingsSumMonthly | currency: '₦'}}</span>
+                <span class="d-block fw-semi-bold text-info">{{savingsSumMonthly | currency: '₦'}}</span>
                 <span class="d-block">This month</span>
               </div>
               <!-- End Col -->
@@ -238,172 +236,27 @@
 
       <!-- Card -->
       <div class="card">
-        <!-- Header -->
-        <div class="card-header card-header-content-md-between">
-          <div class="mb-2 mb-md-0">
-            <form>
-              <!-- Search -->
-              <div class="input-group input-group-merge input-group-flush">
-                <div class="input-group-prepend input-group-text">
-                  <i class="bi-search"></i>
-                </div>
-                <input id="datatableSearch" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
-              </div>
-              <!-- End Search -->
-            </form>
-          </div>
-
-          <div class="d-grid d-sm-flex gap-2">
-            <!-- Dropdown -->
-            <div class="dropdown">
-              <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi-download me-2"></i> Export
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
-                <span class="dropdown-header">Options</span>
-                <a id="export-copy" class="dropdown-item" href="javascript:;">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg" alt="Image Description">
-                  Copy
-                </a>
-                <a id="export-print" class="dropdown-item" href="javascript:;">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg" alt="Image Description">
-                  Print
-                </a>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-header">Download options</span>
-                <a id="export-excel" class="dropdown-item" href="javascript:;">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg" alt="Image Description">
-                  Excel
-                </a>
-                <a id="export-csv" class="dropdown-item" href="javascript:;">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
-                  .CSV
-                </a>
-                <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg" alt="Image Description">
-                  PDF
-                </a>
-              </div>
-            </div>
-            <!-- End Dropdown -->
-
-            <!-- Dropdown -->
-            <div class="dropdown">
-              <button type="button" class="btn btn-white btn-sm w-100" id="showHideDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                <i class="bi-table me-1"></i> Columns <span class="badge bg-soft-dark text-dark rounded-circle ms-1">7</span>
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-end dropdown-card" aria-labelledby="showHideDropdown" style="width: 15rem;">
-                <div class="card card-sm">
-                  <div class="card-body">
-                    <div class="d-grid gap-3">
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_ref">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Reference</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_ref" checked>
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->
-
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_customer">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Customer</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_customer" checked>
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->
-
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_amount">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Amount</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_amount" checked>
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->
-
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_plan">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Plan</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_plan" checked>
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->
-
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_transaction_type">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Transaction Type</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_transaction_type" checked>
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->
-
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_date">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Date</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_date" checked>
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->                      
-
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_phone_no">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Phone No</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_phone_no" >
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->                      
-
-                      <!-- Form Switch -->
-                      <label class="row form-check form-switch" for="toggleColumn_actions">
-                        <span class="col-8 col-sm-9 ms-0">
-                          <span class="me-2">Actions</span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                          <input type="checkbox" class="form-check-input" id="toggleColumn_actions" checked>
-                        </span>
-                      </label>
-                      <!-- End Form Switch -->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End Dropdown -->
-          </div>
-        </div>
-        <!-- End Header -->
 
         <!-- Tab Content -->
         <div class="tab-content" id="transactionsTabContent">
-
           <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+        <!-- Header -->
+        <app-transactions-header 
+        [dateId]="1" 
+        (onRender)="filter($event, 1, 'datatable')"
+        [tableName]="'datatable'" 
+        (onDownloadCopy)="downloadAll('datatable', 'copy')"
+        (onDownloadPrint)="downloadAll('datatable', 'print')"
+        (onDownloadExcel)="downloadAll('datatable', 'excel')"
+        (onDownloadCsv)="downloadAll('datatable', 'csv')"
+        (onDownloadPdf)="downloadAll('datatable', 'pdf')"></app-transactions-header>
+        <!-- End Header -->
+
         <!-- Table -->
-        <div class="table-responsive datatable-custom">
-          <table id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
+        <div class="table-responsive"> 
+          <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" [attr.data-hs-datatables-options]='{
                    "columnDefs": [{
-                      "targets": [0],
+                      "targets": [0, 7],
                       "orderable": false
                     }],
                    "order": [],
@@ -425,120 +278,55 @@
                     <label class="form-check-label" for="datatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="table-column-ps-0">Reference</th>
-                <th>Customer</th>
-                <th>Amount</th>
-                <th>Plan</th>
-                <th>Transaction Type</th>                
-                <th>Date</th>
-                <th>Phone No</th>              
-                <th>Actions</th>
+                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
               </tr>
             </thead>
-
             <tbody>
-              <tr *ngFor="let r of allRecords; let i = index;">
-                <td class="table-column-pe-0">
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="ordersCheck{{r?.transref}}">
-                    <label class="form-check-label" for="ordersCheck{{r?.transref}}"></label>
-                  </div>
-                </td>
-                <td class="table-column-ps-0">
-                  <a type="button" (click)="open(content, r)">{{r?.transref}}</a>
-                </td>
-                <td>
-                  <a class="text-body" [routerLink]="['/customer', r?.customerId, 'details']">{{ (r.firstName?.concat(' ').concat(r.lastName) | titlecase) }}</a>
-                </td>
-                <td>{{r?.transAmount | currency: '₦'}}</td>
-                <td>
-                  <span class="">{{r?.plan_name | titlecase}}</span>
-                </td>                
-                <td>
-                  <span  *ngIf="r?.transType === 'Savings' " class="badge bg-soft-success text-success">
-                    <span class="legend-indicator bg-success"></span>
-                    <span>{{r?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="r?.transType === 'Withdrawal' " class="badge bg-soft-danger text-danger">
-                    <span class="legend-indicator bg-danger"></span>
-                    <span>{{r?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="r?.transType === 'commission' " class="badge bg-soft-warning text-warning">
-                    <span class="legend-indicator bg-warning"></span>
-                    <span>{{r?.transType | titlecase}}</span>
-                  </span>
-                </td>                
-                <!-- {{r?.transDate}} {{r?.time | date: 'h:mm a' }} -->
-                <td>{{r?.transDate | date: 'MMMM d yyyy,'}} {{ (r.transDate?.concat(' ').concat( r?.time ) | date: 'shortTime' )}}</td>             
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="text-dark">{{r?.userId}}</span>
-                  </div>
-                </td>
-                
-                <td>
-                  <div class="btn-group" role="group">
-                    <button class="btn btn-white btn-sm" (click)="open(content, r)">
-                      <i class="bi-eye"></i> View
-                    </button>
-                  </div>
-                </td>
+              <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords"
+                [userId]="r?.userId"
+                [customerId]="r?.customerId"
+                [firstName]="r?.firstName"
+                [lastName]="r?.lastName" 
+                [fullName]="(r?.firstName?.concat(' ').concat(r?.lastName) | titlecase)"
+                [plan_name]="r?.plan_name"
+                [transAmount]="r?.transAmount"
+                [transref]="r?.transref"
+                [transType]="r?.transType"
+                [transDate]="r?.transDate"
+                [time]="r?.time"
+                [agentFullName]="(r?.agent_firstname?.concat(' ').concat(r?.agent_lastname) | titlecase)"
+                [transDateConcat]="(r?.transDate?.concat(' ').concat( r?.time ) | date: 'shortTime' )"
+                [content]="r?.content"                
+                (onOpen)="open(content, r)"
+                >
               </tr>
-
-
-
             </tbody>
           </table>
         </div>
         <!-- End Table -->
-
         <!-- Footer -->
-        <div class="card-footer">
-          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                <span class="me-2">Showing:</span>
-
-                <!-- Select -->
-                <div class="tom-select-custom">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "hideSearch": true
-                          }'>
-                    <option value="12" selected>12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                  </select>
-                </div>
-                <!-- End Select -->
-
-                <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
-              </div>
-            </div>
-            <!-- End Col -->
-
-            <div class="col-sm-auto">
-              <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
-        </div>
+        <!-- <app-transactions-footer [tableLength]="allRecords?.length"></app-transactions-footer> -->
         <!-- End Footer -->
       </div>
 
       <!-- Tab Panel -->
       <div class="tab-pane fade" id="savings" role="tabpanel" aria-labelledby="savings-tab">
+         <!-- Header -->
+         <app-transactions-header 
+         [dateId]="2" 
+         [tableName]="'savingsDatatable'"
+         (onRender)="filter($event, 2, 'savingsDatatable')"
+         (onDownloadCopy)="downloadAll('savingsDatatable', 'copy')"
+         (onDownloadPrint)="downloadAll('savingsDatatable', 'print')"
+         (onDownloadExcel)="downloadAll('savingsDatatable', 'excel')"
+         (onDownloadCsv)="downloadAll('savingsDatatable', 'csv')"
+         (onDownloadPdf)="downloadAll('savingsDatatable', 'pdf')"
+         ></app-transactions-header>
+         <!-- End Header -->
+
         <!-- Table -->
-        <div class="table-responsive datatable-custom">
-          <table id="savingsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
+        <div class="table-responsive ">
+          <table datatable [dtOptions]="dtOptions[1]" [dtTrigger]="dtTrigger" id="savingsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0],
                       "orderable": false
@@ -562,112 +350,35 @@
                     <label class="form-check-label" for="datatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="table-column-ps-0">Reference</th>
-                <th>Customer</th>
-                <th>Amount</th>
-                <th>Plan</th>
-                <th>Transaction Type</th>                
-                <th>Date</th>
-                <th>Phone No</th>              
-                <th>Actions</th>
+                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr *ngFor="let s of savingsRecords; let i = index;">
-                <td class="table-column-pe-0">
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="ordersCheck{{s?.transref}}">
-                    <label class="form-check-label" for="ordersCheck{{s?.transref}}"></label>
-                  </div>
-                </td>
-                <td class="table-column-ps-0">
-                  <a href="javascript:;">{{s?.transref}}</a>
-                </td>
-                <td>
-                  <a class="text-body" [routerLink]="['/customer', s?.customerId, 'details']">{{ (s.firstName?.concat(' ').concat(s?.lastName) | titlecase) }}</a>
-                </td>
-                <td>{{s?.transAmount | currency: '₦'}}</td>
-                <td>
-                  <span class="">{{s?.plan_name | titlecase}}</span>
-                </td>                
-                <td>
-                  <span  *ngIf="s?.transType === 'Savings' " class="badge bg-soft-success text-success">
-                    <span class="legend-indicator bg-success"></span>
-                    <span>{{s?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="s?.transType === 'Withdrawal' " class="badge bg-soft-danger text-danger">
-                    <span class="legend-indicator bg-danger"></span>
-                    <span>{{s?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="s?.transType === 'commission' " class="badge bg-soft-warning text-warning">
-                    <span class="legend-indicator bg-warning"></span>
-                    <span>{{s?.transType | titlecase}}</span>
-                  </span>
-                </td>                
-                <!-- {{s?.transDate}} {{s?.time | date: 'h:mm a' }} -->
-                <td>{{s?.transDate | date: 'MMMM d yyyy,'}} {{ (s.transDate?.concat(' ').concat( s?.time ) | date: 'shortTime' )}}</td>             
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="text-dark">{{s?.userId}}</span>
-                  </div>
-                </td>
-                
-                <td>
-                  <div class="btn-group" role="group">
-                    <button class="btn btn-white btn-sm" (click)="open(content, s)">
-                      <i class="bi-eye"></i> View
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-
-
+              <tr app-transactions-table [records]="savingsRecords" *ngFor="let s of savingsRecords; let i = index;" 
+              [userId]="s?.userId"
+              [customerId]="s?.customerId"
+              [firstName]="s?.firstName"
+              [lastName]="s?.lastName" 
+              [fullName]="(s?.firstName?.concat(' ').concat(s?.lastName) | titlecase)"
+              [plan_name]="s?.plan_name"
+              [transAmount]="s?.transAmount"
+              [transref]="s?.transref"
+              [transType]="s?.transType"
+              [transDate]="s?.transDate"
+              [time]="s?.time"
+              [agentFullName]="(s?.agent_firstname?.concat(' ').concat(s?.agent_lastname) | titlecase)"
+              [transDateConcat]="(s?.transDate?.concat(' ').concat( s?.time ) | date: 'shortTime' )"
+              [content]="s?.content"                
+              (onOpen)="open(content, s)"
+              ></tr>
             </tbody>
           </table>
         </div>
         <!-- End Table -->
 
         <!-- Footer -->
-        <div class="card-footer">
-          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                <span class="me-2">Showing:</span>
-
-                <!-- Select -->
-                <div class="tom-select-custom">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "hideSearch": true
-                          }'>
-                    <option value="12" selected>12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                  </select>
-                </div>
-                <!-- End Select -->
-
-                <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
-              </div>
-            </div>
-            <!-- End Col -->
-
-            <div class="col-sm-auto">
-              <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
-        </div>
+        <!-- <app-transactions-footer [tableLength]="savingsRecords?.length"></app-transactions-footer> -->
         <!-- End Footer -->
 
       </div>
@@ -675,9 +386,21 @@
 
       <!-- Tab Panel -->
       <div class="tab-pane fade" id="withdrawals" role="tabpanel" aria-labelledby="withdrawals-tab">
+         <!-- Header -->
+         <app-transactions-header 
+         [dateId]="3"
+         [tableName]="'withdrawalsDatatable'" 
+         (onRender)="filter($event, 3, 'withdrawalsDatatable')" 
+         (onDownloadCopy)="downloadAll('withdrawalsDatatable', 'copy')"
+         (onDownloadPrint)="downloadAll('withdrawalsDatatable', 'print')"
+         (onDownloadExcel)="downloadAll('withdrawalsDatatable', 'excel')"
+         (onDownloadCsv)="downloadAll('withdrawalsDatatable', 'csv')"
+         (onDownloadPdf)="downloadAll('withdrawalsDatatable', 'pdf')"
+         ></app-transactions-header>
+         <!-- End Header -->
         <!-- Table -->
-        <div class="table-responsive datatable-custom">
-          <table id="withdrawalsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
+        <div class="table-responsive ">
+          <table datatable [dtOptions]="dtOptions[2]" [dtTrigger]="dtTrigger" id="withdrawalsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0],
                       "orderable": false
@@ -701,121 +424,54 @@
                     <label class="form-check-label" for="withdrawalsDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="table-column-ps-0">Reference</th>
-                <th>Customer</th>
-                <th>Amount</th>
-                <th>Plan</th>
-                <th>Transaction Type</th>                
-                <th>Date</th>
-                <th>Phone No</th>              
-                <th>Actions</th>
+                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr *ngFor="let w of withdrawalRecords; let i = index;">
-                <td class="table-column-pe-0">
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="ordersCheck{{w?.transref}}">
-                    <label class="form-check-label" for="ordersCheck{{w?.transref}}"></label>
-                  </div>
-                </td>
-                <td class="table-column-ps-0">
-                  <a href="javascript:;">{{w?.transref}}</a>
-                </td>
-                <td>
-                  <a class="text-body" [routerLink]="['/customer', w?.customerId, 'details']">{{ (w.firstName?.concat(' ').concat(w?.lastName) | titlecase) }}</a>
-                </td>
-                <td>{{w?.transAmount | currency: '₦'}}</td>
-                <td>
-                  <span class="">{{w?.plan_name | titlecase}}</span>
-                </td>                
-                <td>
-                  <span  *ngIf="w?.transType === 'Savings' " class="badge bg-soft-success text-success">
-                    <span class="legend-indicator bg-success"></span>
-                    <span>{{w?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="w?.transType === 'Withdrawal' " class="badge bg-soft-danger text-danger">
-                    <span class="legend-indicator bg-danger"></span>
-                    <span>{{w?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="w?.transType === 'commission' " class="badge bg-soft-warning text-warning">
-                    <span class="legend-indicator bg-warning"></span>
-                    <span>{{w?.transType | titlecase}}</span>
-                  </span>
-                </td>                
-                <!-- {{w?.transDate}} {{w?.time | date: 'h:mm a' }} -->
-                <td>{{w?.transDate | date: 'MMMM d yyyy,'}} {{ (w.transDate?.concat(' ').concat( w?.time ) | date: 'shortTime' )}}</td>             
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="text-dark">{{w?.userId}}</span>
-                  </div>
-                </td>
-                
-                <td>
-                  <div class="btn-group" role="group">
-                    <button class="btn btn-white btn-sm" (click)="open(content, w)">
-                      <i class="bi-eye"></i> View
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-
-
+              <tr app-transactions-table [records]="withdrawalRecords" *ngFor="let w of withdrawalRecords; let i = index;" 
+              [userId]="w?.userId"
+              [customerId]="w?.customerId"
+              [firstName]="w?.firstName"
+              [lastName]="w?.lastName" 
+              [fullName]="(w?.firstName?.concat(' ').concat(w?.lastName) | titlecase)"
+              [plan_name]="w?.plan_name"
+              [transAmount]="w?.transAmount"
+              [transref]="w?.transref"
+              [transType]="w?.transType"
+              [transDate]="w?.transDate"
+              [time]="w?.time"
+              [agentFullName]="(w?.agent_firstname?.concat(' ').concat(w?.agent_lastname) | titlecase)"
+              [transDateConcat]="(w?.transDate?.concat(' ').concat( w?.time ) | date: 'shortTime')"
+              [content]="w?.content"                
+              (onOpen)="open(content, w)"
+              ></tr>
             </tbody>
           </table>
         </div>
         <!-- End Table -->
 
         <!-- Footer -->
-        <div class="card-footer">
-          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                <span class="me-2">Showing:</span>
-
-                <!-- Select -->
-                <div class="tom-select-custom">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "hideSearch": true
-                          }'>
-                    <option value="12" selected>12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                  </select>
-                </div>
-                <!-- End Select -->
-
-                <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
-              </div>
-            </div>
-            <!-- End Col -->
-
-            <div class="col-sm-auto">
-              <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
-        </div>
+        <!-- <app-transactions-footer [tableLength]="withdrawalRecords?.length"></app-transactions-footer> -->
         <!-- End Footer -->
       </div>
       <!-- End Tab Panel -->
 
       <!-- Tab Panel -->
       <div class="tab-pane fade" id="commissions" role="tabpanel" aria-labelledby="commissions-tab">
+         <!-- Header -->
+         <app-transactions-header [dateId]="4"
+         [tableName]="'commissionsDatatable'" 
+         (onRender)="filter($event, 4, 'commissionsDatatable')" 
+         (onDownloadCopy)="downloadAll('commissionsDatatable', 'copy')"
+         (onDownloadPrint)="downloadAll('commissionsDatatable', 'print')"
+         (onDownloadExcel)="downloadAll('commissionsDatatable', 'excel')"
+         (onDownloadCsv)="downloadAll('commissionsDatatable', 'csv')"
+         (onDownloadPdf)="downloadAll('commissionsDatatable', 'pdf')"></app-transactions-header>
+         <!-- End Header -->
         <!-- Table -->
-        <div class="table-responsive datatable-custom">
-          <table id="commissionsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
+        <div class="table-responsive">
+          <table datatable [dtOptions]="dtOptions[3]" [dtTrigger]="dtTrigger" id="commissionsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0],
                       "orderable": false
@@ -839,123 +495,41 @@
                     <label class="form-check-label" for="commissionsDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="table-column-ps-0">Reference</th>
-                <th>Customer</th>
-                <th>Amount</th>
-                <th>Plan</th>
-                <th>Transaction Type</th>                
-                <th>Date</th>
-                <th>Phone No</th>              
-                <th>Actions</th>
+                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr *ngFor="let c of commissionRecords; let i = index;">
-                <td class="table-column-pe-0">
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="ordersCheck{{c?.transref}}">
-                    <label class="form-check-label" for="ordersCheck{{c?.transref}}"></label>
-                  </div>
-                </td>
-                <td class="table-column-ps-0">
-                  <a href="javascript:;">{{c?.transref}}</a>
-                </td>
-                <td>
-                  <a class="text-body" [routerLink]="['/customer', c?.customerId, 'details']">{{ (c.firstName?.concat(' ').concat(c?.lastName) | titlecase) }}</a>
-                </td>
-                <td>{{c?.transAmount | currency: '₦'}}</td>
-                <td>
-                  <span class="">{{c?.plan_name | titlecase}}</span>
-                </td>                
-                <td>
-                  <span  *ngIf="c?.transType === 'Savings' " class="badge bg-soft-success text-success">
-                    <span class="legend-indicator bg-success"></span>
-                    <span>{{c?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="c?.transType === 'Withdrawal' " class="badge bg-soft-danger text-danger">
-                    <span class="legend-indicator bg-danger"></span>
-                    <span>{{c?.transType | titlecase}}</span>
-                  </span>
-                  <span  *ngIf="c?.transType === 'commission' " class="badge bg-soft-warning text-warning">
-                    <span class="legend-indicator bg-warning"></span>
-                    <span>{{c?.transType | titlecase}}</span>
-                  </span>
-                </td>                
-                <!-- {{c?.transDate}} {{c?.time | date: 'h:mm a' }} -->
-                <td>{{c?.transDate | date: 'MMMM d yyyy,'}} {{ (c.transDate?.concat(' ').concat( c?.time ) | date: 'shortTime' )}}</td>             
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="text-dark">{{c?.userId}}</span>
-                  </div>
-                </td>
-                
-                <td>
-                  <div class="btn-group" role="group">
-                    <button class="btn btn-white btn-sm" (click)="open(content, c)">
-                      <i class="bi-eye"></i> View
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-
-
+              <tr app-transactions-table [records]="commissionRecords" *ngFor="let c of commissionRecords; let i = index;" 
+              [userId]="c?.userId"
+              [customerId]="c?.customerId"
+              [firstName]="c?.firstName"
+              [lastName]="c?.lastName" 
+              [fullName]="(c?.firstName?.concat(' ').concat(c?.lastName) | titlecase)"
+              [plan_name]="c?.plan_name"
+              [transAmount]="c?.transAmount"
+              [transref]="c?.transref"
+              [transType]="c?.transType"
+              [transDate]="c?.transDate"
+              [time]="c?.time"
+              [agentFullName]="(c?.agent_firstname?.concat(' ').concat(c?.agent_lastname) | titlecase)"
+              [transDateConcat]="(c?.transDate?.concat(' ').concat( c?.time ) | date: 'shortTime')"
+              [content]="c?.content"                
+              (onOpen)="open(content, c)"
+              ></tr>
             </tbody>
           </table>
         </div>
         <!-- End Table -->
 
         <!-- Footer -->
-        <div class="card-footer">
-          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                <span class="me-2">Showing:</span>
-
-                <!-- Select -->
-                <div class="tom-select-custom">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "hideSearch": true
-                          }'>
-                    <option value="12" selected>12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                  </select>
-                </div>
-                <!-- End Select -->
-
-                <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
-              </div>
-            </div>
-            <!-- End Col -->
-
-            <div class="col-sm-auto">
-              <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
-        </div>
+        <!-- <app-transactions-footer [tableLength]="commissionRecords?.length"></app-transactions-footer> -->
         <!-- End Footer -->
       </div>
       <!-- End Tab Panel -->
 
-
-
-
       </div>
       <!-- End Tab Content -->
-
-
 
       </div>
       <!-- End Card -->
@@ -974,9 +548,9 @@
       [transAmount] = "modalContent?.transAmount"
       [accountNo] = "modalContent?.accountNo"
       [userId] = "modalContent?.userId" 
+      [planName] = "modalContent?.plan_name" 
       (onOpenPdfContent) = "openReceipt(modalContent)" 
       (onPrintPdfContent) = "printReceipt(modalContent)" 
       (onModalClose) = "modal.dismiss('Cross click')" 
       ></app-receipt>
       </ng-template>
-   

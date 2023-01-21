@@ -248,7 +248,7 @@ export class ReceiptService {
               alignment: 'left'
             },
             {
-              text: agentdetails?.firstname + ' ' + agentdetails?.lastname,
+              text: transaction?.agent_firstname?.concat(' ').concat(transaction?.agent_lastname),
               style: 'anotherStyle',
             },
           ],

@@ -14,16 +14,17 @@
       <div class="text-center mb-5">
         <!-- Avatar -->
         <div class="avatar avatar-xxl avatar-circle profile-cover-avatar">
-          <img class="avatar-img" [src]="customer?.img ? imagePath + customer?.img : './assets/img/160x160/img9.jpg'"
-            alt="{{customer?.firstName}}">
+          <img class="avatar-img"
+            [src]="customer?.img ? imagePath + customer?.img : '../../../assets/img/160x160/img1.jpg'"
+            onerror="this.src='../../../assets/img/160x160/img1.jpg'" alt="{{customer?.firstName}}">
           <span class="avatar-status avatar-status-success"></span>
         </div>
         <!-- End Avatar -->
 
         <!-- {{(customer.firstName?.concat(' ').concat(customer.lastName) | titlecase) }} -->
-        <h1 class="page-header-title">{{(customer.firstName?.concat(' ').concat(customer.lastName) | titlecase) }}<i
+        <h1 class="page-header-title">{{(customer?.firstName?.concat(' ').concat(customer?.lastName) | titlecase) }}<i
             class="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Top endorsed"></i></h1>
+            title="Active User"></i></h1>
 
         <!-- List -->
         <ul class="list-inline list-px-2">
@@ -73,12 +74,17 @@
             <a class="nav-link" id="withdrawal-tab" data-bs-toggle="tab" href="#withdrawal" role="tab">Withdraw</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="transactions-history-tab" data-bs-toggle="tab" href="#transactions-history" role="tab">Transactions
-              <span class="badge bg-soft-dark text-dark rounded-circle ms-1">{{customerTrxs ? customerTrxs?.length: 0 }}</span>
+            <a class="nav-link" id="transactions-history-tab" data-bs-toggle="tab" href="#transactions-history"
+              role="tab">Transactions
+              <span class="badge bg-soft-dark text-dark rounded-circle ms-1">{{customerTrxs ? customerTrxs?.length: 0
+                }}</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="plans-tab" data-bs-toggle="tab" href="#plans" role="tab">Plans</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="updateProfile-tab" data-bs-toggle="tab" href="#updateProfile" role="tab">Update Profile</a>
           </li>
 
           <li class="nav-item ms-auto">
@@ -107,13 +113,14 @@
                 <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="profileDropdown">
                   <span class="dropdown-header">Contact</span>
 
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="tel:{{customer?.userId}}">
                     <i class="bi-share-fill dropdown-item-icon"></i> Contact Phone
                   </a>
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="mailto:{{customer?.email}}">
                     <i class="bi-slash-circle dropdown-item-icon"></i> Send Email
                   </a>
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" target="_blank"
+                    href="https://api.whatsapp.com/send/?phone=234{{customer?.userId}}&text=Hello+{{customer?.firstName}}">
                     <i class="bi-info-circle dropdown-item-icon"></i> Contact Whatsapp
                   </a>
 
@@ -138,36 +145,30 @@
           <div class="row">
             <div class="col-lg-4">
               <!-- Card -->
-              <div class="card card-body mb-3 mb-lg-5">
-                <h5>Starter</h5>
+              <div class="card card-body mb-3 mb-lg-5" *ngFor="let plan of userPlans; let i = index;">
+                <div class="d-flex">
+                  <h5>{{plan.plan_name}}</h5>
+                  <h5 [ngClass]="roundNumber(changeNumber(plan?.ledger_bal) / (30 * changeNumber(plan?.plan_amount)) * 100) >= 50 
+                     ? 'ms-auto text-success ' : 'ms-auto text-danger' ">Bal: {{plan.available_bal | currency: '₦'}}
+                  </h5>
+                </div>
 
                 <!-- Progress -->
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="progress flex-grow-1">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 82%" aria-valuenow="82"
+                    <div class="progress-bar bg-primary" role="progressbar"
+                      [ngStyle]="{'width': roundNumber(changeNumber(plan?.ledger_bal) / (30 * changeNumber(plan?.plan_amount)) * 100) +'%'}"
+                      attr.aria-valuenow="{{roundNumber(changeNumber(plan?.ledger_bal) / (30 * changeNumber(plan?.plan_amount)) * 100)}}"
                       aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <span class="ms-4">85%</span>
+                  <span class="ms-4">{{plan?.ledger_bal > 0 ? roundNumber(changeNumber(plan?.ledger_bal) / (30 *
+                    changeNumber(plan?.plan_amount)) * 100) : 0}}%</span>
                 </div>
                 <!-- End Progress -->
               </div>
               <!-- End Card -->
 
-              <!-- Card -->
-              <div class="card card-body mb-3 mb-lg-5">
-                <h5>Premium</h5>
 
-                <!-- Progress -->
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="progress flex-grow-1">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 82%" aria-valuenow="82"
-                      aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <span class="ms-4">65%</span>
-                </div>
-                <!-- End Progress -->
-              </div>
-              <!-- End Card -->
 
               <!-- Sticky Block Start Point -->
               <div id="accountSidebarNav"></div>
@@ -410,17 +411,17 @@
 
             <div class="col-lg-12">
               <!-- Card -->
-              <div class="card">
+              <div class="card" *ngIf="customer">
                 <!-- Body -->
                 <div class="card-body">
-                  <form [formGroup]="savingsForm" (ngSubmit)="AddSavings()">
+                  <form [formGroup]="savingsForm">
                     <div class="row">
                       <div class="col-sm-6">
                         <!-- Form -->
                         <div class="mb-4">
-                          <label for="firstNameLabel" class="form-label">First name</label>
+                          <label for="firstNameSavings" class="form-label">First name</label>
                           <input type="text" class="form-control" formControlName="firstname" readonly
-                            id="firstNameLabel" value="{{this.customer?.firstName}}">
+                            id="firstNameSavings" value="{{customer?.firstName}}">
                         </div>
                         <!-- End Form -->
                       </div>
@@ -429,9 +430,9 @@
                       <div class="col-sm-6">
                         <!-- Form -->
                         <div class="mb-4">
-                          <label for="lastNameLabel" class="form-label">Last name</label>
-                          <input type="text" class="form-control" formControlName="lastname" readonly id="lastNameLabel"
-                            value="{{this.customer?.lastName}}">
+                          <label for="lastNameSavings" class="form-label">Last name</label>
+                          <input type="text" class="form-control" formControlName="lastname" readonly
+                            id="lastNameSavings" value="{{customer?.lastName}}">
                         </div>
                         <!-- End Form -->
                       </div>
@@ -439,59 +440,67 @@
                     </div>
                     <!-- End Row -->
 
-                    <!-- Form -->
-                    <div class="mb-4">
-                      <label for="accountNoLabel" class="form-label">Account Number</label>
-                      <input type="number" class="form-control" formControlName="account_num" readonly
-                        id="accountNoLabel" value="{{this.customer?.account_num}}">
-                    </div>
-                    <!-- End Form -->
+                    <div class="row">
+                      <div class="col-sm-6">
 
-                    <!-- Form -->
-                    <div class="mb-4">
-                      <label for="planLabel" class="form-label">Plan</label>
-                      <!-- Select -->
-                      <div class="tom-select-custom mb-3">
-                        <select class="js-select form-select" id="planLabel" formControlName="planId" autocomplete="off"
-                          data-hs-tom-select-options='{
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="accountNoSavings" class="form-label">Account Number</label>
+                          <input type="number" class="form-control" formControlName="account_num" readonly
+                            id="accountNoSavings" value="{{customer?.account_num}}">
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-sm-6">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="planSavings" class="form-label">Subscribed Plan</label>
+                          <!-- Select -->
+                          <div class="tom-select-custom mb-3">
+                            <select class="js-select form-select" id="planSavings" formControlName="planId"
+                              data-hs-tom-select-options='{
                             "placeholder": "Select plan"
                           }'>
-                          <option value="1"
-                            data-option-template='<span class="d-flex align-items-center"><span class="text-truncate">Starter</span></span>'>
-                            Starter
-                          </option>
-                          <option value="2"
-                            data-option-template='<span class="d-flex align-items-center"><span class="text-truncate">Basic</span></span>'>
-                            Basic
-                          </option>
-                        </select>
+                              <option [value]="changeNumber(plan.plan_id)"
+                                *ngFor="let plan of userPlans; let i = index;"
+                                attr.data-option-template='<span class="d-flex align-items-center">
+                              <span class="text-truncate">{{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦"))}}</span></span>'>
+                                {{plan.plan_name}} - {{plan.plan_amount | currency: '₦'}}
+                              </option>
+                            </select>
+                          </div>
+                          <!-- End Select -->
+                        </div>
+                        <!-- End Form -->
                       </div>
-                      <!-- End Select -->
+                      <!-- End Col -->
+
                     </div>
-                    <!-- End Form -->
+                    <!-- End row -->
 
                     <!-- Form -->
                     <div class="mb-4">
-                      <label for="amountLabel" class="form-label">Amount</label>
-                      <input type="number" class="form-control" formControlName="transAmount" id="amountLabel">
+                      <label for="amountSavings" class="form-label">Amount</label>
+                      <input type="number" class="form-control" formControlName="transAmount" id="amountSavings"
+                        value="{{0 | currency: ''}}">
                     </div>
                     <!-- End Form -->
-
-
-
 
 
                     <!-- Form Check -->
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="marketingEmailsCheckbox">
-                      <label class="form-check-label" for="marketingEmailsCheckbox">I have the consent of the customer
+                      <input class="form-check-input" type="checkbox" formControlName="terms" id="termsCheckbox">
+                      <label class="form-check-label" for="termsCheckbox">I have the consent of the customer
                         to perform this transaction.</label>
                     </div>
                     <!-- End Form Check -->
 
                     <div class="d-flex justify-content-end gap-3">
-                      <button type="button" class="btn btn-white">Discard</button>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="button" class="btn btn-white">Reset</button>
+                      <button type="button" class="btn btn-primary"
+                        (click)="enterPin(pin, savingsForm.value)">Submit</button>
                     </div>
                   </form>
 
@@ -513,17 +522,17 @@
 
             <div class="col-lg-12">
               <!-- Card -->
-              <div class="card">
+              <div class="card" *ngIf="customer != null">
                 <!-- Body -->
                 <div class="card-body">
-                  <form [formGroup]="withdrawalForm" (ngSubmit)="Withdrawal()">
+                  <form [formGroup]="withdrawalForm">
                     <div class="row">
                       <div class="col-sm-6">
                         <!-- Form -->
                         <div class="mb-4">
                           <label for="firstNameLabel" class="form-label">First name</label>
                           <input type="text" class="form-control" formControlName="firstname" readonly
-                            id="firstNameLabel" value="{{this.customer?.firstName}}">
+                            id="firstNameLabel" value="{{customer?.firstName}}">
                         </div>
                         <!-- End Form -->
                       </div>
@@ -534,7 +543,7 @@
                         <div class="mb-4">
                           <label for="lastNameLabel" class="form-label">Last name</label>
                           <input type="text" class="form-control" formControlName="lastname" readonly id="lastNameLabel"
-                            value="{{this.customer?.lastName}}">
+                            value="{{customer?.lastName}}">
                         </div>
                         <!-- End Form -->
                       </div>
@@ -542,42 +551,48 @@
                     </div>
                     <!-- End Row -->
 
-                    <!-- Form -->
-                    <div class="mb-4">
-                      <label for="accountNoLabel" class="form-label">Account Number</label>
-                      <input type="number" class="form-control" formControlName="account_num" readonly
-                        id="accountNoLabel" value="{{this.customer?.account_num}}">
-                    </div>
-                    <!-- End Form -->
+                    <div class="row">
+                      <div class="col-sm-6">
 
-                    <!-- Form -->
-                    <div class="mb-4">
-                      <label for="planLabel" class="form-label">Plan</label>
-                      <!-- Select -->
-                      <div class="tom-select-custom mb-3">
-                        <select class="js-select form-select" id="planLabel" formControlName="planId" autocomplete="off"
-                          data-hs-tom-select-options='{
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="accountNoLabel" class="form-label">Account Number</label>
+                          <input type="number" class="form-control" formControlName="account_num" readonly
+                            id="accountNoLabel" value="{{customer?.account_num}}">
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-sm-6">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="planLabel" class="form-label">Subscribed Plan</label>
+                          <!-- Select -->
+                          <div class="tom-select-custom mb-3">
+                            <select class="js-select form-select" id="planLabel" formControlName="planId"
+                              data-hs-tom-select-options='{
                             "placeholder": "Select plan"
                           }'>
-                          <option value="1"
-                            data-option-template='<span class="d-flex align-items-center"><span class="text-truncate">Starter</span></span>'>
-                            Starter
-                          </option>
-                          <option value="2"
-                            data-option-template='<span class="d-flex align-items-center"><span class="text-truncate">Basic</span></span>'>
-                            Basic
-                          </option>
-                        </select>
+                              <option value="{{plan.plan_id}}" *ngFor="let plan of userPlans; let i = index;"
+                                attr.data-option-template='<span class="d-flex align-items-center">
+                              <span class="text-truncate">{{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦"))}}</span></span>'>
+                                {{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦"))}}
+                              </option>
+                            </select>
+                          </div>
+                          <!-- End Select -->
+                        </div>
+                        <!-- End Form -->
                       </div>
-                      <!-- End Select -->
+                      <!-- End Col -->
                     </div>
-                    <!-- End Form -->
 
                     <!-- Form -->
                     <div class="mb-4">
                       <label for="amountLabel" class="form-label">Amount</label>
                       <input type="number" class="form-control" formControlName="transAmount" id="amountLabel"
-                        value="{{0 | number}}">
+                        value="{{0 | currency: ''}}">
                     </div>
                     <!-- End Form -->
 
@@ -587,15 +602,22 @@
 
                     <!-- Form Check -->
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="marketingEmailsCheckbox">
-                      <label class="form-check-label" for="marketingEmailsCheckbox">I have the consent of the customer
+                      <input class="form-check-input" type="checkbox" formControlName="terms" id="termsCheckbox2">
+                      <label class="form-check-label" for="termsCheckbox2">I have the consent of the customer
                         to perform this transaction.</label>
                     </div>
                     <!-- End Form Check -->
 
                     <div class="d-flex justify-content-end gap-3">
-                      <button type="button" class="btn btn-white">Discard</button>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="button" class="btn btn-white">Reset</button>
+                      <button type="button" class="btn btn-primary" *ngIf="user.level=== '1' || user.level=== '2' "
+                        [disabled]="!withdrawalForm.valid" (click)="enterPin(pin, withdrawalForm.value)">Submit</button>
+                      <button type="button" class="btn btn-primary" *ngIf="user.level=== '3' || user.level=== '4' "
+                        [disabled]="!withdrawalForm.valid || loading" (click)="Withdrawal('1111')">Submit
+                        <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </button>
                     </div>
                   </form>
 
@@ -620,7 +642,8 @@
                   <h4 class="card-header-title">Last 20 Transactions</h4>
 
                   <div class="ms-auto">
-                        <a [routerLink]="['/customer', customer?.sn, 'trans-history']" class="btn btn-light">View All Transactions</a>
+                    <a [routerLink]="['/customer', customer?.sn, 'trans-history']" class="btn btn-light">View All
+                      Transactions</a>
                   </div>
                 </div>
                 <!-- End Header -->
@@ -641,11 +664,14 @@
 
                     <tbody>
                       <tr *ngFor="let t of customerTrxs; let i = index;">
-                        <td><a href="#">{{t?.transref}}</a></td>
+                        <td><a type="button" (click)="open(content, t)">{{t?.transref}}</a></td>
                         <td>
-                          <span class="badge bg-soft-success text-success" *ngIf="t?.transType === 'Savings' ">{{t?.transType | titlecase}}</span>
-                          <span class="badge bg-soft-danger text-danger" *ngIf="t?.transType === 'Withdrawal' ">{{t?.transType | titlecase}}</span>
-                          <span class="badge bg-soft-warning text-warning" *ngIf="t?.transType === 'commission' ">{{t?.transType | titlecase}}</span>
+                          <span class="badge bg-soft-success text-success"
+                            *ngIf="t?.transType === 'Savings' ">{{t?.transType | titlecase}}</span>
+                          <span class="badge bg-soft-danger text-danger"
+                            *ngIf="t?.transType === 'Withdrawal' ">{{t?.transType | titlecase}}</span>
+                          <span class="badge bg-soft-warning text-warning"
+                            *ngIf="t?.transType === 'commission' ">{{t?.transType | titlecase}}</span>
                         </td>
                         <td>{{t?.transAmount | currency: '₦' }}</td>
                         <td>{{t?.transDate | date}}</td>
@@ -655,7 +681,8 @@
                           </button>
                         </td>
                         <td>
-                          <button class="btn btn-white btn-sm" (click)="open(content, t)"><i class="bi-eye-fill me-1"></i> Quick view</button>
+                          <button class="btn btn-white btn-sm" (click)="open(content, t)"><i
+                              class="bi-eye-fill me-1"></i> Quick view</button>
                         </td>
                       </tr>
 
@@ -671,46 +698,260 @@
         </div>
 
         <div class="tab-pane fade" id="plans" role="tabpanel" aria-labelledby="plans-tab">
-          <div class="row">          
-            <div class="col-md-3 mb-3" *ngFor="let plan of plans; let i = index;">
+          <form [formGroup]="PlanForm" (ngSubmit)="createPlan()" *ngIf="plans?.length > 0">
+            <div class="row">
+              <div class="col-md-3 mb-3" *ngFor="let plan of plans; let i = index;">
+                <!-- Card -->
+                <div class="card card-lg form-check form-check-select-stretched h-100 zi-1">
+                  <div class="card-header text-center p-3">
+                    <!-- Form Check -->
+                    <input type="radio" class="form-check-input" formControlName="plans" id="plan_id{{plan?.sn}}"
+                      checked value="{{plan?.sn}}">
+                    <label class="form-check-label" for="plan_id{{plan?.sn}}"></label>
+                    <!-- End Form Check -->
+
+                    <span class="card-subtitle">{{plan?.plan_name}}</span>
+                    <h2 class="card-title text-dark"><span id="planCount1" class="display-5">{{checkNumber(plan?.amount)
+                        == "number" ? (plan.amount | currency: '₦') : plan.amount}}</span>
+                      <span class="fs-6 text-muted">/ month</span>
+                    </h2>
+                  </div>
+
+                  <div class="card-body d-flex justify-content-center p-3">
+                    <!-- List Checked -->
+                    <ul class="list-checked list-checked-primary mb-0">
+                      <li class="list-checked-item">Duration: {{plan?.plan_duration}}</li>
+                      <li class="list-checked-item">Days: {{plan?.days}}</li>
+                      <li class="list-checked-item">Commission: {{plan?.commission}}</li>
+                      <li class="list-checked-item">Withdraw at any time</li>
+                    </ul>
+                    <!-- End List Checked -->
+                  </div>
+
+                </div>
+                <!-- End Card -->
+              </div>
+              <!-- End Col -->
+            </div>
+            <!-- End Row -->
+
+            <div class="text-center">
+              <div class="d-grid mb-2">
+                <button type="submit" class="btn btn-primary" [disabled]="loading">Select Plan
+                  <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div class="row" *ngIf="plansInfo!= null && plans?.length == 0">
+            <span class="text-center">{{plansInfo}}</span>
+          </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="updateProfile" role="tabpanel" aria-labelledby="updateProfile-tab">
+          <div class="row">
+            <!-- <div class="col-lg-4 mb-3 mb-lg-0">
+              <h4>Savings</h4>
+            </div> -->
+
+            <div class="col-lg-12">
               <!-- Card -->
-              <div class="card card-lg form-check form-check-select-stretched h-100 zi-1">
-                <div class="card-header text-center p-3">
-                  <!-- Form Check -->
-                  <input type="radio" class="form-check-input" name="plans" id="plan_id{{plan?.plan_id}}" checked value="{{plan?.sn}}">
-                  <label class="form-check-label" for="plan_id{{plan?.plan_id}}"></label>
-                  <!-- End Form Check -->
-          
-                  <span class="card-subtitle">{{plan?.plan_name}}</span>
-                  <h2 class="card-title text-dark"><span id="planCount1" class="display-5">{{checkNumber(plan?.amount) == "number" ? (plan.amount | currency: '₦') : plan.amount}}</span>
-                    <span class="fs-6 text-muted">/ month</span>
-                  </h2>
+              <div class="card" *ngIf="customer">
+                <!-- Body -->
+                <div class="card-body">
+                  <form [formGroup]="updateProfileForm" (ngSubmit)="updateUser()">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="firstNameProfile" class="form-label">First name</label>
+                          <input type="text" class="form-control" formControlName="firstName"
+                            id="firstNameProfile" [readonly]="user?.level == 3 || user?.level == 4 ? false : true" >
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="middleNameProfile" class="form-label">Middle name</label>
+                          <input type="text" class="form-control" formControlName="mname"
+                            id="middleNameProfile" [readonly]="user?.level == 3 || user?.level == 4 ? false : true">
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="lastNameProfile" class="form-label">Last name</label>
+                          <input type="text" class="form-control" formControlName="lastName"
+                            id="lastNameProfile" [readonly]="user?.level == 3 || user?.level == 4 ? false : true">
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+
+                    <div class="row">                    
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="emailProfile" class="form-label">Email Address</label>
+                          <input type="text" class="form-control" formControlName="email" id="emailProfile" value="{{customer?.lastName}}" 
+                          [readonly]="user?.level == 3 || user?.level == 4 ? false : true">
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="phoneProfile" class="form-label">Phone Number</label>
+                          <input type="text" class="form-control" formControlName="userId"
+                            id="phoneProfile" [readonly]="user?.level == 3 || user?.level == 4 ? false : true">
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="networkProfile" class="form-label">Mobile Network</label>
+                          <!-- Select -->
+                          <div class="tom-select-custom mb-3">
+                            <select class="js-select form-select" id="networkProfile" formControlName="mobilenetwork"
+                              data-hs-tom-select-options='{
+                            "placeholder": "Select Mobile Network"
+                          }'>
+                              <option [value]="network?.name"
+                                *ngFor="let network of networks; let i = index;"
+                                attr.data-option-template='<span class="d-flex align-items-center">
+                              <span class="text-truncate">{{network?.name}}</span></span>'>
+                                {{network?.name}}
+                              </option>
+                            </select>
+                          </div>
+                          <!-- End Select -->
+                        </div>
+                        <!-- End Form -->
+                      </div>
+                      <!-- End Col -->
+
+                    </div>
+                    <!-- End row -->
+
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="BVN_numProfile" class="form-label">BVN</label>
+                          <input type="number" class="form-control" formControlName="BVN_num" id="BVN_numProfile">
+                        </div>
+                        <!-- End Form -->                    
+                      </div>
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="dateOfBirthProfile" class="form-label">Date of Birth</label>
+                          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirthProfile">
+                        </div>
+                        <!-- End Form -->                    
+                      </div>
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="genderProfile" class="form-label">Gender</label>
+                          <!-- Select -->
+                          <div class="tom-select-custom mb-3">
+                            <select class="js-select form-select" id="genderProfile" formControlName="gender"
+                              data-hs-tom-select-options='{
+                            "placeholder": "Select Gender"
+                          }'>
+                              <option [value]="gender?.name"
+                                *ngFor="let gender of genders; let i = index;"
+                                attr.data-option-template='<span class="d-flex align-items-center">
+                              <span class="text-truncate">{{gender?.name}}</span></span>'>
+                                {{gender?.name}}
+                              </option>
+                            </select>
+                          </div>
+                          <!-- End Select -->
+                        </div>
+                        <!-- End Form -->                    
+                      </div>
+                    
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="streetProfile" class="form-label">Street</label>
+                          <input type="text" class="form-control" formControlName="street1" id="streetProfile">
+                        </div>
+                        <!-- End Form -->                    
+                      </div>
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="cityProfile" class="form-label">City</label>
+                          <input type="text" class="form-control" formControlName="city" id="cityProfile">
+                        </div>
+                        <!-- End Form -->                    
+                      </div>
+
+                      <div class="col-sm-4">
+                        <!-- Form -->
+                        <div class="mb-4">
+                          <label for="stateProfile" class="form-label">State</label>
+                          <input type="text" class="form-control" formControlName="state" id="stateProfile">
+                        </div>
+                        <!-- End Form -->                    
+                      </div>
+                    
+                    </div>
+
+
+                    <!-- Form Check -->
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" formControlName="terms" id="termsCheckboxProfile">
+                      <label class="form-check-label" for="termsCheckboxProfile">I have the consent of the customer
+                        to perform this transaction.</label>
+                    </div>
+                    <!-- End Form Check -->
+
+                    <div class="d-flex justify-content-end gap-3">
+                      <button type="reset" class="btn btn-white">Reset</button>                      
+                      <button type="submit" class="btn btn-primary" [disabled]="loading">Update Profile
+                        <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </button>
+                    </div>
+                  </form>
+
                 </div>
-          
-                <div class="card-body d-flex justify-content-center p-3">
-                  <!-- List Checked -->
-                  <ul class="list-checked list-checked-primary mb-0">
-                    <li class="list-checked-item">Duration: {{plan?.plan_duration}}</li>
-                    <li class="list-checked-item">Days: {{plan?.days}}</li>
-                    <li class="list-checked-item">Commission: {{plan?.commission}}</li>
-                    <li class="list-checked-item">Withdraw at any time</li>
-                  </ul>
-                  <!-- End List Checked -->
-                </div>
-          
+                <!-- Body -->
+
               </div>
               <!-- End Card -->
             </div>
-            <!-- End Col -->              
           </div>
           <!-- End Row -->
-
-          <div class="text-center">
-            <div class="d-grid mb-2">
-              <button type="submit" class="btn btn-primary">Select Plan</button>
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -724,20 +965,18 @@
 
 <!-- ng-template receipt -->
 <ng-template #content let-modal>
-  <app-receipt 
-  [customerId]="modalContent?.customerId"
-  [fullName]="(modalContent.firstName?.concat(' ').concat(modalContent?.lastName))"
-  [firstName]="modalContent?.firstName"
-  [lastName]="modalContent?.lastName"
-  [transDate]="(modalContent.transDate?.concat(' ').concat(modalContent?.time))"
-  [transType]="modalContent?.transType"
-  [transref]="modalContent?.transref"
-  [transAmount]="modalContent?.transAmount"
-  [accountNo]="modalContent?.accountNo"
-  [userId]="modalContent?.userId"
-  (onOpenPdfContent)="openReceipt(modalContent)"
-  (onPrintPdfContent)="printReceipt(modalContent)"
-  (onModalClose)="modal.dismiss('Cross click')"
-  ></app-receipt>
-  </ng-template>
+  <app-receipt [customerId]="modalContent?.customerId"
+    [fullName]="(modalContent.firstName?.concat(' ').concat(modalContent?.lastName))"
+    [firstName]="modalContent?.firstName" [lastName]="modalContent?.lastName"
+    [transDate]="(modalContent.transDate?.concat(' ').concat(modalContent?.time))" [transType]="modalContent?.transType"
+    [transref]="modalContent?.transref" [transAmount]="modalContent?.transAmount" [accountNo]="modalContent?.accountNo"
+    [userId]="modalContent?.userId" [planName]="modalContent?.plan_name" (onOpenPdfContent)="openReceipt(modalContent)"
+    (onPrintPdfContent)="printReceipt(modalContent)" (onModalClose)="modal.dismiss('Cross click')"></app-receipt>
+</ng-template>
 
+<ng-template #pin let-modal>
+  <app-pin [loading]="loading" [config]="config" (onSubmit)="performTransaction(transactionValues, otp)"
+    (onModalClose)="modal.dismiss('Cross click')" (onPinChange)="onOtpChange($event)" [otp]="otp" [data]="data"
+    [showOtpComponent]="showOtpComponent" [otpLength]="otpLength"></app-pin>
+
+</ng-template>

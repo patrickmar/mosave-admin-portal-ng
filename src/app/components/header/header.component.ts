@@ -17,15 +17,33 @@ export class HeaderComponent implements OnInit {
   mini_logo = environment.mini_logo;
   user: any;
   firstname!: string;
-  isLoggedIn$!: Observable<boolean>;
+  isLoggedIn$!: Observable<boolean>; 
+  userRole: any; 
+  roles = [
+    {
+      id: 1,
+      role: "Agent"
+    },
+    {
+      id: 2,
+      role: "Supervisor"
+    },
+    {
+      id: 3,
+      role: "Admin"
+    },
+    {
+      id: 4,
+      role: "SuperAdmin"
+    },
+  ]  
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.getUserDetails();
     this.jsInit();
-    this.isLoggedIn$ = this.authService.isLoggedIn;
-    
+    this.isLoggedIn$ = this.authService.isLoggedIn;   
   }
 
   jsInit(){
@@ -41,6 +59,9 @@ export class HeaderComponent implements OnInit {
       var titleCasePipe = new TitleCasePipe();
       this.firstname = titleCasePipe.transform(this.user?.firstname);
       console.log(this.user.sn);
+      console.log(this.roles);
+      this.userRole = this.roles.filter((i: any) => i.id === Number(this.user.level));
+      console.log(this.userRole);
     });
   }
 

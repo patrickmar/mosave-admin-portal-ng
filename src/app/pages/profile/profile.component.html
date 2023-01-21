@@ -56,22 +56,27 @@
                      "stickyOffsetTop": 20
                    }'>
                 <li class="nav-item">
-                  <a class="nav-link active" routerLink="#content">
+                  <a class="nav-link active" [routerLink] = "['/profile']" fragment="basicInformationSection">
                     <i class="bi-person nav-icon"></i> Basic information
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" [routerLink] = "['/profile']"  fragment="emailSection">
+                  <a class="nav-link" [routerLink] = "['/profile']" fragment="emailSection">
                     <i class="bi-at nav-icon"></i> Email
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" [routerLink] = "['/profile']"  fragment="passwordSection">
+                  <a class="nav-link" [routerLink] = "['/profile']" fragment="pinSection">
+                    <i class="bi-key nav-icon"></i> Pin
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [routerLink] = "['/profile']" fragment="passwordSection">
                     <i class="bi-key nav-icon"></i> Password
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" [routerLink] = "['/profile']"  fragment="connectedAccountsSection">
+                  <a class="nav-link" [routerLink] = "['/profile']" fragment="connectedAccountsSection">
                     <i class="bi-diagram-3 nav-icon"></i> Connected Products 
                   </a>
                 </li>
@@ -96,7 +101,7 @@
 
               <!-- Avatar -->
               <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="editAvatarUploaderModal">
-                <img id="editAvatarImgModal" class="avatar-img" src="./assets/img/160x160/img6.jpg" alt="Image Description">
+                <img id="editAvatarImgModal" class="avatar-img" src="../../../assets/img/160x160/img1.jpg" alt="Image Description">
 
                 <input type="file" class="js-file-attach avatar-uploader-input" id="editAvatarUploaderModal" data-hs-file-attach-options='{
                             "textTarget": "#editAvatarImgModal",
@@ -116,7 +121,7 @@
             <!-- End Card -->
 
             <!-- Card -->
-            <div class="card">
+            <div id="basicInformationSection" class="card">
               <div class="card-header">
                 <h2 class="card-title h4">Basic information</h2>
               </div>
@@ -131,7 +136,7 @@
 
                     <div class="col-sm-9">
                       <div class="input-group input-group-sm-vertical">
-                        <input type="text" class="form-control" formControlName="firstname" id="firstNameLabel" >
+                        <input type="text" class="form-control" formControlName="firstname" id="firstNameLabel">
                         <input type="text" class="form-control" formControlName="lastname" id="lastNameLabel">
                       </div>
                     </div>
@@ -197,7 +202,11 @@
                   <!-- End Form -->
 
                   <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Save changes
+                      <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </button>
                   </div>
                 </form>
                 <!-- End Form -->
@@ -237,6 +246,108 @@
 
                   <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+                <!-- End Form -->
+              </div>
+              <!-- End Body -->
+            </div>
+            <!-- End Card -->
+
+            <!-- Card -->
+            <div id="pinSection" class="card">
+              <div class="card-header">
+                <h4 class="card-title">Set Pin</h4>
+              </div>
+
+              <!-- Body -->
+              <div class="card-body">
+                <!-- Form -->
+                <form id="setPinForm">
+                  <!-- Form -->
+                  <div class="row mb-4"> 
+                    <label for="currentPasswordLabel" class="col-sm-3 col-form-label form-label">Enter Pin</label>
+
+                    <div class="col-sm-9">
+                      <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange($event)" *ngIf="showOtpComponent" [config]="config"> </ng-otp-input>
+                      <!-- <span *ngIf="otp" class="o-t-p">Entered pin :-{{otp}}</span> -->
+                    </div>
+                  </div>
+                  <!-- End Form -->
+
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="newPassword" class="col-sm-3 col-form-label form-label">Renter Pin</label>
+                    <div class="col-sm-9">
+                      <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange2($event)" *ngIf="showOtpComponent" [config]="config"> </ng-otp-input>
+                      <!-- <span *ngIf="otp" class="o-t-p">Entered pin :-{{otp2}}</span> -->
+                    </div>
+                  </div>
+                  <!-- End Form -->                  
+
+                  <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" (click)="setPin()" [disabled]="loading || (otpLength == null && otpLength2 < 4) ||  otpLength < 4">Submit
+                      <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </button>
+                  </div>
+                </form>
+                <!-- End Form -->
+              </div>
+              <!-- End Body -->
+            </div>
+            <!-- End Card -->
+
+            <!-- Card -->
+            <div id="pinSection" class="card">
+              <div class="card-header">
+                <h4 class="card-title">Change Pin</h4>
+              </div>
+
+              <!-- Body -->
+              <div class="card-body">
+                <!-- Form -->
+                <form id="changePinForm">
+                  <!-- Form -->
+                  <div class="row mb-4"> 
+                    <label for="currentPinLabel" class="col-sm-3 col-form-label form-label">Enter current Pin</label>
+
+                    <div class="col-sm-9">
+                      <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange3($event)" *ngIf="showOtpComponent" [config]="config"> </ng-otp-input>
+                      <!-- <span *ngIf="otp" class="o-t-p">Entered pin :-{{otp}}</span> -->
+                    </div>
+                  </div>
+                  <!-- End Form -->
+
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="enterNewPin" class="col-sm-3 col-form-label form-label">Enter new Pin</label>
+
+                    <div class="col-sm-9">
+                      <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange4($event)" *ngIf="showOtpComponent" [config]="config"> </ng-otp-input>
+                      <!-- <span *ngIf="otp" class="o-t-p">Entered pin :-{{otp2}}</span> -->
+                    </div>
+                  </div>
+                  <!-- End Form -->
+
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="reEnterNewPassword" class="col-sm-3 col-form-label form-label">Renter new Pin</label>
+
+                    <div class="col-sm-9">
+                      <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange5($event)" *ngIf="showOtpComponent" [config]="config"> </ng-otp-input>
+                      <!-- <span *ngIf="otp" class="o-t-p">Entered pin :-{{otp2}}</span> -->
+                    </div>
+                  </div>
+                  <!-- End Form -->                  
+
+                  <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" (click)="changePin()" [disabled]="loading || (otpLength4 == 0 &&  otpLength5 == 0) || (otpLength4 < 4 &&  otpLength5 < 4)">Submit
+                      <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    </button>
                   </div>
                 </form>
                 <!-- End Form -->

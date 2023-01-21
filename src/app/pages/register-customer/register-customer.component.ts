@@ -1,8 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { iDeactivateComponent } from 'src/app/services/form-check.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 declare var HSFormSearch: any;
 declare var HSBsDropdown: any;
@@ -22,20 +25,23 @@ export class RegisterCustomerComponent implements OnInit, iDeactivateComponent {
   response: any;
   loading: boolean = false;
   //clicked = false;
+  img!: string;
 
-  constructor(private dataService: DataService, private toastService: ToastService) { }
+  constructor(private dataService: DataService, private toastService: ToastService,
+    private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loadScript();
 
     this.registerForm = new FormGroup({
-      image: new FormControl('', Validators.required),
+      img: new FormControl('', Validators.required),
       firstname: new FormControl('', Validators.required),
       lastname: new FormControl('', Validators.required),
       email: new FormControl('', Validators.required),
       phoneno: new FormControl('', Validators.required),
       gender: new FormControl('', Validators.required),
       location: new FormControl('', Validators.required),
+      BVN_num: new FormControl('', Validators.compose([Validators.minLength(11), Validators.maxLength(11)])),
       organization: new FormControl('',),
       accountType: new FormControl('', Validators.required),
       city: new FormControl('',),
@@ -43,6 +49,9 @@ export class RegisterCustomerComponent implements OnInit, iDeactivateComponent {
       country: new FormControl(''),
       address: new FormControl(''),
     })
+
+    //this.checkImg();
+    
   }
 
   canExit(){
@@ -54,48 +63,65 @@ export class RegisterCustomerComponent implements OnInit, iDeactivateComponent {
     }
   }
 
+  uploadImg(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.registerForm.get('img')?.setValue(event.target.files[0]);
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  checkImg(){
+    const img  = (document.getElementById('avatarImg') as HTMLImageElement).src;
+    this.img = img;
+    console.log(this.img);
+  }
+
   register() {
     console.log(this.registerForm.value);
     this.loading = true;
     const img  = (document.getElementById('avatarImg') as HTMLImageElement).src;
    console.log(img);
 
+   if(img == null || img == ""){
+    this.toastService.showError('Image can not be empty', 'Error');
+   }else {
+
+   }
+
    const blob = this.dataURItoBlob4(img);
     const formData = new FormData();
     console.log(blob);
     const fileName = new Date().getTime() + '.png';
-    formData.append('image2', blob, fileName);
+    const form = this.registerForm.value;
+    formData.append('photo', blob, fileName);
 
-    Object.entries(formData).forEach(([key, value]) => {
-      formData.append(key, this.registerForm.value[key]);
+    Object.keys(form).forEach((key) => {
+      formData.append(key, form[key]);
     });
-
-    // Object.keys(formData).forEach((key) => {
-    //   formData.append(key, this.registerForm.value[key]);
-    // });
 
     formData.forEach((value,key) => {
-      console.log(key+" "+value)
+      console.log(key+" "+value);
     });
-
-    
-
-
-
-    this.dataService.registerCustomer(this.registerForm.value).subscribe((res:any)=>{
+    const serviceName = "customer/register";
+    const url = environment.app.baseUrl + environment.app.path + serviceName;;
+    //this.dataService.registerCustomer(formData)
+    this.http.post(url, formData).pipe(finalize(() => { }))
+    .subscribe((res:any)=>{
       this.response = res;
       console.log(this.response);
       this.loading = false;
-      if(res.success == true){
+      if(res.success == true){ 
         this.toastService.showSuccess(this.response.message, 'Success');
         //document.getElementById("successMessageContent")!.style.display = 'block'
       }else{
         this.toastService.showError(this.response.message, 'Error');
-      }
-      
+      }      
     }, (error: any)=>{
       this.loading = false;
-      this.toastService.showError(error, 'Error');
+      this.toastService.showError(error.statusText, 'Error');
       console.log(error);
     });
   }

@@ -16,8 +16,9 @@
 
     <div class="modal-top-cover-icon">
     <span class="icon icon-lg icon-light icon-circle icon-centered shadow-sm">
-        <i class="bi-receipt fs-2"></i>
+        <img class="avatar" src="{{img}}" alt="Logo">
     </span>
+    
     </div>
 
     <!-- Body -->
@@ -67,8 +68,8 @@
         </li>
         <li class="list-group-item text-dark">
         <div class="d-flex justify-content-between align-items-center">
-            <span>Phone number:</span>
-            <span>{{userId}}</span>
+            <span>Plan Name:</span>
+            <span>{{planName}}</span>
         </div>
         </li>
         <li class="list-group-item list-group-item-light text-dark">
@@ -81,12 +82,12 @@
 
     <div class="d-flex justify-content-end gap-3">
         <button class="btn btn-white btn-sm" (click)="openPdf(content)"><i class="bi-file-earmark-arrow-down-fill me-1"></i> PDF</button>
-        <button class="btn btn-white btn-sm" (click)="printPdf(content)"><i class="bi-printer-fill me-1"></i> Print Details</button>
+        <button class="btn btn-white btn-sm" (click)="printPdf(content)"><i class="bi-printer-fill me-1"></i> Print Receipt</button>
     </div>
 
     <hr class="my-5">
 
-    <p class="modal-footer-text">If you have any questions, please contact us at <a class="link" href="mailto:support@avante-cs.com">support@avante-cs.com</a> or call at <a class="link text-nowrap" href="tel:+2348188775534">+234 818 877 5534</a></p>
+    <p class="modal-footer-text">If you have any questions, please contact us at <a class="link" href="mailto:support@moloyal.com">support@moloyal.com</a> or call at <a class="link text-nowrap" href="tel:+2348188775534">+234 818 877 5534</a></p>
     </div>
     <!-- End Body -->
 </div>
