@@ -32,6 +32,9 @@
               </a>
             </div>
 
+            <span class="dropdown-header mt-4">Savings</span>
+            <small class="bi-three-dots nav-subtitle-replacer"></small>
+
 
             <!-- Collapse -->
             <div class="navbar-nav nav-compact">
@@ -100,6 +103,48 @@
 
             </div>
             <!-- End Collapse -->
+
+            <span class="dropdown-header mt-4">Event Ticketing</span>
+            <small class="bi-three-dots nav-subtitle-replacer"></small>
+
+
+
+
+            <div id="navbarVerticalMenuPagesMenu2">
+              <!-- Collapse -->
+              <div class="nav-item">
+                <a class="nav-link dropdown-toggle " href="#eventMenu" role="button" data-bs-toggle="collapse" data-bs-target="#eventMenu" aria-expanded="false" aria-controls="eventMenu">
+                  <i class="bi-people nav-icon"></i>
+                  <span class="nav-link-title">Events</span>
+                </a>
+
+                <div id="eventMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu2">
+                  <a class="nav-link " routerLink="/customers">View</a>
+                  <a class="nav-link " routerLink="/ticket/create">Create</a>
+                </div>
+              </div>
+              <!-- End Collapse -->
+
+              <!-- Collapse -->
+              <!-- <div class="nav-item">
+                <a class="nav-link dropdown-toggle " href="#TransactionsMenu" role="button" data-bs-toggle="collapse" data-bs-target="#TransactionsMenu" aria-expanded="false" aria-controls="TransactionsMenu">
+                  <i class="bi-people nav-icon"></i>
+                  <span class="nav-link-title">Transactions</span>
+                </a>
+
+                <div id="TransactionsMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu2">
+                  <a class="nav-link" routerLink="/transactions">All</a>
+                  <a class="nav-link" [routerLink] = "['/transactions']"  fragment="savings">Savings</a>
+                  <a class="nav-link" [routerLink] = "['/transactions']"  fragment="withdrawals">Withdrawals</a>
+                </div>
+              </div> -->
+              <!-- End Collapse -->
+
+            </div>
+            <!-- End Collapse -->
+
+
+
           </div>
 
         </div>

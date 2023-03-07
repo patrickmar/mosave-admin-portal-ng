@@ -37,6 +37,8 @@ import { PinComponent } from './modals/pin/pin.component';
 import { TransactionsTableComponent } from './components/transactions-table/transactions-table.component';
 import { TransactionsHeaderComponent } from './components/transactions-header/transactions-header.component';
 import { TransactionsFooterComponent } from './components/transactions-footer/transactions-footer.component';
+import { CreateComponent } from './pages/ticketing/create/create.component';
+import { UpdateComponent } from './pages/ticketing/update/update.component';
 
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
@@ -52,6 +54,8 @@ const appRoutes: Routes = [
   {path: "customer/:sn/details", component: DetailsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "profile", component: ProfileComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "transactions", component: TransactionsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "ticket/create", component: CreateComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "ticket/:sn/update", component: UpdateComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "page-not-found", component: PageNotFoundComponent},
   { path: '**', redirectTo: 'page-not-found'},
 ]
@@ -80,6 +84,8 @@ const appRoutes: Routes = [
     TransactionsTableComponent,
     TransactionsHeaderComponent,
     TransactionsFooterComponent,
+    CreateComponent,
+    UpdateComponent,
   ],
   imports: [
     BrowserModule,
