@@ -53,7 +53,7 @@ const appRoutes: Routes = [
   {path: "customer/:sn/trans-history", component: TransactionHistoryComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "customer/:sn/details", component: DetailsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "profile", component: ProfileComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
-  {path: "transactions", component: TransactionsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "transactions/:type", component: TransactionsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "ticket/create", component: CreateComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "ticket/:sn/update", component: UpdateComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "page-not-found", component: PageNotFoundComponent},

@@ -186,16 +186,16 @@
           <!-- Nav -->
           <ul class="nav nav-tabs page-header-tabs">
             <li class="nav-item">
-              <a class="nav-link active" id="all-tab" data-bs-toggle="tab" href="#all" role="tab">All Transactions</a>
+              <a [ngClass]="transactionType === '' || transactionType === 'all' ? 'nav-link active' : 'nav-link' " id="all-tab" data-bs-toggle="tab" href="#all" role="tab">All Transactions</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " id="savings-tab" data-bs-toggle="tab" href="#savings" role="tab">Savings</a>
+              <a [ngClass]="transactionType === 'savings' ? 'nav-link active' : 'nav-link' " id="savings-tab" data-bs-toggle="tab" href="#savings" role="tab">Savings</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="withdrawals-tab" data-bs-toggle="tab" href="#withdrawals" role="tab">Withdrawals</a>
+              <a [ngClass]="transactionType === 'withdrawals' ? 'nav-link active' : 'nav-link' " id="withdrawals-tab" data-bs-toggle="tab" href="#withdrawals" role="tab">Withdrawals</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="commissions-tab" data-bs-toggle="tab" href="#commissions" role="tab">Commissions</a>
+              <a [ngClass]="transactionType === 'commissions' ? 'nav-link active' : 'nav-link' " id="commissions-tab" data-bs-toggle="tab" href="#commissions" role="tab">Commissions</a>
             </li>
           </ul>
           <!-- End Nav -->

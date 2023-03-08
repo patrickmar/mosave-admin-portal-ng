@@ -63,9 +63,12 @@
                 </a>
 
                 <div id="TransactionsMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                  <a class="nav-link" routerLink="/transactions">All</a>
-                  <a class="nav-link" [routerLink] = "['/transactions']"  fragment="savings">Savings</a>
-                  <a class="nav-link" [routerLink] = "['/transactions']"  fragment="withdrawals">Withdrawals</a>
+                  <a class="nav-link" routerLink="/transactions/all">All</a>
+                  <a class="nav-link" [routerLink] = "['/transactions/savings']">Savings</a>
+                  <a class="nav-link" [routerLink] = "['/transactions/withdrawals']">Withdrawals</a>
+                  <a class="nav-link" [routerLink] = "['/transactions/commissions']">Withdrawals</a>
+                  <!-- <a class="nav-link" [routerLink] = "['/transactions']"  fragment="savings">Savings</a>
+                  <a class="nav-link" [routerLink] = "['/transactions']"  fragment="withdrawals">Withdrawals</a> -->
                 </div>
               </div>
               <!-- End Collapse -->

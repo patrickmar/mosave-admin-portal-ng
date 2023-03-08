@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, QueryList, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { forkJoin, Subject } from 'rxjs';
@@ -33,6 +34,7 @@ export class TransactionsComponent implements OnInit {
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
 
+  transactionType!: any;
   records!: Array<any>;
   recordsExist: boolean = false;
   user: any;
@@ -95,7 +97,7 @@ export class TransactionsComponent implements OnInit {
 
   constructor(private dataService: DataService, private datePipe: DatePipe,
     private receiptService: ReceiptService, private modalService: NgbModal,
-    private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
+    private cdr: ChangeDetectorRef, private ngZone: NgZone, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.jsInit();
@@ -168,6 +170,11 @@ export class TransactionsComponent implements OnInit {
   ngOnDestroy(): void {
     // We will unsubscribe the even
     this.dtTrigger.unsubscribe();
+  }
+
+  getCustomerId() {
+    this.transactionType = this.route.snapshot.paramMap.get('type');
+    console.log(this.transactionType);
   }
 
   displayToConsole(): void {
