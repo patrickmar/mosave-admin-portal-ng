@@ -13,6 +13,7 @@ declare var HSCore: any;
 })
 export class CreateComponent implements OnInit {
   tableHead = ["Name", "Price", "Disc. Price", "Quantity", "Action"];
+  eventCategory = ["Festival", "Conference", "Seminar", "Executive Meeting", "Webinar", "Comedy", "Gala Night", "Musical show", "Trade Fair", "Others",]
 
   constructor() { }
 
@@ -67,7 +68,12 @@ export class CreateComponent implements OnInit {
         // =======================================================
         new HSAddField('.js-add-field2', {
           addedField: (field:any) => {
-            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'))
+            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'));
+            HSCore.components.HSFlatpickr.init('#eventDateRangeLabel3');
+            const eventDateRange3 = HSCore.components.HSFlatpickr.getItem('eventDateRangeLabel3');
+            
+            HSCore.components.HSFlatpickr.init('#eventDateRangeLabel4');
+            const eventDateRange4 = HSCore.components.HSFlatpickr.getItem('eventDateRangeLabel4');
           }
         })
 
@@ -84,6 +90,14 @@ export class CreateComponent implements OnInit {
         // =======================================================
 
         new HSQuantityCounter('.js-quantity-counter-input')
+
+        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel');
+        const eventDateRange = HSCore.components.HSFlatpickr.getItem('eventDateRangeLabel');
+        
+        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel2');
+        const eventDateRange2 = HSCore.components.HSFlatpickr.getItem('eventDateRangeLabel2');
+
+        
 
 
         // INITIALIZATION OF DROPZONE

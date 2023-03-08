@@ -34,6 +34,7 @@
               "./src/assets/vendor/jsvectormap/dist/css/jsvectormap.min.css",
               "./src/assets/vendor/swiper/swiper-bundle.min.css", 
               "./src/assets/vendor/quill/dist/quill.snow.css",
+              "./src/assets/vendor/flatpickr/dist/flatpickr.min.css",
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",  
               "node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css",
               "node_modules/datatables.net-select-dt/css/select.dataTables.css",
@@ -61,6 +62,8 @@
 
               "./src/assets/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js",
               "./src/assets/vendor/fslightbox/index.js",
+
+              "./src/assets/vendor/flatpickr/dist/flatpickr.min.js",
 
               "node_modules/jszip/dist/jszip.js",
               "node_modules/datatables.net-buttons/js/dataTables.buttons.js",
