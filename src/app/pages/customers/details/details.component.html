@@ -526,6 +526,22 @@
                 <!-- Body -->
                 <div class="card-body">
                   <form [formGroup]="withdrawalForm">
+
+                    <!-- Form Switch -->
+                    <div class="mb-4">
+                    <label class="row form-check form-switch" for="switch2">
+                      <span class="col-8 col-sm-9 ms-0">
+                          <span class="text-dark">Withdraw to bank <i class="bi-question-circle text-body ms-1"
+                                  data-bs-toggle="tooltip" data-bs-placement="top"
+                                  title="Transfer money from Moloyal account to customer bank account"></i></span>
+                      </span>
+                      <span class="col-4 col-sm-3 text-end">
+                          <input type="checkbox" class="form-check-input" (change)="switchWithdrawType()" formControlName="bankWithdrawal" id="switch2">
+                      </span>
+                  </label>
+                </div>
+                  <!-- End Form Switch -->
+
                     <div class="row">
                       <div class="col-sm-6">
                         <!-- Form -->
@@ -586,6 +602,40 @@
                         <!-- End Form -->
                       </div>
                       <!-- End Col -->
+
+                      
+                    </div>
+
+                    <div class="row" *ngIf="bankWithdrawal == true" formGroupName="bank">
+                      <div class="col-sm-6">
+                        <div class="mb-4">
+                          <label for="bankLabel" class="form-label">Bank <i class="bi-question-circle text-body ms-1"
+                              data-bs-toggle="tooltip" data-bs-placement="top"
+                              title="Select the bank to transfer to?"></i></label>
+  
+                          <!-- Select -->
+                          <div class="tom-select-custom">
+                              <select class="js-select form-select" autocomplete="off" id="bankLabel" formControlName="bank_code"
+                                  data-hs-tom-select-options='{
+                            "placeholder": "Select Bank"
+                          }'>
+                                  <option *ngFor="let b of allBanks; let i = index;" [value]="b?.code">{{b?.name}}</option>
+                              </select>
+                          </div>
+                          <!-- End Select -->
+                      </div>
+                      <!-- End Form -->
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="mb-4">
+                          <label for="accountNoLabel" class="form-label">Account Number</label>
+                          <input type="text" class="form-control" (keyup)="verifyAccount($event)" formControlName="account_number" id="accountNoLabel">
+                        <small [ngClass]="error == true ? 'text-danger' : 'form-text' " *ngIf="verifiedAcctName">{{verifiedAcctName}}</small>
+                        </div>
+                        <!-- End Form -->
+
+                      </div>
                     </div>
 
                     <!-- Form -->

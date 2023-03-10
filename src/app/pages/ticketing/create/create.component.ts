@@ -17,19 +17,24 @@ export class CreateComponent implements OnInit {
   eventTypes = ["Festival", "Conference", "Seminar", "Executive Meeting", "Webinar", "Comedy", "Gala Night", "Musical show", "Trade Fair", "Others",]
   ticketForm: FormGroup;
   showEndDate: boolean = false;
-  value = 0;
+  maxQty = 10000;
+  showSeat: boolean = false;
 
   constructor(private fb: FormBuilder) { 
     this.ticketForm = this.fb.group({  
       eventTitle: ['', [Validators.required, Validators.minLength(5)]],  
       venue: ['', [Validators.required, Validators.minLength(5)]], 
-      merchantName: ['', [Validators.required, Validators.minLength(5)]],
+      //merchantName: ['', [Validators.required, Validators.minLength(5)]],
       submerchantId: new FormControl(parseInt(''), Validators.required),
       paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
-      vendor: ['', [Validators.required, Validators.minLength(5)]],
+      vendor: ['', [Validators.minLength(5)]],
       chargesBearer: ['', [Validators.required, Validators.minLength(5)]],
       eventType: ['', [Validators.required, Validators.minLength(5)]],
+      description: ['', [Validators.required, Validators.minLength(5)]],
+      tags: ['', [Validators.minLength(5)]],
+      SeatCapacity: new FormControl(0, Validators.required),
       enableEvent: false,
+      enableSeat: false,
       ticketCategories: this.fb.array([this.newCategory()]),
       start: this.fb.array([]),
       end: this.fb.array([]),
@@ -49,6 +54,14 @@ export class CreateComponent implements OnInit {
       this.showEndDate = true;
     } else {
       this.showEndDate = false;
+    }
+  }
+
+  displaySeat(){
+    if(this.showSeat == false){
+      this.showSeat = true;
+    } else {
+      this.showSeat = false;
     }
   }
 
@@ -77,7 +90,8 @@ export class CreateComponent implements OnInit {
       qty: this.fb.control(10, Validators.compose([
         Validators.maxLength(6),
         Validators.minLength(1),
-        Validators.min(10)
+        Validators.min(1),
+        Validators.max(this.maxQty)
       ])),
       discountPrice: this.fb.control('', Validators.compose([
         Validators.maxLength(10),
@@ -115,18 +129,58 @@ export class CreateComponent implements OnInit {
 
   
 
-  handleMinus(index: number) {
-    const newValue = this.ticketForm.get("ticketCategories")?.value[index]?.qty - 1;
-    this.ticketCategories().at(index).get('qty')?.setValue(newValue);
+  handleMinus(e: any, index: number) {
+    let value = this.ticketForm.get("ticketCategories")?.value[index]?.qty;
+    if (value === 1) {
+      e.preventDefault();
+    } else {
+      const newValue = value - 1;
+      this.ticketCategories().at(index).get('qty')?.setValue(newValue);
+    }
   }
-  handlePlus(index: number) {
-    const newValue = this.ticketForm.get("ticketCategories")?.value[index]?.qty + 1;
-    this.ticketCategories().at(index).get('qty')?.setValue(newValue);
+  handlePlus(e: any, index: number) {
+    let value = this.ticketForm.get("ticketCategories")?.value[index]?.qty;
+    if (value === this.maxQty) {
+      e.preventDefault();
+    } else {
+      const newValue = value + 1;
+      this.ticketCategories().at(index).get('qty')?.setValue(newValue);
+    }
   }
      
-  onSubmit() {  
+  onSubmit() {
+    var val = $("#quillArea .ql-editor").html();
+    this.ticketForm.get('description')?.setValue(val);  
     console.log(this.ticketForm.value);
   }  
+
+  merchantList = [
+    {
+      id: 1,
+      name: 'BME',
+      merchantId: 201501
+    },
+    {
+      id: 2,
+      name: 'Dangote',
+      merchantId: 201502
+    },
+    {
+      id: 3,
+      name: 'Fair acres',
+      merchantId: 201503
+    },
+    {
+      id: 4,
+      name: 'Muson',
+      merchantId: 201504
+    },
+    {
+      id: 5,
+      name: 'Flytime',
+      merchantId: 201505
+    },
+  ]
 
   jsInit() {
 

@@ -7,7 +7,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-no-gutter">
                         <li class="breadcrumb-item"><a class="breadcrumb-link"
-                                href="./ecommerce-products.html">Events</a></li>
+                            routerLink="/ticket/view">Events</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Create Ticket</li>
                     </ol>
                 </nav>
@@ -15,6 +15,10 @@
                 <h1 class="page-header-title">Create Ticket</h1>
             </div>
             <!-- End Col -->
+            <div class="col-sm-auto">
+                <a class="btn btn-primary" routerLink="/ticket/view">View All Tickets</a>
+              </div>
+              <!-- End Col -->
         </div>
         <!-- End Row -->
     </div>
@@ -67,10 +71,23 @@
                             <div class="mb-4">
                                 <label for="merchantLabel" class="form-label">Merchant</label>
 
-                                <div class="input-group">
+                                <!-- Select -->
+                        <div class="tom-select-custom">
+                            <select class="js-select form-select" autocomplete="off" id="merchantLabel" formControlName="submerchantId"
+                                data-hs-tom-select-options='{
+                          "searchInDropdown": false,
+                          "hideSearch": false,
+                          "placeholder": "Select Merchant"
+                        }'>
+                                <option *ngFor="let m of merchantList; let i = index;" [value]="m?.merchantId">{{m?.name}}</option>
+                            </select>
+                        </div>
+                        <!-- End Select -->
+
+                                <!-- <div class="input-group">
                                     <input type="text" class="form-control" formControlName="merchantName" id="merchantLabel" autocomplete="off"
                                         placeholder="merchant ID" aria-label="merchant">                                    
-                                </div>
+                                </div> -->
 
                                 
                             </div>
@@ -84,7 +101,7 @@
 
                     <!-- Quill -->
                     <div class="quill-custom">
-                        <div class="js-quill" style="height: 15rem;" data-hs-quill-options='{
+                        <div class="js-quill" id="quillArea" style="height: 15rem;" data-hs-quill-options='{
                    "placeholder": "Type your description...",
                     "modules": {
                       "toolbar": [
@@ -93,6 +110,8 @@
                     }
                    }'>
                         </div>
+
+                        <textarea formControlName="description" style="display:none" id="textArea"></textarea>
                     </div>
                     <!-- End Quill -->
                 </div>
@@ -164,7 +183,7 @@
                 <div class="card-body">
                     <h6 class="text-cap">Start Date</h6>
 
-                    <div >
+                    <div>
                         <ng-container formArrayName="start">
                             <div class="row mb-4" *ngFor="let s of startDate().controls; let id=index">
                                 <ng-container [formGroupName]="id">
@@ -203,6 +222,7 @@
 
                         <!-- start End date Input Field   -->
                         <div [hidden]="!showEndDate">
+                            <h6 class="text-cap">End Date</h6>
                             <ng-container formArrayName="end">
                                 <div class="row mb-4" *ngFor="let e of endDate().controls; let ix=index">
                                     <ng-container [formGroupName]="ix">
@@ -335,13 +355,13 @@
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <input class="form-control form-control-quantity-counter"
-                                                    type="text" formControlName="qty">
+                                                    type="number" formControlName="qty">
                                             </div>
                                             <!-- End Col -->
 
                                             <div class="col-auto">
                                                 <a class="btn btn-white btn-xs btn-icon rounded-circle"
-                                                    type="button" (click)="handleMinus(i)">
+                                                    type="button" (click)="handleMinus($event, i)">
                                                     <svg width="8" height="2" viewBox="0 0 8 2" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
                                                         <path
@@ -350,7 +370,7 @@
                                                     </svg>
                                                 </a>
                                                 <a class=" btn btn-white btn-xs btn-icon rounded-circle"
-                                                type="button" (click)="handlePlus(i)">
+                                                type="button" (click)="handlePlus($event, i)">
                                                     <svg width="8" height="8" viewBox="0 0 8 8" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
                                                         <path
@@ -437,20 +457,7 @@
                     </div>
                     <!-- End Form -->
 
-                    <hr class="my-4">
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="availabilitySwitch1">
-                        <span class="col-8 col-sm-9 ms-0">
-                            <span class="text-dark">Enable Event <i class="bi-question-circle text-body ms-1"
-                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Activate event for purchase."></i></span>
-                        </span>
-                        <span class="col-4 col-sm-3 text-end">
-                            <input type="checkbox" class="form-check-input" formControlName="enableEvent" id="availabilitySwitch1">
-                        </span>
-                    </label>
-                    <!-- End Form Switch -->
+                    
                 </div>
                 <!-- Body -->
             </div>
@@ -495,11 +502,53 @@
                         <!-- End Select -->
                     </div>
                     <!-- Form -->
+                    <div class="mb-4">
+                        <label for="tagsLabel" class="form-label">Tags (optional)</label>
 
-                    <label for="tagsLabel" class="form-label">Tags</label>
-
-                    <input type="text" class="form-control" id="tagsLabel" placeholder="Enter tags here"
+                    <input type="text" class="form-control" id="tagsLabel" placeholder="Enter tags here" formControlName="tags"
                         aria-label="Enter tags here">
+
+                        <small class="form-text">Tags should be separated by comma.</small>
+
+                    </div>                   
+
+                
+                        <hr class="my-4">
+
+                    <!-- Form Switch -->
+                    <div class="mb-4">
+                    <label class="row form-check form-switch" for="availabilitySwitch1">
+                        <span class="col-8 col-sm-9 ms-0">
+                            <span class="text-dark">Enable Seat Arrangement <i class="bi-question-circle text-body ms-1"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Enable the option to generate a seat number for customers"></i></span>
+                        </span>
+                        <span class="col-4 col-sm-3 text-end">
+                            <input type="checkbox" class="form-check-input" (change)="displaySeat()"  formControlName="enableSeat" id="availabilitySwitch1">
+                        </span>
+                    </label>
+                    <!-- End Form Switch -->
+                </div>
+
+                    <div class="mb-4" *ngIf="showSeat">
+                        <label for="capacityLabel" class="form-label">Enter Seat Capacity</label>
+                    <input type="number" class="form-control" id="capacityLabel" placeholder="1000" formControlName="SeatCapacity">
+                    </div>
+
+                    <!-- Form Switch -->
+                    <!-- <div class="mb-4"></div> -->
+                    <label class="row form-check form-switch" for="availabilitySwitch2">
+                        <span class="col-8 col-sm-9 ms-0">
+                            <span class="text-dark">Enable Event <i class="bi-question-circle text-body ms-1"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Activate event for purchase."></i></span>
+                        </span>
+                        <span class="col-4 col-sm-3 text-end">
+                            <input type="checkbox" class="form-check-input" formControlName="enableEvent" id="availabilitySwitch2">
+                        </span>
+                    </label>
+                    <!-- End Form Switch -->
+
                 </div>
                 <!-- Body -->
             </div>

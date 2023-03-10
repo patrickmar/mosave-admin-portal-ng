@@ -103,6 +103,7 @@ export class TransactionsComponent implements OnInit {
     this.jsInit();
     this.jsOnLoad();
     this.getTableHead();
+    this.getTransactionType();
     //this.dtOptions
     var time = new Date().getTime();
 
@@ -172,7 +173,7 @@ export class TransactionsComponent implements OnInit {
     this.dtTrigger.unsubscribe();
   }
 
-  getCustomerId() {
+  getTransactionType() {
     this.transactionType = this.route.snapshot.paramMap.get('type');
     console.log(this.transactionType);
   }

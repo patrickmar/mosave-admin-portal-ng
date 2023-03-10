@@ -10,6 +10,16 @@ export class DataService {
 
   constructor(private httpService: HttpService) { }
 
+  //get request from paystack
+  // Get Agent terms and conditions
+  public getAllBanks() {
+    return this.httpService.getPaystack('bank');
+  }
+
+  public verifyBankAccount(options: string) {
+    return this.httpService.getPaystack('bank/resolve?'+ options);
+  }
+
   // ALL GET REQUEST
   // get all mosave customers
   public getAllcustomers(): Observable<any> {

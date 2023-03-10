@@ -239,7 +239,8 @@
 
         <!-- Tab Content -->
         <div class="tab-content" id="transactionsTabContent">
-          <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+          <div [ngClass]="transactionType === '' || transactionType === 'all' ? 'tab-pane fade show active' : 'tab-pane fade' "
+            id="all" role="tabpanel" aria-labelledby="all-tab">
         <!-- Header -->
         <app-transactions-header 
         [dateId]="1" 
@@ -310,7 +311,7 @@
       </div>
 
       <!-- Tab Panel -->
-      <div class="tab-pane fade" id="savings" role="tabpanel" aria-labelledby="savings-tab">
+      <div [ngClass]="transactionType === 'savings' ? 'tab-pane fade show active' : 'tab-pane fade' " id="savings" role="tabpanel" aria-labelledby="savings-tab">
          <!-- Header -->
          <app-transactions-header 
          [dateId]="2" 
@@ -385,7 +386,7 @@
       <!-- End Tab Panel -->
 
       <!-- Tab Panel -->
-      <div class="tab-pane fade" id="withdrawals" role="tabpanel" aria-labelledby="withdrawals-tab">
+      <div [ngClass]="transactionType === 'withdrawals' ? 'tab-pane fade show active' : 'tab-pane fade' " id="withdrawals" role="tabpanel" aria-labelledby="withdrawals-tab">
          <!-- Header -->
          <app-transactions-header 
          [dateId]="3"
@@ -458,7 +459,7 @@
       <!-- End Tab Panel -->
 
       <!-- Tab Panel -->
-      <div class="tab-pane fade" id="commissions" role="tabpanel" aria-labelledby="commissions-tab">
+      <div [ngClass]="transactionType === 'commissions' ? 'tab-pane fade show active' : 'tab-pane fade' " id="commissions" role="tabpanel" aria-labelledby="commissions-tab">
          <!-- Header -->
          <app-transactions-header [dateId]="4"
          [tableName]="'commissionsDatatable'" 

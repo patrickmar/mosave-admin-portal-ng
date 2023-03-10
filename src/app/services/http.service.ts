@@ -45,4 +45,14 @@ export class HttpService {
       //this.dismissLoader();
     }))
   }
+
+  getPaystack(serviceName: string) {
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' +environment.paystack.secretKey,
+    });
+    const options = { headers: headers, withCredentials: false };
+    const url = environment.paystack.url + serviceName;
+    return this.http.get(url, options).pipe(finalize(() => {
+    }))
+  }
 }

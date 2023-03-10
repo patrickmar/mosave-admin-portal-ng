@@ -39,6 +39,7 @@ import { TransactionsHeaderComponent } from './components/transactions-header/tr
 import { TransactionsFooterComponent } from './components/transactions-footer/transactions-footer.component';
 import { CreateComponent } from './pages/ticketing/create/create.component';
 import { UpdateComponent } from './pages/ticketing/update/update.component';
+import { ViewComponent } from './pages/ticketing/view/view.component';
 
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
   {path: "profile", component: ProfileComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "transactions/:type", component: TransactionsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "ticket/create", component: CreateComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "ticket/view", component: ViewComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "ticket/:sn/update", component: UpdateComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "page-not-found", component: PageNotFoundComponent},
   { path: '**', redirectTo: 'page-not-found'},
@@ -86,6 +88,7 @@ const appRoutes: Routes = [
     TransactionsFooterComponent,
     CreateComponent,
     UpdateComponent,
+    ViewComponent,
   ],
   imports: [
     BrowserModule,

@@ -50,6 +50,11 @@ export class DetailsComponent implements OnInit {
   data: any;
   showOtpComponent = true;
   otpLength: any;
+  allBanks: Array<any> | any;
+  spinner: boolean = false;
+  verifiedAcctName!: string;
+  error: boolean = false;
+  bankWithdrawal: boolean = false;
 
   @ViewChild('ngOtpInput', { static: false }) ngOtpInput: any;
   config = {
@@ -65,15 +70,15 @@ export class DetailsComponent implements OnInit {
   };
 
   networks = [
-    {id: 1, name: '9MOBILE'},
-    {id: 2, name: 'AIRTEL'},
-    {id: 3, name: 'GLO'},
-    {id: 4, name: 'MTN'}
+    { id: 1, name: '9MOBILE' },
+    { id: 2, name: 'AIRTEL' },
+    { id: 3, name: 'GLO' },
+    { id: 4, name: 'MTN' }
   ]
 
   genders = [
-    {id: 1, name: 'Female'},
-    {id: 2, name: 'Male'},
+    { id: 1, name: 'Female' },
+    { id: 2, name: 'Male' },
   ]
 
   setVal(val: string) {
@@ -91,6 +96,7 @@ export class DetailsComponent implements OnInit {
     this.getCustomerTrxs();
     this.getCustomerPlans();
     this.getSavingPlans();
+    this.getAllBanks();
     console.log(this.user);
     console.log(this.customer);
   }
@@ -134,7 +140,18 @@ export class DetailsComponent implements OnInit {
         Validators.min(50),
         Validators.required
       ])),
-      source: new FormControl('Withdrawal')
+      source: new FormControl('Withdrawal'),
+      bankWithdrawal: new FormControl(false),
+      bank: new FormGroup({
+        bankName: new FormControl(''),
+        account_number: new FormControl(''),
+        name: new FormControl(''),
+        bank_code: new FormControl(''),
+        currency: new FormControl('NGN'),
+        type: new FormControl('nuban'),
+      }),
+
+      
     });
 
     this.PlanForm = new FormGroup({
@@ -150,22 +167,30 @@ export class DetailsComponent implements OnInit {
       gender: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       userId: new FormControl('', Validators.required),
-      mname: new FormControl( ''),
+      mname: new FormControl(''),
       BVN_num: new FormControl(''),
       city: new FormControl(''),
       country: new FormControl(''),
-      dateOfBirth : new FormControl(''),
+      dateOfBirth: new FormControl(''),
       mobilenetwork: new FormControl(''),
       state: new FormControl(''),
-      street1: new FormControl(''), 
-      
+      street1: new FormControl(''),
       customerId: new FormControl(this.customerId, Validators.required),
       agentId: new FormControl(this.user.sn, Validators.required),
       terms: new FormControl(true, Validators.pattern('true')),
       source: new FormControl('Profile'),
+
     });
 
     //this.getCustomerPlans(this.customerId);
+  }
+
+  switchWithdrawType(){
+    if(this.bankWithdrawal == false){
+      this.bankWithdrawal = true;
+    } else {
+      this.bankWithdrawal = false;
+    }
   }
 
   getUserDetails() {
@@ -215,22 +240,94 @@ export class DetailsComponent implements OnInit {
 
   }
 
-  getDetailsForProfileUpdate(customer: any){
+  getDetailsForProfileUpdate(customer: any) {
     var titlecase = new TitleCasePipe;
-      this.updateProfileForm.get('firstName')?.setValue(titlecase.transform(customer?.firstName));
-      this.updateProfileForm.get('lastName')?.setValue(titlecase.transform(customer?.lastName));
-      this.updateProfileForm.get('mname')?.setValue(titlecase.transform(customer?.mname));
-      this.updateProfileForm.get('email')?.setValue(customer?.email);
-      this.updateProfileForm.get('userId')?.setValue(customer?.userId);
-      this.updateProfileForm.get('BVN_num')?.setValue(customer?.BVN_num);
-      this.updateProfileForm.get('gender')?.setValue(customer?.gender);
-      this.updateProfileForm.get('mobilenetwork')?.setValue(customer?.mobilenetwork);
-      this.updateProfileForm.get('dateOfBirth')?.setValue(new Date(customer?.dateOfBirth).toISOString().substr(0, 10));
-      this.updateProfileForm.get('city')?.setValue(titlecase.transform(customer?.city));
-      this.updateProfileForm.get('street1')?.setValue(titlecase.transform(customer?.street1));
-      this.updateProfileForm.get('state')?.setValue(titlecase.transform(customer?.state));
-      this.updateProfileForm.get('country')?.setValue(customer?.country);
-      
+    this.updateProfileForm.get('firstName')?.setValue(titlecase.transform(customer?.firstName));
+    this.updateProfileForm.get('lastName')?.setValue(titlecase.transform(customer?.lastName));
+    this.updateProfileForm.get('mname')?.setValue(titlecase.transform(customer?.mname));
+    this.updateProfileForm.get('email')?.setValue(customer?.email);
+    this.updateProfileForm.get('userId')?.setValue(customer?.userId);
+    this.updateProfileForm.get('BVN_num')?.setValue(customer?.BVN_num);
+    this.updateProfileForm.get('gender')?.setValue(customer?.gender);
+    this.updateProfileForm.get('mobilenetwork')?.setValue(customer?.mobilenetwork);
+    this.updateProfileForm.get('dateOfBirth')?.setValue(new Date(customer?.dateOfBirth).toISOString().substr(0, 10));
+    this.updateProfileForm.get('city')?.setValue(titlecase.transform(customer?.city));
+    this.updateProfileForm.get('street1')?.setValue(titlecase.transform(customer?.street1));
+    this.updateProfileForm.get('state')?.setValue(titlecase.transform(customer?.state));
+    this.updateProfileForm.get('country')?.setValue(customer?.country);
+
+  }
+
+  getAllBanks() {
+    this.dataService.getAllBanks().subscribe((res: any) => {
+      console.log(res);
+      if (res.status == true) {
+        this.allBanks = res.data;
+      } else {
+        this.allBanks = null
+        //this.toastService.presentToast(res.message);
+      }
+    });
+  }
+
+  getBankCode() {
+    let bankCode = this.withdrawalForm.get("bank")?.get("bank_code")?.value;
+    console.log(bankCode);
+    var match = this.allBanks.filter(function (obj: any) {
+      return obj.code == bankCode;
+    });
+    console.log(match[0]);
+    this.withdrawalForm.get("bank")?.get("bankName")?.setValue(match[0].name);
+    return match[0];
+  }
+
+  verifyAccount(event: any) {
+    let accountNo: string = event.target.value;
+    // Ensure the input is more than 10 before carrying out the request
+    console.log(accountNo);
+    if (accountNo.length == 10) {
+      this.spinner = true;
+      this.getBankCode();
+      const bankCode = this.withdrawalForm.get("bank")?.get("bank_code")?.value // this.getBankCode();
+      console.log(bankCode);
+      if (bankCode === "") {
+        this.toastService.showError('Please select a bank', 'Error');
+      } else {
+        let value = 'account_number=' + accountNo + '&bank_code=' + bankCode;
+        console.log(value);
+        try {
+          this.dataService.verifyBankAccount(value).subscribe((res: any) => {
+            console.log(res);
+            this.spinner = false;
+            if (res.status == true) {
+              this.error = false;
+              this.verifiedAcctName = res.data.account_name;
+              this.withdrawalForm.get("bank")?.get("name")?.setValue(res.data.account_name);
+            } else {
+              this.error = true;
+              this.verifiedAcctName = res.error.message;
+              this.withdrawalForm.get("bank")?.get("name")?.setValue("");
+              this.toastService.showError(res.error.message, 'Error');
+            }
+          }, (error: any) => {
+            this.spinner = false;
+            this.error = true;
+            console.log(error);
+            this.verifiedAcctName = error.error.message;
+            this.withdrawalForm.get("bank")?.get("account_name")?.setValue("");
+            this.toastService.showError(error.error.message, 'Error');
+          });
+        } catch (error) {
+          console.log(error);
+        }
+
+
+      }
+
+
+    }
+
+
   }
 
 
@@ -329,7 +426,7 @@ export class DetailsComponent implements OnInit {
       } else {
         this.toastService.showError('Withdrawal form not valid', 'Error');
       }
-    }else if(form.source === "Profile") {
+    } else if (form.source === "Profile") {
       if (this.updateProfileForm.valid) {
         this.updateUser();
       } else {
@@ -382,9 +479,17 @@ export class DetailsComponent implements OnInit {
   Withdrawal(otp: string) {
     this.loading = true;
     this.getSelectedPlan(this.withdrawalForm);
-    console.log(this.withdrawalForm.value);
+    // const transfer = {
+    //   type: "nuban", 
+    //   name: this.withdrawalForm.value.account_name,
+    //   account_number: this.withdrawalForm.value.account_number,
+    //   bank_code: this.withdrawalForm.value.bank,
+    //   currency: "NGN"
+    // }
+    const payload = this.withdrawalForm.value;
+    console.log(payload);
     if (this.user.level == 3 || this.user.level == 4) {
-      this.dataService.withdrawalwithoutOtp(this.withdrawalForm.value).subscribe((res: any) => {
+      this.dataService.withdrawalwithoutOtp(payload).subscribe((res: any) => {
         console.log(res);
         this.response = res;
         this.loading = false;
@@ -598,33 +703,33 @@ export class DetailsComponent implements OnInit {
   }
 
   jsInit() {
-    (function() {
+    (function () {
       window.onload = function () {
 
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
         new HSSideNav('.js-navbar-vertical-aside').init()
-  
-  
+
+
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
         new HSFormSearch('.js-form-search');
-  
-  
+
+
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init();
-  
+
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init('.js-select');
-  
-  
+
+
         // INITIALIZATION OF NAV SCROLLER
         // =======================================================
         new HsNavScroller('.js-nav-scroller')
-  
-  
+
+
         // INITIALIZATION OF STICKY BLOCKS
         // =======================================================
         new HSStickyBlock('.js-sticky-block', {
@@ -632,7 +737,7 @@ export class DetailsComponent implements OnInit {
         })
       }
     })()
-    
+
   }
 
 
@@ -657,28 +762,28 @@ export class DetailsComponent implements OnInit {
       // bank: values?.bank,
       // accountNo: values.bankAccountNo,
       // accountName: values.bankAccountName,
-  }
+    }
 
-  console.log(updateUserData);
-  this.loading = true;
-      this.dataService.updateCustomerProfile(updateUserData).subscribe((result: any) => {
-        console.log(result);
-        this.response = result;
-        if (this.response.error == false) {
-          this.loading = false;
-          this.toastService.showSuccess(this.response.message, 'Success');
-          //this.modalService.dismissAll();
-        } else {
-          this.loading = false;
-          this.toastService.showError(this.response.message, 'Error');
-        }
-
-      },(error: any) => {
+    console.log(updateUserData);
+    this.loading = true;
+    this.dataService.updateCustomerProfile(updateUserData).subscribe((result: any) => {
+      console.log(result);
+      this.response = result;
+      if (this.response.error == false) {
         this.loading = false;
-        console.log(error);        
-        this.toastService.showError('Something went wrong', 'Error');
-      });
-    
+        this.toastService.showSuccess(this.response.message, 'Success');
+        //this.modalService.dismissAll();
+      } else {
+        this.loading = false;
+        this.toastService.showError(this.response.message, 'Error');
+      }
+
+    }, (error: any) => {
+      this.loading = false;
+      console.log(error);
+      this.toastService.showError('Something went wrong', 'Error');
+    });
+
 
   }
 

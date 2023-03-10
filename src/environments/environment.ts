@@ -13,6 +13,11 @@ export const environment = {
   logo2: "../../../assets/img/logo/logo2.png",
   logo3: "../../../assets/img/logo/site-logo2.png",
   mini_logo: "../../../assets/img/logo/logo-transparent.png",
+  paystack:{
+    url: "https://api.paystack.co/",
+    secretKey: "sk_test_feeb3d34498e46330086fe2a73b02692a05adda5",
+    publicKey: "pk_test_fb0ce109fe7f1e851ddf454110f04af9b3154e14",
+  }
 };
 
 /*
