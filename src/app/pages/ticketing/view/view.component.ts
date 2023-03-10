@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-view',
@@ -10,43 +11,19 @@ export class ViewComponent implements OnInit {
   header = ['Image', 'Title', 'Merchant', 'Event Date', 'Qty sold', 'Status', 'Action']
   allTickets!: Array<any>;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private dataService: DataService) { 
     this.getAllTickets();
   }
 
-  getAllTickets(){
-    this.allTickets = [
-      {
-        id: 1,
-        title: 'Muson Festival',
-        image: '', 
-        merchant: 'Muson', 
-        date: '05/10/2022',
-        qtySold: 50,
-        active: true
-      },
-      {
-        id: 2,
-        title: 'Flytime Festival',
-        image: '', 
-        merchant: 'Flytime', 
-        date: '05/10/2022',
-        qtySold: 30,
-        active: true
-      },
-      {
-        id: 3,
-        title: 'Fair acres musical show',
-        image: '', 
-        merchant: 'Fairacres', 
-        date: '05/10/2022',
-        qtySold: 40,
-        active: true
-      }
+  ngOnInit(): void {
+    
+  }
 
-    ]
+  getAllTickets(){
+    this.dataService.getAllTickets().subscribe((res: any) => {
+      console.log(res);
+      this.allTickets = res;      
+    });
     
   }
 

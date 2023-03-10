@@ -41,6 +41,25 @@ export class CreateComponent implements OnInit {
     });  
   }
 
+  validations = {
+    eventTitle: [
+      { type: 'required', message: 'Title is required.' }
+    ],
+    'phone': [
+      { type: 'required', message: 'Phone Number is required.' },
+      { type: 'invalidCountryPhone', message: 'Phone number is incorrect for the selected country.' },
+      { type: 'minlength', message: 'Phone number  must be at least 11 characters long.' },
+      { type: 'maxlength', message: 'Phone number cannot be more than 11 characters long.' },
+    ],
+    'venue': [
+      { type: 'required', message: 'Network is required.' }
+    ],
+    'description': [
+      { type: 'required', message: 'Network is required.' }
+    ],
+
+  };
+
   ngOnInit(): void {
     this.jsInit();
     this.jsInit2();

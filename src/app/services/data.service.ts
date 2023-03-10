@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from './http.service';
@@ -8,7 +9,14 @@ import { HttpService } from './http.service';
 export class DataService {
   time = new Date().getTime();
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService, private http: HttpClient) { }
+
+  readonly sampleTicket: string = './assets/json/tickets.json';
+
+  // Get Data Bundle API call
+  public getAllTickets() {
+    return this.http.get(this.sampleTicket);
+  }
 
   //get request from paystack
   // Get Agent terms and conditions

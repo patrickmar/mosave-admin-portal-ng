@@ -1,0 +1,200 @@
+[
+    {
+        "id": 1,
+        "image": "", 
+        "merchant": "Muson", 
+        "qtySold": 50,
+        "active": true,
+        "eventTitle": "Muson Festival",
+        "venue": "Ikeja, Lagos.",
+        "submerchantId": "201504",
+        "paystackAcctId": "ACCT29928301",
+        "vendor": "Muson Events",
+        "chargesBearer": "subaccount",
+        "eventType": "Festival",
+        "description": "<p>This is a test description. Train hard. Stay dry. This soccer jacket is made of soft, sweat-wicking fabric that keeps you moving on the practice field. Stretch panels at the elbows and sides give you a full range of motion as you work.</p><p><br></p><h3>Specifications</h3><ul><li>Regular fit is wider at the body, with a straight silhouette</li><li>Ribbed stand-up collar</li><li>Long sleeves with ribbed cuffs</li><li>100% polyester doubleknit</li></ul><p><br></p>",
+        "tags": "shows, music, carnival",
+        "SeatCapacity": 1000,
+        "enableEvent": true,
+        "enableSeat": true,
+        "ticketCategories": [
+            {
+                "name": "Regular",
+                "price": "2000",
+                "qty": "600",
+                "discountPrice": "1500"
+            },
+            {
+                "name": "VIP",
+                "price": "5000",
+                "qty": "120",
+                "discountPrice": "4000"
+            },
+            {
+                "name": "VVIP",
+                "price": "1000",
+                "qty": "30",
+                "discountPrice": "8000"
+            }
+        ],
+        "start": [
+            {
+                "date": "03/10/2023",
+                "time": "12:00"
+            }
+        ],
+        "end": [
+            {
+                "date": "03/16/2023",
+                "time": "19:00"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "image": "", 
+        "merchant": "Flytime", 
+        "qtySold": 40,
+        "active": true,
+        "eventTitle": "Flytime Festival",
+        "venue": "Ikeja, Lagos.",
+        "submerchantId": "201504",
+        "paystackAcctId": "ACCT29928301",
+        "vendor": "Muson Events",
+        "chargesBearer": "subaccount",
+        "eventType": "Festival",
+        "description": "<p>This is a test description. Train hard. Stay dry. This soccer jacket is made of soft, sweat-wicking fabric that keeps you moving on the practice field. Stretch panels at the elbows and sides give you a full range of motion as you work.</p><p><br></p><h3>Specifications</h3><ul><li>Regular fit is wider at the body, with a straight silhouette</li><li>Ribbed stand-up collar</li><li>Long sleeves with ribbed cuffs</li><li>100% polyester doubleknit</li></ul><p><br></p>",
+        "tags": "shows, music, carnival",
+        "SeatCapacity": 1000,
+        "enableEvent": true,
+        "enableSeat": true,
+        "ticketCategories": [
+            {
+                "name": "Regular",
+                "price": "2000",
+                "qty": "600",
+                "discountPrice": "1500"
+            },
+            {
+                "name": "VIP",
+                "price": "5000",
+                "qty": "120",
+                "discountPrice": "4000"
+            },
+            {
+                "name": "VVIP",
+                "price": "1000",
+                "qty": "30",
+                "discountPrice": "8000"
+            }
+        ],
+        "start": [
+            {
+                "date": "03/10/2023",
+                "time": "12:00"
+            }
+        ],
+        "end": [
+            {
+                "date": "03/16/2023",
+                "time": "19:00"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "image": "", 
+        "merchant": "Fair Acres", 
+        "qtySold": 70,
+        "active": true,
+        "eventTitle": "Fairacre Carnival",
+        "venue": "Ikeja, Lagos.",
+        "submerchantId": "201504",
+        "paystackAcctId": "ACCT29928301",
+        "vendor": "Muson Events",
+        "chargesBearer": "subaccount",
+        "eventType": "Festival",
+        "description": "<p>This is a test description. Train hard. Stay dry. This soccer jacket is made of soft, sweat-wicking fabric that keeps you moving on the practice field. Stretch panels at the elbows and sides give you a full range of motion as you work.</p><p><br></p><h3>Specifications</h3><ul><li>Regular fit is wider at the body, with a straight silhouette</li><li>Ribbed stand-up collar</li><li>Long sleeves with ribbed cuffs</li><li>100% polyester doubleknit</li></ul><p><br></p>",
+        "tags": "shows, music, carnival",
+        "SeatCapacity": 1000,
+        "enableEvent": true,
+        "enableSeat": true,
+        "ticketCategories": [
+            {
+                "name": "Regular",
+                "price": "2000",
+                "qty": "600",
+                "discountPrice": "1500"
+            },
+            {
+                "name": "VIP",
+                "price": "5000",
+                "qty": "120",
+                "discountPrice": "4000"
+            },
+            {
+                "name": "VVIP",
+                "price": "1000",
+                "qty": "30",
+                "discountPrice": "8000"
+            }
+        ],
+        "start": [
+            {
+                "date": "03/10/2023",
+                "time": "12:00"
+            }
+        ],
+        "end": [
+            {
+                "date": "03/16/2023",
+                "time": "19:00"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "image": "", 
+        "merchant": "Muson", 
+        "qtySold": 30,
+        "active": true,
+        "eventTitle": "Fair acres musical show",
+        "venue": "Ikeja, Lagos.",
+        "submerchantId": "201504",
+        "paystackAcctId": "ACCT29928301",
+        "vendor": "Muson Events",
+        "chargesBearer": "account",
+        "eventType": "Festival",
+        "description": "<p>This is a test description. Train hard. Stay dry. This soccer jacket is made of soft, sweat-wicking fabric that keeps you moving on the practice field. Stretch panels at the elbows and sides give you a full range of motion as you work.</p><p><br></p><h3>Specifications</h3><ul><li>Regular fit is wider at the body, with a straight silhouette</li><li>Ribbed stand-up collar</li><li>Long sleeves with ribbed cuffs</li><li>100% polyester doubleknit</li></ul><p><br></p>",
+        "tags": "shows, music, carnival",
+        "SeatCapacity": 500,
+        "enableEvent": true,
+        "enableSeat": true,
+        "ticketCategories": [
+            {
+                "name": "Regular",
+                "price": "2000",
+                "qty": "600",
+                "discountPrice": "1500"
+            },
+            {
+                "name": "VIP",
+                "price": "5000",
+                "qty": "120",
+                "discountPrice": "4000"
+            },
+            {
+                "name": "VVIP",
+                "price": "1000",
+                "qty": "30",
+                "discountPrice": "8000"
+            }
+        ],
+        "start": [
+            {
+                "date": "03/10/2023",
+                "time": "12:00"
+            }
+        ]
+    }
+]
