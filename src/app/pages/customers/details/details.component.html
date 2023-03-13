@@ -713,6 +713,7 @@
                     </thead>
 
                     <tbody>
+                      <ng-container *ngIf="customerTrxs.length > 0 else elseTemplate">                      
                       <tr *ngFor="let t of customerTrxs; let i = index;">
                         <td><a type="button" (click)="open(content, t)">{{t?.transref}}</a></td>
                         <td>
@@ -735,6 +736,18 @@
                               class="bi-eye-fill me-1"></i> Quick view</button>
                         </td>
                       </tr>
+                    </ng-container>
+                      <ng-template #elseTemplate>
+                        <tr>
+                          <td valign="top" colspan="8" class="dataTables_empty">
+                            <div class="text-center p-4">
+                              <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;"
+                                data-hs-theme-appearance="default">
+                              <p class="mb-0">No transaction history found</p>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-template>
 
                     </tbody>
                   </table>
@@ -797,7 +810,11 @@
           </form>
 
           <div class="row" *ngIf="plansInfo!= null && plans?.length == 0">
-            <span class="text-center">{{plansInfo}}</span>
+            <div class="text-center p-4">
+              <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;"
+                data-hs-theme-appearance="default">
+              <p class="mb-0">{{plansInfo}}</p>
+            </div>
           </div>
 
         </div>
