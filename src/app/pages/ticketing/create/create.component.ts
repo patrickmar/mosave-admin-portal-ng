@@ -27,14 +27,14 @@ export class CreateComponent implements OnInit {
       //merchantName: ['', [Validators.required, Validators.minLength(5)]],
       submerchantId: new FormControl(parseInt(''), Validators.required),
       paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
-      vendor: ['', [Validators.minLength(5)]],
-      chargesBearer: ['', [Validators.required, Validators.minLength(5)]],
-      eventType: ['', [Validators.required, Validators.minLength(5)]],
-      description: ['', [Validators.required, Validators.minLength(5)]],
+      vendor: ['', [Validators.minLength(2)]],
+      chargesBearer: ['', [Validators.required, Validators.minLength(2)]],
+      eventType: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(2)]],
       tags: ['', [Validators.minLength(5)]],
-      SeatCapacity: new FormControl(0, Validators.required),
-      enableEvent: false,
-      enableSeat: false,
+      SeatCapacity: new FormControl(0),
+      enableEvent: new FormControl(false),
+      enableSeat: new FormControl(false),
       ticketCategories: this.fb.array([this.newCategory()]),
       start: this.fb.array([]),
       end: this.fb.array([]),
@@ -45,17 +45,38 @@ export class CreateComponent implements OnInit {
     eventTitle: [
       { type: 'required', message: 'Title is required.' }
     ],
-    'phone': [
+    name: [
+      { type: 'required', message: 'Name is required.' }
+    ],
+    price: [
+      { type: 'required', message: 'Price is required.' }
+    ],
+    qty: [
+      { type: 'required', message: 'Qty is required.' }
+    ],    
+    phone: [
       { type: 'required', message: 'Phone Number is required.' },
       { type: 'invalidCountryPhone', message: 'Phone number is incorrect for the selected country.' },
       { type: 'minlength', message: 'Phone number  must be at least 11 characters long.' },
       { type: 'maxlength', message: 'Phone number cannot be more than 11 characters long.' },
     ],
-    'venue': [
-      { type: 'required', message: 'Network is required.' }
+    venue: [
+      { type: 'required', message: 'Venue is required.' }
     ],
-    'description': [
-      { type: 'required', message: 'Network is required.' }
+    description: [
+      { type: 'required', message: 'Description is required.' }
+    ],
+    chargesBearer: [
+      { type: 'required', message: 'Bearer is required.' }
+    ],
+    eventType: [
+      { type: 'required', message: 'Event type is required.' }
+    ],
+    submerchantId: [
+      { type: 'required', message: 'submerchantId is required.' }
+    ],
+    paystackAcctId: [
+      { type: 'required', message: 'paystack Account is required.' }
     ],
 
   };
@@ -171,6 +192,7 @@ export class CreateComponent implements OnInit {
     var val = $("#quillArea .ql-editor").html();
     this.ticketForm.get('description')?.setValue(val);  
     console.log(this.ticketForm.value);
+    this.ticketForm.reset();
   }  
 
   merchantList = [

@@ -65,6 +65,14 @@
 
                                     <input type="text" class="form-control" formControlName="venue" id="venueLabel"
                                         placeholder="Lagos, Nigeria" aria-label="">
+                                        <div class="error-container">
+                                            <ng-container *ngFor="let validation of validations.venue">
+                                              <div class="error-message"
+                                                *ngIf="ticketForm.get('venue')?.hasError(validation.type) && (ticketForm.get('venue')?.dirty || ticketForm.get('venue')?.touched)">
+                                                <small class="text-danger">{{ validation.message }}</small>
+                                              </div>
+                                            </ng-container>
+                                          </div>
                                 </div>
                                 <!-- End Form -->
                             </div>
@@ -86,13 +94,20 @@
                                             <option *ngFor="let m of merchantList; let i = index;"
                                                 [value]="m?.merchantId">{{m?.name}}</option>
                                         </select>
+
+                                        <div class="error-container">
+                                            <ng-container *ngFor="let validation of validations.submerchantId">
+                                              <div class="error-message"
+                                                *ngIf="ticketForm.get('submerchantId')?.hasError(validation.type) && (ticketForm.get('submerchantId')?.dirty || ticketForm.get('submerchantId')?.touched)">
+                                                <small class="text-danger">{{ validation.message }}</small>
+                                              </div>
+                                            </ng-container>
+                                          </div>
+                                          
                                     </div>
                                     <!-- End Select -->
 
-                                    <!-- <div class="input-group">
-                                    <input type="text" class="form-control" formControlName="merchantName" id="merchantLabel" autocomplete="off"
-                                        placeholder="merchant ID" aria-label="merchant">                                    
-                                </div> -->
+                                    
 
 
                                 </div>
@@ -120,6 +135,7 @@
                             <textarea formControlName="description" style="display:none" id="textArea"></textarea>
                         </div>
                         <!-- End Quill -->
+
                     </div>
                     <!-- Body -->
                 </div>
@@ -349,13 +365,31 @@
                                     <th class="table-column-ps-0">
                                         <input type="text" class="form-control" formControlName="name"
                                             placeholder="Regular" style="min-width: 6rem;">
+                                            <div class="error-container">
+                                                <ng-container *ngFor="let validation of validations.name">
+                                                  <div class="error-message"
+                                                    *ngIf="ticketCategories().at(i).get('name')?.hasError(validation.type) 
+                                                    && (ticketCategories().at(i).get('name')?.dirty || ticketCategories().at(i).get('name')?.touched)">
+                                                    <small class="text-danger">{{ validation.message }}</small>
+                                                  </div>
+                                                </ng-container>
+                                              </div>
                                     </th>
                                     <th class="table-column-ps-0">
                                         <div class="input-group input-group-merge" style="min-width: 7rem;">
                                             <div class="input-group-prepend input-group-text p-2">₦</div>
                                             <input type="text" class="form-control ps-5" formControlName="price"
-                                                placeholder="2000">
+                                                placeholder="2000">                                                
                                         </div>
+                                        <div class="error-container">
+                                            <ng-container *ngFor="let validation of validations.price">
+                                              <div class="error-message"
+                                                *ngIf="ticketCategories().at(i).get('price')?.hasError(validation.type) 
+                                                && (ticketCategories().at(i).get('price')?.dirty || ticketCategories().at(i).get('price')?.touched)">
+                                                <small class="text-danger">{{ validation.message }}</small>
+                                              </div>
+                                            </ng-container>
+                                          </div>
                                     </th>
                                     <th class="table-column-ps-0">
                                         <div class="input-group input-group-merge" style="min-width: 7rem;">
@@ -371,6 +405,15 @@
                                                 <div class="col">
                                                     <input class="form-control form-control-quantity-counter"
                                                         type="number" formControlName="qty">
+                                                        <div class="error-container">
+                                                            <ng-container *ngFor="let validation of validations.qty">
+                                                              <div class="error-message"
+                                                                *ngIf="ticketCategories().at(i).get('qty')?.hasError(validation.type) 
+                                                                && (ticketCategories().at(i).get('qty')?.dirty || ticketCategories().at(i).get('qty')?.touched)">
+                                                                <small class="text-danger">{{ validation.message }}</small>
+                                                              </div>
+                                                            </ng-container>
+                                                          </div>
                                                 </div>
                                                 <!-- End Col -->
 
@@ -446,6 +489,14 @@
                                 <input type="text" class="form-control" formControlName="paystackAcctId"
                                     id="acctIdLabel" placeholder="ACCT82993392" aria-label="Acct">
                             </div>
+                            <div class="error-container">
+                                <ng-container *ngFor="let validation of validations.paystackAcctId">
+                                  <div class="error-message"
+                                    *ngIf="ticketForm.get('paystackAcctId')?.hasError(validation.type) && (ticketForm.get('paystackAcctId')?.dirty || ticketForm.get('paystackAcctId')?.touched)">
+                                    <small class="text-danger">{{ validation.message }}</small>
+                                  </div>
+                                </ng-container>
+                              </div>
 
                             <small class="form-text">Kindly generate this account ID from Paystack dashboard</small>
                         </div>

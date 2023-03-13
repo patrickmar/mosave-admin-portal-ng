@@ -330,7 +330,7 @@
                     <a class="d-flex align-items-center" [routerLink]="['/customer', data?.sn, 'details']">
                       <ng-container>
                       <div class="avatar avatar-circle" *ngIf="data.image">
-                        <img class="avatar-img" [src]="imageBaseURL+data?.image" alt="{{data?.firstName}}" onerror="this.src='../../../assets/img/160x160/img1.jpg'">
+                        <img class="avatar-img" [src]="imageBaseURL+data?.image" alt="{{data?.firstName}}" onerror="this.src=avatar">
                       </div>
                       </ng-container>
                       <div class="avatar avatar-soft-primary avatar-circle" *ngIf="!data.image">

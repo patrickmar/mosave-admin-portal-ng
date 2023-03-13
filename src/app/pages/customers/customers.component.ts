@@ -36,6 +36,7 @@ export class CustomersComponent implements OnInit {
   // Must be declared as "any", not as "DataTables.Settings"
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
+  avatar = environment.avatar;
 
   @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;

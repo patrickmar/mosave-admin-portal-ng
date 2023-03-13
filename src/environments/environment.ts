@@ -13,6 +13,7 @@ export const environment = {
   logo2: "../../../assets/img/logo/logo2.png",
   logo3: "../../../assets/img/logo/site-logo2.png",
   mini_logo: "../../../assets/img/logo/logo-transparent.png",
+  avatar: '../../../assets/img/160x160/img1.jpg',
   paystack:{
     url: "https://api.paystack.co/",
     secretKey: "sk_test_feeb3d34498e46330086fe2a73b02692a05adda5",

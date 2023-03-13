@@ -104,12 +104,12 @@ export class DetailsComponent implements OnInit {
   ngOnInit(): void {
 
     this.savingsForm = new FormGroup({
-      accountName: new FormControl(this.fullName, Validators.required),
-      firstname: new FormControl(this.customer?.firstName, Validators.required),
-      lastname: new FormControl(this.customer?.lastName, Validators.required),
-      account_num: new FormControl(this.customer?.account_num, Validators.required),
-      customerId: new FormControl(this.customerId, Validators.required),
-      accountTypeId: new FormControl(this.customer?.accountTypeId, Validators.required),
+      accountName: new FormControl('', Validators.required),
+      firstname: new FormControl('', Validators.required),
+      lastname: new FormControl('', Validators.required),
+      account_num: new FormControl('', Validators.required),
+      customerId: new FormControl('', Validators.required),
+      accountTypeId: new FormControl('', Validators.required),
       agentId: new FormControl(this.user.sn, Validators.required),
       planId: new FormControl(parseInt(''), Validators.required),
       terms: new FormControl(true, Validators.pattern('true')),
@@ -124,12 +124,12 @@ export class DetailsComponent implements OnInit {
     });
 
     this.withdrawalForm = new FormGroup({
-      accountName: new FormControl(this.fullName, Validators.required),
-      firstname: new FormControl(this.customer?.firstName, Validators.required),
-      lastname: new FormControl(this.customer?.lastName, Validators.required),
-      account_num: new FormControl(this.customer?.account_num, Validators.required),
-      customerId: new FormControl(this.customerId, Validators.required),
-      accountTypeId: new FormControl(this.customer?.account_typeId, Validators.required),
+      accountName: new FormControl('', Validators.required),
+      firstname: new FormControl('', Validators.required),
+      lastname: new FormControl('', Validators.required),
+      account_num: new FormControl('', Validators.required),
+      customerId: new FormControl('', Validators.required),
+      accountTypeId: new FormControl('', Validators.required),
       agentId: new FormControl(this.user.sn, Validators.required),
       planId: new FormControl(parseInt(''), Validators.required),
       terms: new FormControl(true, Validators.pattern('true')),
@@ -225,16 +225,16 @@ export class DetailsComponent implements OnInit {
       this.fullName = this.customer.firstName + ' ' + this.customer.lastName;
       console.log(this.fullName);
       var titlecase = new TitleCasePipe;
-      this.savingsForm.get('firstname')?.setValue(titlecase.transform(this.customer?.firstName));
-      this.savingsForm.get('lastname')?.setValue(titlecase.transform(this.customer?.lastName));
-      this.savingsForm.get('accountName')?.setValue(titlecase.transform(this.fullName));
-      this.savingsForm.get('accountTypeId')?.setValue(this.customer?.accountTypeId);
-      this.savingsForm.get('account_num')?.setValue(this.customer?.account_num);
-      this.withdrawalForm.get('firstname')?.setValue(titlecase.transform(this.customer?.firstName));
-      this.withdrawalForm.get('lastname')?.setValue(titlecase.transform(this.customer?.lastName));
-      this.withdrawalForm.get('accountName')?.setValue(titlecase.transform(this.fullName));
-      this.withdrawalForm.get('accountTypeId')?.setValue(this.customer?.accountTypeId);
-      this.withdrawalForm.get('account_num')?.setValue(this.customer?.account_num);
+      let form = {
+        firstname: titlecase.transform(this.customer?.firstName),
+        lastname: titlecase.transform(this.customer?.lastName),
+        accountName: titlecase.transform(this.fullName),
+        accountTypeId: this.customer?.accountTypeId,
+        account_num: this.customer?.account_num,
+      };
+      this.savingsForm.patchValue(form);
+      this.withdrawalForm.patchValue(form);
+
       this.getDetailsForProfileUpdate(this.customer);
     });
 
@@ -242,20 +242,22 @@ export class DetailsComponent implements OnInit {
 
   getDetailsForProfileUpdate(customer: any) {
     var titlecase = new TitleCasePipe;
-    this.updateProfileForm.get('firstName')?.setValue(titlecase.transform(customer?.firstName));
-    this.updateProfileForm.get('lastName')?.setValue(titlecase.transform(customer?.lastName));
-    this.updateProfileForm.get('mname')?.setValue(titlecase.transform(customer?.mname));
-    this.updateProfileForm.get('email')?.setValue(customer?.email);
-    this.updateProfileForm.get('userId')?.setValue(customer?.userId);
-    this.updateProfileForm.get('BVN_num')?.setValue(customer?.BVN_num);
-    this.updateProfileForm.get('gender')?.setValue(customer?.gender);
-    this.updateProfileForm.get('mobilenetwork')?.setValue(customer?.mobilenetwork);
-    this.updateProfileForm.get('dateOfBirth')?.setValue(new Date(customer?.dateOfBirth).toISOString().substr(0, 10));
-    this.updateProfileForm.get('city')?.setValue(titlecase.transform(customer?.city));
-    this.updateProfileForm.get('street1')?.setValue(titlecase.transform(customer?.street1));
-    this.updateProfileForm.get('state')?.setValue(titlecase.transform(customer?.state));
-    this.updateProfileForm.get('country')?.setValue(customer?.country);
-
+    let form = {
+      firstName: titlecase.transform(customer?.firstName),
+      lastName: titlecase.transform(customer?.lastName),
+      mname: titlecase.transform(customer?.mname),
+      email: customer?.email,
+      userId: customer?.userId,
+      BVN_num: customer?.BVN_num,
+      gender: customer?.gender,
+      mobilenetwork: customer?.mobilenetwork,
+      dateOfBirth: new Date(customer?.dateOfBirth).toISOString().substr(0, 10),
+      city: titlecase.transform(customer?.city),
+      street1: titlecase.transform(customer?.street1),
+      state: titlecase.transform(customer?.state),
+      country: customer?.country,
+    }
+    this.updateProfileForm.patchValue(form);
   }
 
   getAllBanks() {
@@ -273,12 +275,17 @@ export class DetailsComponent implements OnInit {
   getBankCode() {
     let bankCode = this.withdrawalForm.get("bank")?.get("bank_code")?.value;
     console.log(bankCode);
-    var match = this.allBanks.filter(function (obj: any) {
-      return obj.code == bankCode;
-    });
-    console.log(match[0]);
-    this.withdrawalForm.get("bank")?.get("bankName")?.setValue(match[0].name);
-    return match[0];
+    if(bankCode == ''){
+      this.toastService.showError('Please select Bank', 'Error');
+    }else {
+      var match = this.allBanks.filter(function (obj: any) {
+        return obj.code == bankCode;
+      });
+      console.log(match[0]);
+      this.withdrawalForm.get("bank")?.get("bankName")?.setValue(match[0].name);
+      return match[0];
+    }
+    
   }
 
   verifyAccount(event: any) {

@@ -103,9 +103,10 @@ const appRoutes: Routes = [
     NgbModalModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled'})
+    RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'})
   ],
   providers: [DatePipe, DateAgoPipe, FormCheckService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [RouterModule]
 })
 export class AppModule { }

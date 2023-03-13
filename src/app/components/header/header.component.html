@@ -20,6 +20,7 @@
         <!-- End Navbar Vertical Toggle -->
 
         <!-- Search Form -->
+        <form [formGroup]="searchForm" (ngSubmit)="searchCustomer($event)">
         <div class="dropdown ms-2">
           <!-- Input Group -->
           <div class="d-none d-lg-block">
@@ -28,7 +29,8 @@
                 <i class="bi-search"></i>
               </div>
 
-              <input type="search" class="js-form-search form-control" placeholder="search MoLoyal" aria-label="search MoLoyal" data-hs-form-search-options='{
+              <input type="search" class="js-form-search form-control" placeholder="Search Customer" (keyup)="searchCustomer($event)"
+              formControlName="searchQuery" aria-label="search Customer" data-hs-form-search-options='{
                        "clearIcon": "#clearSearchResultsIcon",
                        "dropMenuElement": "#searchDropdownMenu",
                        "dropMenuOffset": 20,
@@ -61,24 +63,48 @@
                   <div class="input-group-prepend input-group-text">
                     <i class="bi-search"></i>
                   </div>
-
-                  <input type="search" class="form-control" placeholder="search MoLoyal" aria-label="search MoLoyal">
+                  <input type="search" class="form-control" placeholder="search Customer" formControlName="searchQuery" aria-label="search MoLoyal" (keyup)="searchCustomer($event)">
                   <a class="input-group-append input-group-text" href="javascript:;">
                     <i class="bi-x-lg"></i>
                   </a>
                 </div>
               </div>
 
-              <span class="dropdown-header">Recent searches</span>
-
-              <div class="dropdown-item bg-transparent text-wrap">
-                <a class="btn btn-soft-dark btn-xs rounded-pill" href="javascript:;">
-                  moloyal <i class="bi-search ms-1"></i>
-                </a>
-                <a class="btn btn-soft-dark btn-xs rounded-pill" href="javascript:;">
-                  test <i class="bi-search ms-1"></i>
-                </a>
+              <div *ngIf="loading" class="d-flex align-items-center">
+                <span>Loading...</span>
+                <div class="spinner-border spinner-border-sm ms-auto" role="status" aria-hidden="true"></div>
               </div>
+
+              <span *ngIf="!loading" class="dropdown-header">Recent searches</span>
+
+              <div *ngIf="!loading"  class="dropdown-item bg-transparent text-wrap">
+                <a *ngFor="let s of recentSearches.slice().reverse() | slice:0:3; let i = index;"  class="btn btn-soft-dark btn-xs rounded-pill m-1" type="button" (click)="Paste(s)">
+                  {{s}} <i class="bi-search ms-1"></i>
+                </a>
+                
+              </div>              
+
+              <ng-container *ngIf="searchResult.length > 0" >
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" type="button" *ngFor="let user of searchResult | slice:0:15; let i = index;" 
+                (click)="goToPage(user.sn)">
+                  <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                      <img class="avatar avatar-xs avatar-circle" [src]="avatar" alt="Image Description" onerror="this.src=avatar">
+                    </div>
+                    <div class="flex-grow-1 text-truncate ms-2">
+                      <span>{{user.firstName.concat(' ').concat(user.lastName) }} <i class="tio-verified text-primary" data-toggle="tooltip" data-placement="top" title="Top endorsed"></i></span>
+                    </div>
+                  </div>
+                </a>
+              </ng-container>
+
+              <ng-container *ngIf="noRecord">
+                <div class="dropdown-divider"></div>
+                <div class="text-center">No customer found.</div>
+              </ng-container>
+
+              
 
 
               
@@ -94,6 +120,7 @@
           <!-- End Card Search Content -->
 
         </div>
+      </form>
 
         <!-- End Search Form -->
       </div>
