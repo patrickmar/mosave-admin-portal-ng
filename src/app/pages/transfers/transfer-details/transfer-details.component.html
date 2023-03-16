@@ -1,0 +1,312 @@
+<!-- Content -->
+<div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header d-print-none">
+        <div class="row align-items-center">
+            <div class="col-sm mb-2 mb-sm-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-no-gutter">
+                        <li class="breadcrumb-item"><a class="breadcrumb-link"
+                                routerLink="/transfer/listing">Transfers</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Transfer details</li>
+                    </ol>
+                </nav>
+
+                <div class="d-sm-flex align-items-sm-center">
+                    <h1 class="page-header-title">Reference #{{transferRecord?.id}}</h1>
+                    <span class="badge bg-soft-success text-success ms-sm-3">
+                        <span class="legend-indicator bg-success"></span>{{transferRecord?.status | titlecase}}
+                    </span>
+                    <span class="badge bg-soft-info text-info ms-2 ms-sm-3">
+                        <span class="legend-indicator bg-info"></span>Fulfilled
+                    </span>
+                    <span class="ms-2 ms-sm-3">
+                        <i class="bi-calendar-week"></i> {{transferRecord?.transferred_at | date: 'medium'}}
+                    </span>
+                </div>
+
+                <div class="mt-2">
+                    <div class="d-flex gap-2">
+                        <a class="text-body me-3" href="javascript:;" onclick="window.print(); return false;">
+                            <i class="bi-printer me-1"></i> Print
+                        </a>
+
+                        <!-- Dropdown -->
+                        <!-- <div class="dropdown">
+                            <a class="text-body" href="javascript:;" id="moreOptionsDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                More options <i class="bi-chevron-down"></i>
+                            </a>
+
+                            <div class="dropdown-menu mt-1" aria-labelledby="moreOptionsDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi-clipboard dropdown-item-icon"></i> Duplicate
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi-x dropdown-item-icon"></i> Cancel order
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi-archive dropdown-item-icon"></i> Archive
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi-eye dropdown-item-icon"></i> View order status page
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi-pencil dropdown-item-icon"></i> Edit order
+                                </a>
+                            </div>
+                        </div> -->
+                        <!-- End Dropdown -->
+                    </div>
+                </div>
+            </div>
+            <!-- End Col -->
+
+            
+            <!-- End Col -->
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Page Header -->
+
+    <div class="row mb-2">
+        <div class="col-sm-auto">
+            <div class="d-flex gap-2">
+              <button type="button" (click)="goBack()" class="btn btn-ghost-dark btn-icon btn-sm rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Go back">
+                <i class="bi-arrow-left display-4 font-bold"></i>
+              </button>
+            </div>
+          </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <!-- Card -->
+            <div class="card">
+                <!-- Header -->
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-header-title">Transfer Details</h4>
+                        <h2 class="card-header-title text-success">{{transferRecord?.amount/ 100 | currency : '₦' }}</h2>
+                    </div>
+                    
+                </div>
+                <!-- End Header -->
+
+                <!-- Body -->
+                <div class="card-body">
+                    <!-- List Group -->
+                    <ul class="list-group list-group-flush list-group-no-gutters">
+                        <li class="list-group-item ">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Account Name: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.recipient.details?.account_name}}
+                                </h5>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Account Number: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.recipient.details?.account_number}}
+                                </h5>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Bank: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.recipient.details?.bank_name}}
+                                </h5>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Transfer Reference: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.reference}}
+                                </h5>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Transfer code: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.transfer_code}}
+                                </h5>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Transfer Fees: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.fee_charged / 100 | currency: '₦'}}
+                                </h5>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Reason: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.reason}}
+                                </h5>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Created At: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.createdAt | date: 'medium'}}
+                                </h5>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Transferred At: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.transferred_at | date: 'medium'}}
+                                </h5>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Transfer From: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.source}}
+                                </h5>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Currency: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.recipient.currency}}
+                                </h5>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-inherit">Session ID: </span>
+                                </div>
+                                <h5 class="mb-0" href="javascript:;">{{transferRecord?.session?.id}}
+                                </h5>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <!-- End List Group -->
+                </div>
+                <!-- End Body -->
+            </div>
+            <!-- End Card -->
+        </div>
+
+
+        <div class="col-lg-6 mb-3 mb-lg-0">
+
+            <!-- Card -->
+            <div class="card">
+                <!-- Header -->
+                <div class="card-header">
+                    <h4 class="card-header-title">
+                        Transfer Activity
+                        <span class="badge bg-soft-dark text-dark ms-1">
+                            <span class="legend-indicator bg-dark"></span>Marked as {{transferRecord?.status | titlecase}}
+                        </span>
+                    </h4>
+                </div>
+                <!-- End Header -->
+
+                <!-- Body -->
+                <div class="card-body">
+                    <!-- Step -->
+                    <ul class="step step-icon-xs">
+                        <!-- Step Item -->
+                        <li class="step-item">
+                            <div class="step-content-wrapper">
+                                <span class="step-divider">{{transferRecord?.createdAt | date :'EEEE, d MMMM, y.'}}</span>
+                            </div>
+                        </li>
+                        <!-- End Step Item -->
+
+                        <!-- Step Item -->
+                        <li class="step-item">
+                            <div class="step-content-wrapper">
+                                <span class="step-icon step-icon-soft-info step-icon-pseudo"></span>
+
+                                <div class="step-content">
+                                    <h5 class="mb-1">
+                                        <span class="text-dark" >Transfer initiated</span>
+                                    </h5>
+
+                                    <p class="fs-6 mb-0">{{transferRecord?.createdAt | date :'shortTime'}}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- End Step Item -->
+
+                        <!-- Step Item -->
+                        <li class="step-item">
+                            <div class="step-content-wrapper">
+                                <span class="step-icon step-icon-soft-danger step-icon-pseudo"></span>
+
+                                <div class="step-content">
+                                    <h5 class="mb-1">
+                                        <span class="text-dark" >Transfer pending</span>
+                                    </h5>
+
+                                    <p class="fs-6 mb-0">{{transferRecord?.createdAt | date :'shortTime'}}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- End Step Item -->
+
+                        <!-- Step Item -->
+                        <li class="step-item">
+                            <div class="step-content-wrapper">
+                                <span class="step-icon step-icon-soft-success step-icon-pseudo"></span>
+
+                                <div class="step-content">
+                                    <h5 class="mb-1">
+                                        <span class="text-dark" >Transfer successful</span>
+                                    </h5>
+
+                                    <p class="fs-6 mb-0">{{transferRecord?.transferred_at | date :'shortTime'}}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- End Step Item -->
+
+                    </ul>
+                    <!-- End Step -->
+
+                    <span class="small">Times are shown in the local time zone.</span>
+                </div>
+                <!-- End Body -->
+            </div>
+            <!-- End Card -->
+        </div>
+
+
+    </div>
+    <!-- End Row -->
+</div>
+<!-- End Content -->

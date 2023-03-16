@@ -47,9 +47,6 @@
 
                         <input type="text" class="form-control" formControlName="eventTitle" id="eventTitleLabel"
                             placeholder="Flytime Festival" aria-label="Title" value="">
-                            <!-- <small *ngIf="!ticketForm.controls.eventTitle.valid" class="text-danger">
-                                Name is required (minimum 5 characters).
-                            </small> -->
                     </div>
                     <!-- End Form -->
 
@@ -66,7 +63,7 @@
                         </div>
                         <!-- End Col -->
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-6" *ngIf="merchantList != undefined">
                             <!-- Form -->
                             <div class="mb-4">
                                 <label for="merchantLabel" class="form-label">Merchant</label>
@@ -552,7 +549,7 @@
                     <div class="mb-4" *ngIf="showSeat">
                         <label for="capacityLabel" class="form-label">Enter Seat Capacity</label>
                         <input type="number" class="form-control" id="capacityLabel" placeholder="1000"
-                            formControlName="SeatCapacity">
+                            formControlName="seatCapacity">
                     </div>
 
                 </div>

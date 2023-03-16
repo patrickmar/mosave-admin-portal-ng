@@ -40,6 +40,7 @@ export class DetailsComponent implements OnInit {
   transactionValues!: object | any;
   plans!: Array<any> | any;
   imagePath = environment.app.baseUrl + environment.app.imagePath;
+  emptyTable = environment.emptyTable;
   loading: boolean = false;
   userPlans!: Array<any>;
   addInfo!: Array<any>;
@@ -128,7 +129,7 @@ export class DetailsComponent implements OnInit {
       firstname: new FormControl('', Validators.required),
       lastname: new FormControl('', Validators.required),
       account_num: new FormControl('', Validators.required),
-      customerId: new FormControl('', Validators.required),
+      customerId: new FormControl(this.customerId, Validators.required),
       accountTypeId: new FormControl('', Validators.required),
       agentId: new FormControl(this.user.sn, Validators.required),
       planId: new FormControl(parseInt(''), Validators.required),
@@ -188,6 +189,17 @@ export class DetailsComponent implements OnInit {
   switchWithdrawType(){
     if(this.bankWithdrawal == false){
       this.bankWithdrawal = true;
+      this.withdrawalForm?.get('myCheckbox')?.valueChanges.subscribe((value:any) => {
+      if(value) {
+        this.withdrawalForm.get('bank')?.get('bankName')?.setValidators(Validators.required);
+        this.withdrawalForm.get('bank')?.get('account_number')?.setValidators(Validators.required);
+        this.withdrawalForm.get('bank')?.get('name')?.setValidators(Validators.required);
+        this.withdrawalForm.get('bank')?.get('bank_code')?.setValidators(Validators.required);
+      } else {
+        this.withdrawalForm.get('myEmailField')?.clearValidators();
+      }
+    }
+);
     } else {
       this.bankWithdrawal = false;
     }
@@ -417,6 +429,11 @@ export class DetailsComponent implements OnInit {
     this.otpLength = this.otp.length;
     console.log(this.otp);
     console.log(this.otpLength);
+  }
+
+  Withdrawal2(){
+    this.getSelectedPlan(this.withdrawalForm);
+    console.log(this.withdrawalForm);
   }
 
   performTransaction(form: any, otp: string) {

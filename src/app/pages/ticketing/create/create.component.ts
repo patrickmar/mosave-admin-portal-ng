@@ -5,7 +5,6 @@ declare var HSSideNav: any;
 declare var HSAddField: any;
 declare var HSBsDropdown: any;
 declare var HSQuantityCounter: any;
-declare var HSCore: any;
 
 @Component({
   selector: 'app-create',
@@ -32,7 +31,7 @@ export class CreateComponent implements OnInit {
       eventType: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(2)]],
       tags: ['', [Validators.minLength(5)]],
-      SeatCapacity: new FormControl(0),
+      seatCapacity: new FormControl(0),
       enableEvent: new FormControl(false),
       enableSeat: new FormControl(false),
       ticketCategories: this.fb.array([this.newCategory()]),

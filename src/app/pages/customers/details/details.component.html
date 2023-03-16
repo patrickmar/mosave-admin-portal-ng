@@ -713,7 +713,7 @@
                     </thead>
 
                     <tbody>
-                      <ng-container *ngIf="customerTrxs.length > 0 else elseTemplate">                      
+                      <ng-container *ngIf="customerTrxs != undefined && customerTrxs.length > 0 else elseTemplate">                      
                       <tr *ngFor="let t of customerTrxs; let i = index;">
                         <td><a type="button" (click)="open(content, t)">{{t?.transref}}</a></td>
                         <td>
@@ -741,7 +741,7 @@
                         <tr>
                           <td valign="top" colspan="8" class="dataTables_empty">
                             <div class="text-center p-4">
-                              <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;"
+                              <img class="mb-3" src="{{emptyTable}}" alt="Image Description" style="width: 10rem;"
                                 data-hs-theme-appearance="default">
                               <p class="mb-0">No transaction history found</p>
                             </div>
@@ -811,7 +811,7 @@
 
           <div class="row" *ngIf="plansInfo!= null && plans?.length == 0">
             <div class="text-center p-4">
-              <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;"
+              <img class="mb-3" src="{{emptyTable}}" alt="Image Description" style="width: 10rem;"
                 data-hs-theme-appearance="default">
               <p class="mb-0">{{plansInfo}}</p>
             </div>

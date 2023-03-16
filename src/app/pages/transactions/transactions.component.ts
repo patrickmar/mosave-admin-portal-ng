@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, QueryList, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, QueryList, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
@@ -22,7 +22,7 @@ declare var HsNavScroller: any;
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.css']
 })
-export class TransactionsComponent implements OnInit {
+export class TransactionsComponent implements OnInit, OnDestroy {
 
   // @ViewChild(DataTableDirective, {static: false})  
   @ViewChild(DataTableDirective)

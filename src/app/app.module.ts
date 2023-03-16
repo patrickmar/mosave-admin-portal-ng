@@ -41,6 +41,9 @@ import { CreateComponent } from './pages/ticketing/create/create.component';
 import { UpdateComponent } from './pages/ticketing/update/update.component';
 import { ViewComponent } from './pages/ticketing/view/view.component';
 import { TicketDetailsComponent } from './pages/ticketing/details/details.component';
+import { ListingComponent } from './pages/transfers/listing/listing.component';
+import { RecipientsComponent } from './pages/transfers/recipients/recipients.component';
+import { TransferDetailsComponent } from './pages/transfers/transfer-details/transfer-details.component';
 
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
@@ -60,6 +63,9 @@ const appRoutes: Routes = [
   {path: "ticket/view", component: ViewComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "ticket/:sn/update", component: UpdateComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "ticket/:sn/details", component: TicketDetailsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "transfers/listing", component: ListingComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "transfers/recipients", component: RecipientsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "transfers/:id/details", component: TransferDetailsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "page-not-found", component: PageNotFoundComponent},
   { path: '**', redirectTo: 'page-not-found'},
 ]
@@ -92,6 +98,9 @@ const appRoutes: Routes = [
     UpdateComponent,
     ViewComponent,
     TicketDetailsComponent,
+    ListingComponent,
+    RecipientsComponent,
+    TransferDetailsComponent,
   ],
   imports: [
     BrowserModule,

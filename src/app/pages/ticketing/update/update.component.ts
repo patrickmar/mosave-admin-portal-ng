@@ -26,9 +26,27 @@ export class UpdateComponent implements OnInit {
   showSeat: boolean = false;
   data: object | any;
   maxCategory = 10;
+  merchantList!: Array<any>
 
   constructor(private fb: FormBuilder, private dataService: DataService, 
     private route: ActivatedRoute, private toastService: ToastService) { 
+      this.ticketForm = this.fb.group({
+        eventTitle: ['', [Validators.required, Validators.minLength(5)]],  
+        venue: ['', [Validators.required, Validators.minLength(5)]],
+        submerchantId: new FormControl('', Validators.required),
+        paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
+        vendor: ['', [Validators.minLength(5)]],
+        chargesBearer: ['', [Validators.required, Validators.minLength(5)]],
+        eventType: ['', [Validators.required, Validators.minLength(5)]],
+        description: ['', [Validators.required, Validators.minLength(5)]],
+        tags: ['', [Validators.minLength(5)]],
+        seatCapacity: new FormControl('', Validators.required),
+        enableEvent: new FormControl(false),
+        enableSeat: new FormControl(false),
+        ticketCategories: this.fb.array([]),
+        start: this.fb.array([]),
+        end: this.fb.array([]),
+      });
     this.getTicket();  
   }
 
@@ -40,6 +58,33 @@ export class UpdateComponent implements OnInit {
     this.addEndDate();
     //this.getAllTickets();
     // this.getTicketId();
+    this.merchantList = [
+      {
+        id: 1,
+        name: 'BME',
+        merchantId: '201501'
+      },
+      {
+        id: 2,
+        name: 'Dangote',
+        merchantId: '201502'
+      },
+      {
+        id: 3,
+        name: 'Fair acres',
+        merchantId: '201503'
+      },
+      {
+        id: 4,
+        name: 'Muson',
+        merchantId: '201504'
+      },
+      {
+        id: 5,
+        name: 'Flytime',
+        merchantId: '201505'
+      },
+    ]
   }
 
   displayEndDate(){
@@ -68,24 +113,22 @@ export class UpdateComponent implements OnInit {
       this.data = filter[0];
       const data = filter[0];
 
-      this.ticketForm = this.fb.group({
-        eventTitle: [data?.eventTitle, [Validators.required, Validators.minLength(5)]],  
-        venue: [data?.venue, [Validators.required, Validators.minLength(5)]], 
-        //merchantName: ['', [Validators.required, Validators.minLength(5)]],
-        submerchantId: new FormControl(parseInt(data?.submerchantId), Validators.required),
-        paystackAcctId: [data?.paystackAcctId, [Validators.required, Validators.minLength(5)]],
-        vendor: [data?.vendor, [Validators.minLength(5)]],
-        chargesBearer: [data?.chargesBearer, [Validators.required, Validators.minLength(5)]],
-        eventType: [data?.eventType, [Validators.required, Validators.minLength(5)]],
-        description: [data?.description, [Validators.required, Validators.minLength(5)]],
-        tags: [data?.tags, [Validators.minLength(5)]],
-        SeatCapacity: new FormControl(data?.SeatCapacity, Validators.required),
-        enableEvent: new FormControl(data?.enableEvent),
-        enableSeat: new FormControl(data?.enableSeat),
-        ticketCategories: this.fb.array([]),
-        start: this.fb.array([]),
-        end: this.fb.array([]),
-      });
+      const ticketForm = {
+        eventTitle: data?.eventTitle,  
+        venue: data?.venue,
+        submerchantId: parseInt(data?.submerchantId),
+        paystackAcctId: data?.paystackAcctId,
+        vendor: data?.vendor,
+        chargesBearer: data?.chargesBearer,
+        eventType: data?.eventType,
+        description: data?.description,
+        tags: data?.tags,
+        seatCapacity: data?.seatCapacity,
+        enableEvent: data?.enableEvent,
+        enableSeat: data?.enableSeat,
+      };
+
+      this.ticketForm.patchValue(ticketForm);
 
       this.data?.ticketCategories?.map((item: any) => {
         const ticket = this.fb.group({
@@ -224,33 +267,7 @@ export class UpdateComponent implements OnInit {
     console.log(this.ticketForm.value);
   }  
 
-  merchantList = [
-    {
-      id: 1,
-      name: 'BME',
-      merchantId: 201501
-    },
-    {
-      id: 2,
-      name: 'Dangote',
-      merchantId: 201502
-    },
-    {
-      id: 3,
-      name: 'Fair acres',
-      merchantId: 201503
-    },
-    {
-      id: 4,
-      name: 'Muson',
-      merchantId: 201504
-    },
-    {
-      id: 5,
-      name: 'Flytime',
-      merchantId: 201505
-    },
-  ]
+  
 
   jsInit() {
 

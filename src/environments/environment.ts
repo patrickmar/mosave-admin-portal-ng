@@ -14,9 +14,10 @@ export const environment = {
   logo3: "../../../assets/img/logo/site-logo2.png",
   mini_logo: "../../../assets/img/logo/logo-transparent.png",
   avatar: '../../../assets/img/160x160/img1.jpg',
+  emptyTable: './assets/svg/illustrations/oc-error.svg',
   paystack:{
     url: "https://api.paystack.co/",
-    secretKey: "sk_test_feeb3d34498e46330086fe2a73b02692a05adda5",
+    secretKey: "sk_live_283e8912e82f34b275a577b97659aec29bf778d1", //"sk_test_feeb3d34498e46330086fe2a73b02692a05adda5",
     publicKey: "pk_test_fb0ce109fe7f1e851ddf454110f04af9b3154e14",
   }
 };

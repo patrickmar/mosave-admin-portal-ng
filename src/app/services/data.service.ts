@@ -24,8 +24,19 @@ export class DataService {
     return this.httpService.getPaystack('bank');
   }
 
+  //verify customer Bank Accounts
   public verifyBankAccount(options: string) {
     return this.httpService.getPaystack('bank/resolve?'+ options);
+  }
+
+  //get all Mosave Transfers on paystack
+  public getAllTransfers(options: string) {
+    return this.httpService.getPaystack('transfer?'+options);
+  }
+
+  //fetch all Mosave Transfers on paystack by customer Id
+  public getCustomerTransferRecord(value: string) {
+    return this.httpService.getPaystack('transfer/'+ value);
   }
 
   // ALL GET REQUEST

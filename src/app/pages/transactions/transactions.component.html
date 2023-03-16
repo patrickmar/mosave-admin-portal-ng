@@ -250,7 +250,8 @@
         (onDownloadPrint)="downloadAll('datatable', 'print')"
         (onDownloadExcel)="downloadAll('datatable', 'excel')"
         (onDownloadCsv)="downloadAll('datatable', 'csv')"
-        (onDownloadPdf)="downloadAll('datatable', 'pdf')"></app-transactions-header>
+        (onDownloadPdf)="downloadAll('datatable', 'pdf')">
+      </app-transactions-header>
         <!-- End Header -->
 
         <!-- Table -->
@@ -347,8 +348,8 @@
               <tr>
                 <th class="table-column-pe-0">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                    <label class="form-check-label" for="datatableCheckAll"></label>
+                    <input class="form-check-input" type="checkbox" value="" id="savingsDatatableCheckAll">
+                    <label class="form-check-label" for="savingsDatatableCheckAll"></label>
                   </div>
                 </th>
                 <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
