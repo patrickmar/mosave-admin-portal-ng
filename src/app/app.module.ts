@@ -44,6 +44,7 @@ import { TicketDetailsComponent } from './pages/ticketing/details/details.compon
 import { ListingComponent } from './pages/transfers/listing/listing.component';
 import { RecipientsComponent } from './pages/transfers/recipients/recipients.component';
 import { TransferDetailsComponent } from './pages/transfers/transfer-details/transfer-details.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
@@ -110,6 +111,7 @@ const appRoutes: Routes = [
     ReactiveFormsModule, 
     HttpClientModule,
     NgbModalModule,
+    NgxDropzoneModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'})

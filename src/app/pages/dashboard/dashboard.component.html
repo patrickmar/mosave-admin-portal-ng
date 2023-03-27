@@ -19,6 +19,177 @@
       </div>
       <!-- End Page Header -->
 
+      <div class="row">
+        <div class="col-lg-6 mb-3 mb-lg-0">
+          <!-- Card -->
+          <div class="card h-100">
+            <!-- Header -->
+            <div class="card-header card-header-content-sm-between">
+              <h4 class="card-header-title mb-2 mb-sm-0">Transactions</h4>
+
+              <!-- Daterangepicker -->
+              <button id="js-daterangepicker-predefined" class="btn btn-ghost-secondary btn-sm dropdown-toggle">
+                <i class="bi-calendar-week"></i>
+                <span class="js-daterangepicker-predefined-preview ms-1"></span>
+              </button>
+              <!-- End Daterangepicker -->
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body">
+              <!-- Chart -->
+              <div class="chartjs-custom mx-auto" style="height: 20rem;">
+                <canvas class="js-chart-datalabels" data-hs-chartjs-options='{
+                              "type": "bubble",
+                              "data": {
+                                "datasets": [
+                                  {
+                                    "label": "Label 1",
+                                    "data": [
+                                      {"x": 55, "y": 65, "r": 99}
+                                    ],
+                                    "color": "#fff",
+                                    "backgroundColor": "rgba(55, 125, 255, 0.9)",
+                                    "borderColor": "transparent"
+                                  },
+                                  {
+                                    "label": "Label 2",
+                                    "data": [
+                                      {"x": 33, "y": 42, "r": 65}
+                                    ],
+                                    "color": "#fff",
+                                    "backgroundColor": "rgba(100, 0, 214, 0.8)",
+                                    "borderColor": "transparent"
+                                  },
+                                  {
+                                    "label": "Label 3",
+                                    "data": [
+                                      {"x": 46, "y": 26, "r": 38}
+                                    ],
+                                    "color": "#fff",
+                                    "backgroundColor": "#00c9db",
+                                    "borderColor": "transparent"
+                                  }
+                                ]
+                              },
+                              "options": {
+                                "scales": {
+                                  "yAxes": [{
+                                    "gridLines": {
+                                      "display": false
+                                    },
+                                    "ticks": {
+                                      "display": false,
+                                      "max": 100,
+                                      "beginAtZero": true
+                                    }
+                                  }],
+                                  "xAxes": [{
+                                  "gridLines": {
+                                      "display": false
+                                    },
+                                    "ticks": {
+                                      "display": false,
+                                      "max": 100,
+                                      "beginAtZero": true
+                                    }
+                                  }]
+                                },
+                                "tooltips": false
+                              }
+                            }'></canvas>
+              </div>
+              <!-- End Chart -->
+
+              <div class="row justify-content-center">
+                <div class="col-auto">
+                  <span class="legend-indicator bg-primary"></span> New
+                </div>
+                <!-- End Col -->
+
+                <div class="col-auto">
+                  <span class="legend-indicator" style="background-color: #7000f2;"></span> Pending
+                </div>
+                <!-- End Col -->
+
+                <div class="col-auto">
+                  <span class="legend-indicator bg-info"></span> Failed
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-lg-6">
+          <!-- Card -->
+          <div class="card h-100">
+            <!-- Header -->
+            <div class="card-header card-header-content-between">
+              <h4 class="card-header-title">Top 5 Savers</h4>
+
+              <!-- Dropdown -->
+              <div class="dropdown">
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi-three-dots-vertical"></i>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown1">
+                  <span class="dropdown-header">Settings</span>
+
+                  <a class="dropdown-item" href="#">
+                    <i class="bi-share-fill dropdown-item-icon"></i> Share reports
+                  </a>
+                  <a class="dropdown-item" href="#">
+                    <i class="bi-download dropdown-item-icon"></i> Download
+                  </a>
+                  <a class="dropdown-item" href="#">
+                    <i class="bi-alt dropdown-item-icon"></i> Connect other apps
+                  </a>
+
+                  <div class="dropdown-divider"></div>
+
+                  <span class="dropdown-header">Feedback</span>
+
+                  <a class="dropdown-item" href="#">
+                    <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
+                  </a>
+                </div>
+              </div>
+              <!-- End Dropdown -->
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body">
+              <!-- <span class="h1 d-block mb-4">$7,431.14 USD</span> -->
+
+              <!-- Table -->
+              <div class="table-responsive">
+                <table class="table table-lg table-nowrap card-table mb-0">
+                  <tr *ngFor="let item of bestSavers | slice:0:5; let i = index;">
+                    <th scope="row">
+                      <span class="legend-indicator bg-primary"></span>{{item?.firstName.concat(' ').concat(item?.lastName) | titlecase}}
+                    </th>
+                    <td>{{item?.transAmount | currency: '₦'}}</td>
+                    <td>
+                      <span class="badge bg-soft-success text-success">+{{item?.percent}}%</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- End Table -->
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+      </div>
+
 
       <!-- Card -->
       <div class="card mb-3 mb-lg-5">
@@ -183,7 +354,7 @@
                       </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                      <h5 class="text-inherit mb-0">{{data?.firstName | titlecase}} {{data?.lastName | titlecase}}</h5>
+                      <h5 class="text-inherit mb-0">{{data?.firstName.concat(' ').concat(data?.lastName) | titlecase}}</h5>
                     </div>
                   </a>
                 </td>

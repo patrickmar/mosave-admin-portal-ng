@@ -121,15 +121,18 @@ export class DataService {
   }
 
   // Get Agent daily total savings balance
-  public getAgentDailySavingsBalance(agentid: any) {
+  public getAgentDailySavingsBalance(agentid: any): Observable<any> {
     return this.httpService.get('agent/sumsavingstrans/' + agentid + '?' + this.time);
   }
   // Get Agent daily total withdraw balance
-  public getAgentDailyWithdrawalBalance(agentid: any) {
+  public getAgentDailyWithdrawalBalance(agentid: any): Observable<any> {
     return this.httpService.get('agent/sumwithtrans/' + agentid + '?' + this.time);
   }
 
-
+  // Get all merchants
+  public getProgramMerchants() {
+    return this.httpService.get('all/programmerchants');
+  }
 
 
   // ALL POST REQUEST
@@ -202,6 +205,12 @@ export class DataService {
   updateAgentProfile(agentData: any): Observable<any> {
     return this.httpService.post('agent/update', agentData);
   }
+
+  // create event ticket
+  createEventTicket(data: any): Observable<any> {
+    return this.httpService.postWithImage('create/eventticket', data);
+  }
+  
 
 
 }

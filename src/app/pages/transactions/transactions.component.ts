@@ -6,6 +6,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { forkJoin, Subject } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { ReceiptService } from 'src/app/services/receipt.service';
+import { StatService } from 'src/app/services/stat.service';
 //import { moment} from 'moment';
 //import * as moment from 'moment';
 //import moment = require('moment');
@@ -91,13 +92,16 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   withTrnxRecords: any;
   commTrnxRecords: any;
 
+  bestSavers!: Array<any>;
+
   // @ViewChild(TransactionsTableComponent)
   // private btnIcon: btn;
   // @ViewChild('TransactionsTableComponent', {static: false}) TransactionsTableComponent: any;
 
   constructor(private dataService: DataService, private datePipe: DatePipe,
     private receiptService: ReceiptService, private modalService: NgbModal,
-    private cdr: ChangeDetectorRef, private ngZone: NgZone, private route: ActivatedRoute) { }
+    private cdr: ChangeDetectorRef, private ngZone: NgZone, private route: ActivatedRoute,
+    private statService: StatService) { }
 
   ngOnInit(): void {
     this.jsInit();
@@ -297,6 +301,8 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       // let today = date.setDate(date.getDate() - 0);
       // let yesterday = date.setDate(date.getDate() - 1);
       // let lastweek = date.setDate(date.getDate() - 7);
+
+      this.bestSavers = this.statService.getBestStat(this.savingsRecords);
 
       const endDate4 = this.datePipe.transform(new Date().setDate(new Date().getDate()), 'YYYY-MM-dd');
       console.log(endDate4);

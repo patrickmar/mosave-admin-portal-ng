@@ -35,6 +35,16 @@ export class HttpService {
     //return this.http.post(url, JSON.stringify(data), options).pipe(catchError(this.errorHandler));
   }
 
+  postWithImage(serviceName: string, data: any) {
+    const headers = new HttpHeaders();
+    const options = { headers: headers, withCredentials: false };
+    const url = environment.app.baseUrl + environment.app.path + serviceName;
+    return this.http.post(url, data, options).pipe(
+      finalize(() => {
+    })
+    );
+  }
+
   get(serviceName: string) {
 
     const headers = new HttpHeaders();

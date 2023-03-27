@@ -1,9 +1,10 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
+import { StatService } from 'src/app/services/stat.service';
 import { environment } from 'src/environments/environment';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 
@@ -29,17 +30,24 @@ export class DashboardComponent implements OnInit {
   imagePath: string  = environment.app.baseUrl+environment.app.imagePath;
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
+  allRecords !: Array<any>;
+  trnxRecords!: Array<any>;
+  savingsRecords!: Array<any>;
+  withdrawalRecords!: Array<any>;
+  commissionRecords!: Array<any>;  
+  bestSavers !: Array<any>;
 
   @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;
   
 
   constructor(private authservice: AuthService, 
-    private dataService: DataService) { }
+    private dataService: DataService, private statService: StatService) { }
 
   ngOnInit(): void {
     this.getUserDetails();
-    this.getAllCustomers();   
+    this.getAllCustomers();
+    this.getAllTrxs();
     //$('#datatable').DataTable();
     //this.jsOnLoad();
     this.dtOptions = {
@@ -126,6 +134,44 @@ export class DashboardComponent implements OnInit {
     }),((error: any)=>{
       console.log(error);
     })
+  }
+
+  getAllTrxs() {
+    try {
+      forkJoin([
+        this.dataService.getMosaveTransactions(),
+        this.dataService.getMosaveSavingTransactions()
+      ]).subscribe((result: any) => {
+        console.log(result[0]);
+        console.log(result[1]);
+        const newRecords = result[0].map((res: any) => {
+          const type2 = res.transType == "S" ? res.transType + "avings" : 
+          res.transType == "W" ? res.transType + "ithdrawal" : res.transType + "";
+          // if (res.transType == "S") {
+          //   var type = res.transType + "avings";
+          // } else if (res.transType == "W") {
+          //   var type = res.transType + "ithdrawal";
+          // } else {
+          //   var type = res.transType + "";
+          // }
+          return { ...res, transType: type2 };
+        })
+        this.allRecords = newRecords;
+        this.trnxRecords = newRecords;
+        this.savingsRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
+        this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
+        this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");  
+        this.bestSavers = this.statService.getBestStat(this.savingsRecords);
+        console.log(this.bestSavers);
+      }), (error: any) => {
+        console.log(error);
+      }
+      
+    } catch (error) {
+      
+    }
+    
+
   }
 
   rerender(event: any){

@@ -204,6 +204,7 @@
           <thead class="thead-light">
             <tr>
               <th class="table-column-pe-2">S/N</th>
+              <th class="table-column-ps-0"></th>
               <th class="table-column-ps-0">Customer Name</th>
               <th>Transaction Reference</th>
               <th>Status</th>
@@ -219,26 +220,29 @@
                 <div class="text-inherit">{{i+1 +'.'}}</div>
               </td>
               <td class="table-column-ps-0">
-                <a class="d-flex align-items-center text-dark" href="#">
-                <div class="flex-shrink-0">
-                    <ng-container *ngIf="item?.image else elseTemplate2">
-                        <div class="avatar avatar-xs avatar-circle">
-                            <img class="avatar-img" [src]="imageBaseURL+item?.image" alt="{{item?.recipient?.name}}"
-                                onerror="this.src=avatar">
-                        </div>
-                    </ng-container>
-                    <ng-template #elseTemplate2>
-                        <div class="avatar avatar-soft-primary avatar-circle" *ngIf="!item.image">
-                            <span class="avatar-initials">{{item?.recipient?.name | slice:0:1}}{{item?.recipient?.name | slice:0:1}}</span>
-                        </div>
-                    </ng-template>
-                </div>                   
+                <div class="d-flex align-items-center text-dark" >
+                  <div class="flex-shrink-0">
+                      <ng-container *ngIf="item?.image else elseTemplate2">
+                          <div class="avatar avatar-xs avatar-circle">
+                              <img class="avatar-img" [src]="imageBaseURL+item?.image" alt="{{item?.recipient?.name}}"
+                                  onerror="this.src=avatar">
+                          </div>
+                      </ng-container>
+                      <ng-template #elseTemplate2>
+                          <div class="avatar avatar-soft-primary avatar-circle" *ngIf="!item.image">
+                              <span class="avatar-initials">{{item?.recipient?.name | slice:0:1}}{{item?.recipient?.name | slice:0:1}}</span>
+                          </div>
+                      </ng-template>
+                  </div>
+                  </div>
 
-
+              </td>
+              <td class="table-column-ps-0">
+                <div class="d-flex align-items-center text-dark">
                   <div class="flex-grow-1 ms-3">
                     <span class="text-inherit">{{item?.recipient?.name}}</span>
                   </div>
-                </a>
+                </div>
               </td>
               <td>
                 <div class="flex-grow-1 ms-3">

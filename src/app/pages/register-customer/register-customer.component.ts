@@ -106,7 +106,7 @@ export class RegisterCustomerComponent implements OnInit, iDeactivateComponent {
       console.log(key+" "+value);
     });
     const serviceName = "customer/register";
-    const url = environment.app.baseUrl + environment.app.path + serviceName;;
+    const url = environment.app.baseUrl + environment.app.path + serviceName;
     //this.dataService.registerCustomer(formData)
     this.http.post(url, formData).pipe(finalize(() => { }))
     .subscribe((res:any)=>{

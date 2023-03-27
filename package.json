@@ -32,6 +32,7 @@
     "jszip": "^3.7.1",
     "moment": "^2.29.3",
     "ng-otp-input": "^1.8.5",
+    "ngx-dropzone": "^3.1.0",
     "ngx-toastr": "^14.3.0",
     "number-to-words": "^1.2.4",
     "pdfmake": "^0.2.5",

@@ -62,24 +62,40 @@ export class ListingComponent implements OnInit, OnDestroy {
       buttons: [
         {
           extend: 'copy',
-          className: 'd-none'
+          className: 'd-none',
+          exportOptions: {
+            columns: [ 0, 2, 3, 4, 5 ]
+          }
         },
         {
           extend: 'print',
-          className: 'd-none'
+          className: 'd-none',
+          exportOptions: {
+            columns: [ 0, 2, 3, 4, 5 ]
+          },
+          
         },
         {
           extend: 'excel',
           className: 'd-none',
           filename: function () {
             return 'MoSave_paystack_report_' + new Date().getTime();
-          }
+          },
+          exportOptions: {
+            columns: [ 0, 2, 3, 4, 5 ]
+          },
+          // customize: function (pdf: any) { // or use customizeData
+          //   this.addExtraColumn(pdf);
+          // }
         },
         {
           extend: 'csv',
           className: 'd-none',
           filename: function () {
             return 'MoSave_paystack_report_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [ 0, 2, 3, 4, 5 ]
           }
         },
         {
@@ -87,9 +103,19 @@ export class ListingComponent implements OnInit, OnDestroy {
           className: 'd-none',
           filename: function () {
             return 'MoSave_paystack_report_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [ 0, 2, 3, 4, 5 ]
           }
         },
       ],
+      // columnDefs: [
+      //   {
+      //       targets: [ 5 ],
+      //       visible: false,
+      //       searchable: false
+      //   },
+      // ],
       info: true,
       lengthChange: true,
     };
@@ -101,6 +127,15 @@ export class ListingComponent implements OnInit, OnDestroy {
     // We will unsubscribe the even
     this.dtTrigger.unsubscribe();
   }
+
+  //  addExtraColumn(pdf: any) {
+  //   pdf.content[1].table.body.forEach((row: any, idx: any)=> { 
+  //     let newCell = structuredClone(row[0]);
+  //     newCell.text = idx === 0 ? "New Heading" : "";
+  //     row.push( newCell );
+  //     console.log( row );
+  //   })
+  // };
 
   getAllTransfers() {
     const config = {
