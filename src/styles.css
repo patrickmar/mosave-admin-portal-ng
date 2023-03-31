@@ -77,5 +77,20 @@ table.dataTable tbody tr.selected > *{
 }
 
 
+#datatable > tbody > tr > td {
+  word-break: break-all;
+}
+
+
+#datatable.display {
+margin: 0 auto;
+width: 100%;
+clear: both;
+border-collapse: collapse;
+table-layout: fixed;         
+word-wrap:break-word;       
+}
+
+
 
 

@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataTablesModule } from 'angular-datatables';
 import { NgOtpInputModule } from 'ng-otp-input';
 
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { UserDataResolver } from './resolvers/userData.resolvers';
 
 import { AppComponent } from './app.component';
@@ -45,6 +45,7 @@ import { ListingComponent } from './pages/transfers/listing/listing.component';
 import { RecipientsComponent } from './pages/transfers/recipients/recipients.component';
 import { TransferDetailsComponent } from './pages/transfers/transfer-details/transfer-details.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { NgChartsModule } from 'ng2-charts';
 
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
@@ -113,10 +114,11 @@ const appRoutes: Routes = [
     NgbModalModule,
     NgxDropzoneModule,
     BrowserAnimationsModule,
+    NgChartsModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'})
   ],
-  providers: [DatePipe, DateAgoPipe, FormCheckService],
+  providers: [DatePipe, DateAgoPipe, DecimalPipe, FormCheckService],
   bootstrap: [AppComponent],
   exports: [RouterModule]
 })

@@ -14,7 +14,7 @@ export class DataService {
   readonly sampleTicket: string = './assets/json/tickets.json';
 
   // Get Data Bundle API call
-  public getAllTickets() {
+  public getAllTickets2() {
     return this.http.get(this.sampleTicket);
   }
 
@@ -134,6 +134,13 @@ export class DataService {
     return this.httpService.get('all/programmerchants');
   }
 
+  
+  // Get all merchants  - view all tickets - GET
+  public getAllTickets() {
+    return this.httpService.get('all/eventickets');
+  }
+
+
 
   // ALL POST REQUEST
   // Post Customer Registration API
@@ -210,6 +217,13 @@ export class DataService {
   createEventTicket(data: any): Observable<any> {
     return this.httpService.postWithImage('create/eventticket', data);
   }
+
+  // create merchant
+  createMerchant(data: any): Observable<any> {
+    return this.httpService.postWithImage('create/merchant', data);
+  }
+// '$merchantid','$password','$merchantname','$email','$address','$city','$state','$country',
+// '$cperson','$phonno',
   
 
 

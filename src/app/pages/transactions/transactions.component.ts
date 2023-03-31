@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, QueryList, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, QueryList, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
@@ -23,7 +23,7 @@ declare var HsNavScroller: any;
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.css']
 })
-export class TransactionsComponent implements OnInit, OnDestroy {
+export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // @ViewChild(DataTableDirective, {static: false})  
   @ViewChild(DataTableDirective)
@@ -104,8 +104,8 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     private statService: StatService) { }
 
   ngOnInit(): void {
-    this.jsInit();
-    this.jsOnLoad();
+    // this.jsInit();
+    // this.jsOnLoad();
     this.getTableHead();
     this.getTransactionType();
     //this.dtOptions
@@ -118,7 +118,6 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       language: {
         zeroRecords: `<div class="text-center p-4">
             <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-            <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
           <p class="mb-0">No data to show</p>
           </div>`,
       },
@@ -168,8 +167,13 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     //this.cdr.detectChanges();
   }
 
+  
+
   ngAfterViewInit(): void {
     //this.dtTrigger.next('');
+
+    this.jsInit();
+    this.jsOnLoad();
   }
 
   ngOnDestroy(): void {
@@ -302,8 +306,6 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       // let yesterday = date.setDate(date.getDate() - 1);
       // let lastweek = date.setDate(date.getDate() - 7);
 
-      this.bestSavers = this.statService.getBestStat(this.savingsRecords);
-
       const endDate4 = this.datePipe.transform(new Date().setDate(new Date().getDate()), 'YYYY-MM-dd');
       console.log(endDate4);
       console.log(date.getDate());
@@ -319,6 +321,8 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       this.calculateDailyTransactions();
       this.calculateMonthlyTransactions();
       this.calculateWeeklyTransactions();
+
+      this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
 
     }), (error: any) => {
       console.log(error);
@@ -854,7 +858,6 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     $('#js-daterangepicker-predefined' + id).on('apply.daterangepicker', function (ev: any, picker: any) {
       var start = picker.startDate;
       var end = picker.endDate;
-      console.log('reach here');
       $.fn.dataTable.ext.search.push(
         function (settings: any, data: any, dataIndex: any) {
           var min = start;

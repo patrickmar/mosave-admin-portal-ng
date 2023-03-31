@@ -1,12 +1,17 @@
-import { TitleCasePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { DecimalPipe, TitleCasePipe } from '@angular/common';
+import { AfterViewInit, Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
+import { Chart, ChartConfiguration, ChartOptions, ChartType, DoughnutControllerChartOptions, } from 'chart.js';
 import { forkJoin, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { StatService } from 'src/app/services/stat.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
+import { BaseChartDirective } from 'ng2-charts';
+
+
 
 declare var $:any;
 declare var moment:any;
@@ -20,11 +25,12 @@ declare var HSBsDropdown:any;
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   dataTable:any;
   user: any;
   firstname!: string;
   customer!: Array<any>;
+  thisMonthCustomer!: Array<any>;
   customerExist: boolean = false;
   date: any;
   imagePath: string  = environment.app.baseUrl+environment.app.imagePath;
@@ -34,15 +40,76 @@ export class DashboardComponent implements OnInit {
   trnxRecords!: Array<any>;
   savingsRecords!: Array<any>;
   withdrawalRecords!: Array<any>;
-  commissionRecords!: Array<any>;  
+  commissionRecords!: Array<any>;
+  savingsTrnxRecords!: Array<any>;
+  withTrnxRecords!: Array<any>;
+  commTrnxRecords!: Array<any>;
   bestSavers !: Array<any>;
+  savingsSum!: number;
+  withdrawalSum!: number;
+  commissionSum!: number;
+  yesterdaytrnxSum!: number;
+  totalBalance!: number;
+  trnxMap: any = {'Savings': 'Deposit', 'Withdrawal': 'Withdrawal', 'commission': 'Commission'};
+
 
   @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;
+
+  public pieChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    aspectRatio: 1.4,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+      },
+      // datalabels: {
+      //   formatter: (value, ctx) => {
+      //     if (ctx.chart.data.labels) {
+      //       return ctx.chart.data.labels[ctx.dataIndex];
+      //     }
+      //   },
+      // },
+    }
+  };
+
+  public pieChartLabels = ['Withdrawal', 'Savings', 'Commissions'];
+  public pieChartData!: any; 
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
+  public doughnutHalfChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    aspectRatio: 1,
+    plugins: {
+      legend: {
+        display: false,
+        position: 'top',
+      },
+      // tooltips: {
+      //    postfix: "%"
+      // },
+    }
+  };
+  // public jjjs: DoughnutControllerChartOptions = {
+  //   circumference: Math.PI,
+  //   rotation: Math.PI,
+  //   cutout: 85,
+  // }
+  public doughnutHalfChartType: ChartType = 'doughnut';
+  public doughnutHalfChartLabels = ["Savings", "Withdrawal"];
+  public doughnutHalfChartData!: any; 
   
 
   constructor(private authservice: AuthService, 
-    private dataService: DataService, private statService: StatService) { }
+    private dataService: DataService, private statService: StatService, private toastService: ToastService, private ngZone: NgZone,
+    private decimalPipe: DecimalPipe
+    ) {
+      //Chart.register(Annotation)
+     }
 
   ngOnInit(): void {
     this.getUserDetails();
@@ -57,7 +124,6 @@ export class DashboardComponent implements OnInit {
       language: {
         zeroRecords: `<div class="text-center p-4">
             <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-            <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
           <p class="mb-0">No data to show</p>
           </div>`,
           paginate: {
@@ -96,7 +162,7 @@ export class DashboardComponent implements OnInit {
       lengthChange: true,
     };
     this.download();
-    this.jsInit();    
+        
   }
 
   ngOnDestroy(): void {
@@ -104,16 +170,86 @@ export class DashboardComponent implements OnInit {
   }
 
   ngAfterViewInit(){
+    this.jsInit();
+  }
+
+  onChangeDate(startDate: any, endDate: any, timeline?: string) {
+    if (this.savingsTrnxRecords != null || this.savingsTrnxRecords != undefined) {
+      this.ngZone.run(() => {
+        this.savingsRecords = timeline === 'All' ? this.savingsTrnxRecords : this.filterDate(startDate, endDate, this.savingsTrnxRecords);
+        this.withdrawalRecords = timeline === 'All' ? this.withTrnxRecords : this.filterDate(startDate, endDate, this.withTrnxRecords); 
+        this.commissionRecords = timeline === 'All' ? this.commTrnxRecords : this.filterDate(startDate, endDate, this.commTrnxRecords);
+        this.randomize(this.withdrawalRecords, this.savingsRecords, this.commissionRecords);
+      });
+    }
+  }
+
+  filterDate(startDate: any, endDate: any, record: Array<any>){
+    return record.filter((m: any) => new Date(m.transDate) >= new Date(startDate) && new Date(m.transDate) <= new Date(endDate));
+  }
+
+  public randomize(withdrawalRecords: any, savingsRecords: any, commissionRecords: any): void {
+    for (let i = 0; i < this.pieChartData.datasets.length; i++) {
+        this.pieChartData.datasets[i].data[0] = withdrawalRecords?.length;
+        this.pieChartData.datasets[i].data[1] = savingsRecords?.length;
+        this.pieChartData.datasets[i].data[2] = commissionRecords?.length;
+    }
+    this.chart?.update();
+  }
+  ranges = {
+    'TodayWithFormat': [moment('').format('MMM D'), moment().format('MMM D, YYYY')],
+  }
+
+  dateRanges = [
+    {
+      timeline: 'All',
+      date: [moment('2022-04-07'), moment()]
+    },
+    {
+      timeline: 'Today',
+      date: [moment(), moment()]
+    },
+    {
+      timeline: 'Yesterday',
+      date: [moment().subtract(1, 'days'), moment().subtract(1, 'days')]
+    },
+    {
+      timeline: 'Last 7 Days',
+      date: [moment().subtract(6, 'days'), moment()]
+    },
+    {
+      timeline: 'Last 30 Days',
+      date: [moment().subtract(29, 'days'), moment()],
+    },
+    {
+      timeline: 'This Month',
+      date: [moment().startOf('month'), moment().endOf('month')],
+    },
+    {
+      timeline: 'Last Month',
+      date: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+    
+    
+]
+
+  // var start = moment();
+  //     var end = moment();
+
+  filterDataByDate(start: any, end:any, timeline?: string) {
+    const format = timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
+    $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(start.format(format) + ' - ' + end.format('MMM D, YYYY'));
+    const startDate = start.format('YYYY-MM-DD');
+    const endDate = end.format('YYYY-MM-DD');
+     this.onChangeDate(startDate, endDate, timeline);
   }
 
 
   getUserDetails(){
     this.authservice.userData$.subscribe((response: any) => {
-      console.log(response);
       this.user = response;
       var titleCasePipe = new TitleCasePipe();
       this.firstname = titleCasePipe.transform(this.user?.firstname);
-      console.log(this.user.sn);
     });
   }
 
@@ -121,10 +257,13 @@ export class DashboardComponent implements OnInit {
     this.dataService.getAllcustomers().subscribe((data: any) =>{
       console.log(data);
       this.customer = data;
-      // for (var i = 0; i < data.length; i++) {
-      //   this.date = new DateAgoPipe().transform(data[i].date_registered);
-      // console.log(this.date);
-      // }
+      const thisMonthCustomer  = this.statService.getMonthlyCustomers(this.customer);
+      const newRecords = thisMonthCustomer.map((res: any) => {
+        const allPlans = res?.plans?.map((p:any) => p.plan_name).join(', ');
+        return { ...res, allPlans: allPlans };
+      });
+
+      this.thisMonthCustomer = newRecords;
       this.dtTrigger.next('');
       if(this.customer?.length > 0 ){
         this.customerExist = true;
@@ -159,20 +298,96 @@ export class DashboardComponent implements OnInit {
         this.allRecords = newRecords;
         this.trnxRecords = newRecords;
         this.savingsRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
-        this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-        this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");  
-        this.bestSavers = this.statService.getBestStat(this.savingsRecords);
-        console.log(this.bestSavers);
+      this.savingsTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
+      this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
+      this.withTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
+      this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");
+      this.commTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'commission');
+      this.savingsSum = this.savingsRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+      //calculate the total withdrawals
+      this.withdrawalSum = this.withdrawalRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+      //calculate the total commissions
+      this.commissionSum = this.commissionRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+      this.totalBalance = this.savingsSum - this.withdrawalSum;
+        this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
+        this.pieChartData = {
+          labels: this.pieChartLabels,
+          datasets: [{
+            data: [this.withdrawalRecords?.length, this.savingsRecords?.length, this.commissionRecords?.length],
+            backgroundColor: ['rgb(237,76,120)', 'rgb(0,201,167)', 'rgb(245,202,153)'],
+            hoverBackgroundColor: ['rgb(201,65,102)', 'rgb(0,171,142)', 'rgb(247,210,168)'],
+            borderColor: ['rgb(237,76,120)', 'rgb(0,201,167)', 'rgb(245,202,153)'],
+            hoverBorderColor:['rgb(201,65,102)', 'rgb(0,171,142)', 'rgb(247,210,168)'],
+            hoverOffset: 4
+          }],
+        }
+        
+        const savingsPercent = this.decimalPipe.transform(this.savingsSum / (this.savingsSum +  this.withdrawalSum)  * 100, '1.0-1');
+        const withdrawalPercent = this.decimalPipe.transform(this.withdrawalSum / (this.savingsSum +  this.withdrawalSum) * 100, '1.0-1');
+
+        this.doughnutHalfChartData = {
+          labels: this.doughnutHalfChartLabels,
+          datasets: [{
+            data: [savingsPercent, withdrawalPercent],
+            backgroundColor: ["#377dff", "rgba(55,125,255,.35)"],
+            hoverBackgroundColor: ["#377dff", "rgba(55,125,255,.35)"],
+            borderWidth: 4,
+            borderColor: "#fff",
+            hoverBorderColor: "#ffffff",
+            circumference: 180,
+            rotation: 270,
+            cutout: '85%',
+          }],
+        }
+        this.getCalculatedTransactions();
       }), (error: any) => {
         console.log(error);
+        this.toastService.showError(error[0]?.message, 'Error');
       }
       
     } catch (error) {
+      this.toastService.showError('Please check your internet and refresh', 'Error');
       
     }
     
 
   }
+
+  getCalculatedTransactions(){
+    const yesterdaySavings = this.statService.getYesterdayTransactions(this.savingsRecords);
+    const yesterdayWithdrawal = this.statService.getYesterdayTransactions(this.withdrawalRecords);
+    // const lastMonthSavings = this.statService.getYesterdayTransactions(this.savingsRecords);
+    // const lastMonthWithdrawal = this.statService.getYesterdayTransactions(this.withdrawalRecords);
+    console.log(yesterdaySavings);
+    console.log(yesterdayWithdrawal);
+    const yesterdaySavingsSum = this.statService.calculateTransactions(yesterdaySavings);
+    const yesterdayWithdrawalSum = this.statService.calculateTransactions(yesterdayWithdrawal);
+    const yesterdayBalance = yesterdaySavingsSum - yesterdayWithdrawalSum;    
+    this.yesterdaytrnxSum = this.totalBalance - yesterdayBalance;
+    console.log(this.yesterdaytrnxSum);
+  }
+
+  getBase64() {
+    return this.chart?.toBase64Image();
+  }
+
+  downloadGraph(){
+    const fileName = new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
+    const src = this.getBase64()+'';
+    const link = document.createElement("a");
+    link.href = src
+    link.download = fileName
+    link.click()
+    link.remove()
+  }
+
+  downloadDoughnut(){
+    this.downloadGraph();
+    }
+
+    downloadPie(){
+      this.downloadGraph();
+    }
 
   rerender(event: any){
     var value = event.target.value;
@@ -262,6 +477,50 @@ export class DashboardComponent implements OnInit {
       // INITIALIZATION OF CLIPBOARD
       // =======================================================
       HSCore.components.HSClipboard.init('.js-clipboard')
+
+      // INITIALIZATION OF CHARTJS
+        // =======================================================
+        // HSCore.components.HSChartJS.init('.js-chart-datalabels', {
+        //   plugins: [ChartDataLabels],
+        //   options: {
+        //     plugins: {
+        //       datalabels: {
+        //         anchor: (context: any) => {
+        //           var value = context.dataset.data[context.dataIndex];
+        //           return value.r < 20 ? 'end' : 'center';
+        //         },
+        //         align: (context: any) => {
+        //           var value = context.dataset.data[context.dataIndex];
+        //           return value.r < 20 ? 'end' : 'center';
+        //         },
+        //         color: (context: any) => {
+        //           var value = context.dataset.data[context.dataIndex];
+        //           return value.r < 20 ? context.dataset.backgroundColor : context.dataset.color;
+        //         },
+        //         font: (context: any) => {
+        //           var value = context.dataset.data[context.dataIndex],
+        //             fontSize = 25;
+
+        //           if (value.r > 50) {
+        //             fontSize = 35;
+        //           }
+
+        //           if (value.r > 70) {
+        //             fontSize = 55;
+        //           }
+
+        //           return {
+        //             weight: 'lighter',
+        //             size: fontSize
+        //           };
+        //         },
+        //         offset: 2,
+        //         padding: 0
+        //       }
+        //     }
+        //   }
+        // })
+
 
 
       

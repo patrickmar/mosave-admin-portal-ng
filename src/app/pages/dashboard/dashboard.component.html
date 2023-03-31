@@ -19,8 +19,108 @@
       </div>
       <!-- End Page Header -->
 
+      <!-- Stats -->
       <div class="row">
-        <div class="col-lg-6 mb-3 mb-lg-0">
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <a class="card card-hover-shadow h-100" href="javascript:;">
+            <div class="card-body">
+              <h6 class="card-subtitle">Total Savings</h6>
+
+              <div class="row align-items-center gx-2 mb-1">
+                <div class="col-12">
+                  <h2 class="card-title text-inherit">{{savingsSum | currency :'₦'}}</h2>
+                </div>
+                <!-- End Col -->
+
+               
+              </div>
+              <!-- End Row -->
+
+              <span class="badge bg-soft-success text-success">
+                <i class="bi-graph-up"></i> 12.5%
+              </span>
+              <span class="text-body fs-6 ms-1" *ngIf="savingsRecords != undefined">from {{savingsRecords.length}}</span>
+            </div>
+          </a>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <a class="card card-hover-shadow h-100" href="javascript:;">
+            <div class="card-body">
+              <h6 class="card-subtitle">Total Withdrawal</h6>
+
+              <div class="row align-items-center gx-2 mb-1">
+                <div class="col-12">
+                  <h2 class="card-title text-inherit">{{withdrawalSum| currency :'₦'}}</h2>
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+
+              <span class="badge bg-soft-success text-success">
+                <i class="bi-graph-up"></i> 1.7%
+              </span>
+              <span class="text-body fs-6 ms-1" *ngIf="withdrawalRecords != undefined">from {{withdrawalRecords.length}}</span>
+            </div>
+          </a>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <a class="card card-hover-shadow h-100" href="javascript:;">
+            <div class="card-body">
+              <h6 class="card-subtitle">Total Commissions</h6>
+
+              <div class="row align-items-center gx-2 mb-1">
+                <div class="col-12">
+                  <h2 class="card-title text-inherit">{{commissionSum | currency :'₦'}}</h2>
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+
+              <span class="badge bg-soft-danger text-danger">
+                <i class="bi-graph-down"></i> 4.4%
+              </span>
+              <span class="text-body fs-6 ms-1" *ngIf="commissionRecords != undefined">from {{commissionRecords.length}}</span>
+            </div>
+          </a>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <!-- Card -->
+          <a class="card card-hover-shadow h-100" href="javascript:;">
+            <div class="card-body">
+              <h6 class="card-subtitle">Total Balance</h6>
+
+              <div class="row align-items-center gx-2 mb-1">
+                <div class="col-12">
+                  <h2 class="card-title text-inherit">{{totalBalance | currency :'₦'}}</h2>
+                </div>
+                <!-- End Col -->
+
+                
+              </div>
+              <!-- End Row -->
+
+              <span class="badge bg-soft-secondary text-body">0.0%</span>
+              <span class="text-body fs-6 ms-1" *ngIf="savingsRecords != undefined">from {{savingsRecords.length - savingsRecords.length}}</span>
+            </div>
+          </a>
+          <!-- End Card -->
+        </div>
+      </div>
+      <!-- End Stats -->
+
+      
+
+      <div class="row">
+        <div class="col-lg-6 mb-3 mb-lg-5">
           <!-- Card -->
           <div class="card h-100">
             <!-- Header -->
@@ -28,109 +128,45 @@
               <h4 class="card-header-title mb-2 mb-sm-0">Transactions</h4>
 
               <!-- Daterangepicker -->
-              <button id="js-daterangepicker-predefined" class="btn btn-ghost-secondary btn-sm dropdown-toggle">
+              <div class="btn-group">
+              <button id="js-daterangepicker-predefined" class="btn btn-ghost-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi-calendar-week"></i>
-                <span class="js-daterangepicker-predefined-preview ms-1"></span>
+                <span class="js-daterangepicker-predefined-preview ms-1" >{{ranges.TodayWithFormat[0] +' - '+ ranges.TodayWithFormat[1] }}</span>
               </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" type="button" *ngFor="let item of dateRanges" (click)="filterDataByDate(item.date[0], item.date[1], item.timeline)">{{item?.timeline}}</a>
+              </div>
               <!-- End Daterangepicker -->
+            </div>
+
             </div>
             <!-- End Header -->
 
             <!-- Body -->
             <div class="card-body">
               <!-- Chart -->
-              <div class="chartjs-custom mx-auto" style="height: 20rem;">
-                <canvas class="js-chart-datalabels" data-hs-chartjs-options='{
-                              "type": "bubble",
-                              "data": {
-                                "datasets": [
-                                  {
-                                    "label": "Label 1",
-                                    "data": [
-                                      {"x": 55, "y": 65, "r": 99}
-                                    ],
-                                    "color": "#fff",
-                                    "backgroundColor": "rgba(55, 125, 255, 0.9)",
-                                    "borderColor": "transparent"
-                                  },
-                                  {
-                                    "label": "Label 2",
-                                    "data": [
-                                      {"x": 33, "y": 42, "r": 65}
-                                    ],
-                                    "color": "#fff",
-                                    "backgroundColor": "rgba(100, 0, 214, 0.8)",
-                                    "borderColor": "transparent"
-                                  },
-                                  {
-                                    "label": "Label 3",
-                                    "data": [
-                                      {"x": 46, "y": 26, "r": 38}
-                                    ],
-                                    "color": "#fff",
-                                    "backgroundColor": "#00c9db",
-                                    "borderColor": "transparent"
-                                  }
-                                ]
-                              },
-                              "options": {
-                                "scales": {
-                                  "yAxes": [{
-                                    "gridLines": {
-                                      "display": false
-                                    },
-                                    "ticks": {
-                                      "display": false,
-                                      "max": 100,
-                                      "beginAtZero": true
-                                    }
-                                  }],
-                                  "xAxes": [{
-                                  "gridLines": {
-                                      "display": false
-                                    },
-                                    "ticks": {
-                                      "display": false,
-                                      "max": 100,
-                                      "beginAtZero": true
-                                    }
-                                  }]
-                                },
-                                "tooltips": false
-                              }
-                            }'></canvas>
+              <div class="chartjs-custom chart-wrapper mx-auto">                              
+                <canvas baseChart
+                [data]="pieChartData"
+                [options]="pieChartOptions"
+                [plugins]="pieChartPlugins"
+                [legend]="pieChartLegend" 
+                [type]="pieChartType">
+                </canvas>
               </div>
               <!-- End Chart -->
-
-              <div class="row justify-content-center">
-                <div class="col-auto">
-                  <span class="legend-indicator bg-primary"></span> New
-                </div>
-                <!-- End Col -->
-
-                <div class="col-auto">
-                  <span class="legend-indicator" style="background-color: #7000f2;"></span> Pending
-                </div>
-                <!-- End Col -->
-
-                <div class="col-auto">
-                  <span class="legend-indicator bg-info"></span> Failed
-                </div>
-                <!-- End Col -->
-              </div>
-              <!-- End Row -->
             </div>
-            <!-- End Body -->
+            <!-- End Body -->   
           </div>
           <!-- End Card -->
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 mb-3 mb-lg-5">
           <!-- Card -->
           <div class="card h-100">
             <!-- Header -->
             <div class="card-header card-header-content-between">
-              <h4 class="card-header-title">Top 5 Savers</h4>
+              <h4 class="card-header-title">Overall Top 5 Savers</h4>
 
               <!-- Dropdown -->
               <div class="dropdown">
@@ -141,21 +177,18 @@
                 <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown1">
                   <span class="dropdown-header">Settings</span>
 
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="javascript:;">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" type="button" (click)="downloadPie()">
                     <i class="bi-download dropdown-item-icon"></i> Download
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-alt dropdown-item-icon"></i> Connect other apps
                   </a>
 
                   <div class="dropdown-divider"></div>
 
                   <span class="dropdown-header">Feedback</span>
 
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="javascript:;">
                     <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                   </a>
                 </div>
@@ -171,15 +204,17 @@
               <!-- Table -->
               <div class="table-responsive">
                 <table class="table table-lg table-nowrap card-table mb-0">
+                  <tbody>
                   <tr *ngFor="let item of bestSavers | slice:0:5; let i = index;">
                     <th scope="row">
                       <span class="legend-indicator bg-primary"></span>{{item?.firstName.concat(' ').concat(item?.lastName) | titlecase}}
                     </th>
                     <td>{{item?.transAmount | currency: '₦'}}</td>
                     <td>
-                      <span class="badge bg-soft-success text-success">+{{item?.percent}}%</span>
+                      <span class="badge bg-soft-success text-success">+{{item?.percent | number: '1.0-1'}}%</span>
                     </td>
                   </tr>
+                </tbody>
                 </table>
               </div>
               <!-- End Table -->
@@ -191,6 +226,178 @@
       </div>
 
 
+      <div class="row">
+        <div class="col-lg-4 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <!-- Header -->
+            <div class="card-header card-header-content-between">
+              <h4 class="card-header-title">Payments</h4>
+
+              <!-- Dropdown -->
+              <div class="dropdown">
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi-three-dots-vertical"></i>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown1">
+                  <span class="dropdown-header">Settings</span>
+
+                  <a class="dropdown-item" href="javascript:;">
+                    <i class="bi-share-fill dropdown-item-icon"></i> Share reports
+                  </a>
+                  <a class="dropdown-item" type="button" (click)="downloadDoughnut()">
+                    <i class="bi-download dropdown-item-icon"></i> Download
+                  </a>
+
+                  <div class="dropdown-divider"></div>
+
+                  <span class="dropdown-header">Feedback</span>
+
+                  <a class="dropdown-item" href="javascript:;">
+                    <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
+                  </a>
+                </div>
+              </div>
+              <!-- End Dropdown -->
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body text-center">
+              <!-- Badge -->
+              <div class="h3">
+                <span class="badge bg-soft-info text-info rounded-pill">
+                  <i class="bi-check-circle-fill me-1"></i> On track
+                </span>
+              </div>
+              <!-- End Badge -->
+
+              <!-- Chart Half -->
+              <div class="chartjs-doughnut-custom" style="height: 15rem;">
+                <canvas 
+                 id="doughnutHalfChart"
+                 class="js-chartjs-doughnut-half"
+
+                 baseChart
+                [data]="doughnutHalfChartData"
+                [options]="doughnutHalfChartOptions"
+                [legend]="pieChartLegend" 
+                [type]="doughnutHalfChartType">
+              </canvas>
+
+                <div class="chartjs-doughnut-custom-stat" style="top: 12rem;">
+                  <small class="text-cap">Account balance</small>
+                  <span class="h1">{{totalBalance | currency :'₦'}}</span>
+                </div>
+              </div>
+              <!-- End Chart Half -->
+
+              <hr>
+
+              <div class="row col-divider">
+                <div class="col text-end">
+                  <span class="d-block h4 mb-0">{{yesterdaytrnxSum| currency :'₦'}}</span>
+                  <span class="d-block small">Yesterday balance</span>
+                </div>
+
+                <div class="col text-start">
+                  <span class="d-block h4 text-success mb-0">
+                    <i class="bi-graph-up"></i> {{(yesterdaytrnxSum / totalBalance * 100 | number:'1.0-1') + '%' }}
+                  </span>
+                  <span class="d-block small">Percentage difference</span>
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-lg-8 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <!-- Header -->
+            <div class="card-header card-header-content-between">
+              <h4 class="card-header-title">Latest transactions</h4>
+
+              <!-- Dropdown -->
+              <div class="dropdown">
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown3" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi-three-dots-vertical"></i>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown3">
+                  <span class="dropdown-header">Settings</span>
+
+                  <a class="dropdown-item" href="javascript:;">
+                    <i class="bi-share-fill dropdown-item-icon"></i> Share reports
+                  </a>
+                  <a class="dropdown-item" type="button">
+                    <i class="bi-download dropdown-item-icon"></i> Download
+                  </a>
+
+                  <div class="dropdown-divider"></div>
+
+                  <span class="dropdown-header">Feedback</span>
+
+                  <a class="dropdown-item" href="javascript:;">
+                    <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
+                  </a>
+                </div>
+              </div>
+              <!-- End Dropdown -->
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body card-body-height">
+              <ul class="list-group list-group-flush list-group-no-gutters">
+                <!-- List Item -->
+                <li class="list-group-item" *ngFor="let record of allRecords  | slice:0:6; let i = index; ">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <!-- Avatar -->
+                      <div class="avatar avatar-sm avatar-soft-dark avatar-circle">
+                        <span class="avatar-initials">{{record?.firstName | titlecase | slice:0:1}}{{(record?.lastName | titlecase | slice:0:1) }}</span>
+                      </div>
+                      <!-- End Avatar -->
+                    </div>
+
+                    <div class="flex-grow-1 ms-3">
+                      <div class="row">
+                        <div class="col-7 col-md-5 order-md-1">
+                          <h5 class="mb-0">{{record?.firstName.concat(' ').concat(record?.lastName) | titlecase}}</h5>
+                          <span class="fs-6 text-body">{{(record?.transType | i18nSelect: trnxMap) + ' to '+ record?.accountType}} </span>
+                        </div>
+
+                        <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
+                          <h5 [ngClass]="'mb-0 ' + (record?.transType === 'Savings' ? 'text-success' : record?.transType === 'commission' ?  +'text-warning' : 'text-danger') ">
+                            {{record?.transType === 'Withdrawal' ?  '-'+ (record?.transAmount | currency:'₦') : record?.transAmount | currency:'₦' }} NGN</h5>
+                          <span class="fs-6 text-body">{{record?.transDate | date: 'd MMMM, y.'}}</span>
+                        </div>
+
+                        <div class="col-auto col-md-3 order-md-2">
+                          <span [ngClass]=" 'badge bg-soft-success text-success rounded-pill' ">Success</span>
+                        </div>
+                      </div>
+                      <!-- End Row -->
+                    </div>
+                  </div>
+                </li>
+                <!-- End List Item -->
+
+              </ul>
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+      </div>
+      <!-- End Row -->
+
+
       <!-- Card -->
       <div class="card mb-3 mb-lg-5">
         <!-- Header -->
@@ -198,7 +405,7 @@
           <div class="row justify-content-between align-items-center flex-grow-1">
             <div class="col-md">
               <div class="d-flex justify-content-between align-items-center">
-                <h4 class="card-header-title">Users</h4>
+                <h4 class="card-header-title">This Month Customers</h4>
 
                 <!-- Datatable Info -->
                 <div id="datatableCounterInfo" style="display: none;">
@@ -264,10 +471,11 @@
                                   "dropdownWidth": "10rem"
                                 }'>
                           <option value="null" selected>All</option>
-                          <option value="1 year ago">1 year ago</option>
+                          <!-- <option value="1 year ago">1 year ago</option>
                           <option value="6 months ago">6 months ago</option>
-                          <option value="3 months ago">3 months ago</option>
+                          <option value="3 months ago">3 months ago</option> -->
                           <option value="1 month ago">1 month ago</option>
+                          <option value="3 weeks ago">3 weeks ago</option>
                           <option value="2 weeks ago">2 weeks ago</option>
                           <option value="1 week ago">1 week ago</option>
                           <option value="1 day ago">1 day ago</option>
@@ -331,15 +539,15 @@
                 </th>
                 <th class="table-column-ps-0">Full name</th>
                 <th>Email</th>
-                <th>Phone No</th>
-                <th>Gender</th>
-                <th>Status</th>
-                <th>Signed Up</th>                
+                <th>Phone No</th>                
+                <th>Active Plans</th>
+                <th>Signed Up</th>   
+                <th>Registered By</th>             
               </tr>
             </thead>
 
-            <tbody>
-              <tr *ngFor="let data of customer; let i = index;">
+            <tbody *ngIf="thisMonthCustomer != undefined">
+              <tr *ngFor="let data of thisMonthCustomer.slice().reverse(); let i = index;">
                 <td class="table-column-pe-0">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="usersDataCheck{{data.sn}}">
@@ -360,11 +568,12 @@
                 </td>
                 <td>{{data?.email}}</td>
                 <td>{{data?.userId}}</td>                
-                <td>{{data?.gender | titlecase}}</td>
-                <td>
+                <td>{{data?.allPlans }}</td>
+                <!-- <td>
                   <span class="legend-indicator bg-success"></span>Active
-                </td>
+                </td> -->
                 <td>{{data?.date_registered | dateAgo}}</td>
+                <td>{{data?.agent_firstname | titlecase}}</td>
                 
               </tr>
 

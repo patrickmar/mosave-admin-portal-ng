@@ -45,7 +45,7 @@ export default class HSScrollspy {
     }
 
     nav.addEventListener('click', e => {
-      if (!e.target.closest('a:not([href="#"]):not([href="#0"])')) return
+      if (!e.target.closest('a:not([href="javascript:;"]):not([href="#0"])')) return
       e.preventDefault()
       if (this.settings.disableCollapse === false && window.innerWidth < this.settings.resolutionsList[this.settings.breakpoint]) {
         new bootstrap.Collapse(this.$el).hide()

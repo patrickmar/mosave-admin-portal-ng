@@ -8,6 +8,7 @@ export const environment = {
     baseUrl: "https://moloyal.com/",
     path: "test/mosave/adminscript/api/",
     imagePath: "test/mosave/script/api/",
+    allImagesPath: 'img_uploads/',
   },
   logo: "../../../assets/img/logo/logo.png",
   logo2: "../../../assets/img/logo/logo2.png",
@@ -19,8 +20,17 @@ export const environment = {
     url: "https://api.paystack.co/",
     secretKey: "sk_live_283e8912e82f34b275a577b97659aec29bf778d1", //"sk_test_feeb3d34498e46330086fe2a73b02692a05adda5",
     publicKey: "pk_test_fb0ce109fe7f1e851ddf454110f04af9b3154e14",
-  }
+  },
+
+  // app:{
+  //   baseUrl: "https://moloyal.com/",
+  //   path: "mosave/adminscript/api/",
+  //   imagePath: "mosave/script/api/",
+  // },
+
 };
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file

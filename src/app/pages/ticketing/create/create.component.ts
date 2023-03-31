@@ -44,8 +44,8 @@ export class CreateComponent implements OnInit {
     this.ticketForm = this.fb.group({
       eventTitle: ['', [Validators.required, Validators.minLength(5)]],
       venue: ['', [Validators.required, Validators.minLength(5)]],
-      merchantId: new FormControl(parseInt(''), Validators.required),
-      submerchantId: new FormControl(parseInt(''), Validators.required),
+      merchantId: new FormControl(0, Validators.required),
+      submerchantId: new FormControl(0, Validators.required),
       paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
       vendor: ['', [Validators.minLength(2)]],
       chargesBearer: ['', [Validators.required, Validators.minLength(2)]],
@@ -207,7 +207,6 @@ export class CreateComponent implements OnInit {
   getProgramMerchants() {
     try {
       this.dataService.getProgramMerchants().subscribe((res: any) => {
-        console.log(res);
         this.allMerchants = res;
       })
     } catch (error) {
@@ -283,10 +282,8 @@ export class CreateComponent implements OnInit {
   }
 
   onSelect(e: any) {
-    console.log(e);
     if(e.addedFiles.length > 0){
       this.files.push(...e.addedFiles);
-      console.log(this.files);
       var regex = /(\.jpg|\.jpeg|\.svg|\.pdf|\.gif|\.png)$/i;
       let file2 = e.addedFiles;
       const doe = [...this.setFiles];
@@ -306,7 +303,6 @@ export class CreateComponent implements OnInit {
             doc["base64"] = result;
             doe.push({ file: doc, base64URL: result });
             this.setFiles = doe;
-            console.log(this.setFiles);
           }).catch((err: any) => {
           });
         }
@@ -333,8 +329,7 @@ export class CreateComponent implements OnInit {
     // console.log(formData);
   }
 
-  onRemove(item: any, e: any) {  
-    console.log(item);  
+  onRemove(item: any, e: any) {
     this.files.splice(this.files.indexOf(item), 1);
     this.setFiles.splice(this.setFiles.indexOf(item), 1);
     e.preventDefault();
@@ -350,27 +345,21 @@ async onSubmit() {
       this.toastService.showError('Banner can not be empty', 'Error');
     } else {       
       this.loading = true;
-      const formData = new FormData();       
-
+      const formData = new FormData();
       for (var i = 0; i < this.setFiles.length; i++) {
         const fileName = new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
         const response = await fetch(this.setFiles[i].file.base64);
         const blob = await response.blob();
-        const blob2 = this.dataURItoBlob4(this.setFiles[i].file.base64);
+        // const blob2 = this.dataURItoBlob4(this.setFiles[i].file.base64);
         formData.append("banner[]", blob, fileName);
       } 
       
-    //formData.append('banner', blob, fileName);
     //remove array from the form object
     // const  {ticketCategories, start, end, ...newForm} = form;
     // console.log(newForm);
 
-      // Object.keys(newForm).forEach((key) => {
-      //   // formData.append(key, form[key]);
-      //   Array.isArray(newForm[key]) ? newForm[key].forEach((value: any) => formData.append(key + '[]', JSON.stringify(value))) : formData.append(key, newForm[key]) 
-      // });
-
       Object.keys(form).forEach((key) => {
+        //   Array.isArray(newForm[key]) ? newForm[key].forEach((value: any) => formData.append(key + '[]', JSON.stringify(value))) : formData.append(key, newForm[key]) 
         formData.append(key, JSON.stringify((form[key])));
       });
 
@@ -391,6 +380,7 @@ async onSubmit() {
         }, (error: any)=>{
           this.loading = false;
           console.log(error);
+          this.toastService.showError(error?.message, 'Error');
         })
       } catch (error) {
         this.loading = false;

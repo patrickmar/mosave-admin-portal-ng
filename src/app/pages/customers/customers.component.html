@@ -347,7 +347,7 @@
                     <a class="" [routerLink]="['/customer', data.sn, 'trans-history']">
                         <span class="d-block h5 mb-0">{{data?.account_num}}</span>
                     </a>                    
-                    <span class="d-block fs-5">{{data?.BVN_num ? data?.BVN_num : 'No BVN'}}</span>
+                    <span class="d-block fs-5">{{data?.BVN_num ? data?.BVN_num : ' No BVN'}}</span>
                   </td>
                   <td>
                     <span *ngIf="data?.account_typeId === '1' ">Savings</span>

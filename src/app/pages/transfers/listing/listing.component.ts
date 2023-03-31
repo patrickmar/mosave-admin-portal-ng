@@ -52,7 +52,6 @@ export class ListingComponent implements OnInit, OnDestroy {
       language: {
         zeroRecords: `<div class="text-center p-4">
             <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-            <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
           <p class="mb-0">No data to show</p>
           </div>`,
       },
