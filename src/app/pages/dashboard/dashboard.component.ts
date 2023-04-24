@@ -1,5 +1,5 @@
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
-import { AfterViewInit, Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Chart, ChartConfiguration, ChartOptions, ChartType, DoughnutControllerChartOptions, } from 'chart.js';
 import { forkJoin, Subject } from 'rxjs';
@@ -51,6 +51,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   yesterdaytrnxSum!: number;
   totalBalance!: number;
   trnxMap: any = {'Savings': 'Deposit', 'Withdrawal': 'Withdrawal', 'commission': 'Commission'};
+  dayDiff: number = 10;
+  switch!: boolean;
+  emptyTable = environment.emptyTable;
 
 
   @ViewChild(DataTableDirective, {static: false})
@@ -64,13 +67,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         display: true,
         position: 'bottom',
       },
-      // datalabels: {
-      //   formatter: (value, ctx) => {
-      //     if (ctx.chart.data.labels) {
-      //       return ctx.chart.data.labels[ctx.dataIndex];
-      //     }
-      //   },
-      // },
     }
   };
 
@@ -79,14 +75,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = true;
   public pieChartPlugins = [];
-  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+  //@ViewChild(BaseChartDirective) charts?: BaseChartDirective | undefined;
+  @ViewChildren(BaseChartDirective) charts!: QueryList<BaseChartDirective>;
+
 
   public doughnutHalfChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     aspectRatio: 1,
     plugins: {
       legend: {
-        display: false,
+        display: true,
         position: 'top',
       },
       // tooltips: {
@@ -94,14 +92,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       // },
     }
   };
-  // public jjjs: DoughnutControllerChartOptions = {
-  //   circumference: Math.PI,
-  //   rotation: Math.PI,
-  //   cutout: 85,
-  // }
   public doughnutHalfChartType: ChartType = 'doughnut';
   public doughnutHalfChartLabels = ["Savings", "Withdrawal"];
   public doughnutHalfChartData!: any; 
+   
+
+  public barChartOptions: any = this.getChartConfig1(500000, '₦');
+  public barChartType: ChartType = 'bar';
+  public barChartLabels = ["Savings", "Withdrawal"];
+  public barChartData!: any;
+
+  thirdPartyApps = [
+    { name: 'Paystack', url: 'https://dashboard.paystack.com/', service: 'Payment Gateway', src: 'paystack-logo.svg'},
+    { name: 'MailChimp', url: 'https://login.mailchimp.com/', service: 'Email Service', src: 'mailchimp-icon.svg'},
+    { name: 'SendGrid', url: 'https://app.sendgrid.com/login?redirect_to=%2F', service: 'Email Service', src: 'SendGrid.svg'}
+  ]
+  savingsGraphSum!: number;
+  withdrawalGraphSum!: number;
+  last12Months!: string[];
+  avgSavings!: number;
+  avgWithdrawals!: number;
+  
   
 
   constructor(private authservice: AuthService, 
@@ -111,7 +122,82 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       //Chart.register(Annotation)
      }
 
+     getChartConfig1(stepSize: number, postfix: string){
+      return {    
+        responsive: true,
+        aspectRatio: 1.6,
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        plugins: {
+          legend: {
+            display: false,
+            //position: 'top',
+          },
+          tooltip: {
+            position: 'nearest', //'average' or 'bottom' ;
+            mode: "index",
+            intersect: false,
+            callbacks: {
+              title:(tooltipItems: any)=> {
+                  return tooltipItems[0].label //+ ' '+  moment().format('YYYY.');
+              },
+              footer: (tooltipItems: any) => {
+                let sum = 0;
+                let deduct = 0
+                // Calculate difference
+                deduct = tooltipItems[0].parsed.y - tooltipItems[1].parsed.y;
+                //calculate sum
+                // tooltipItems.forEach((tooltipItem: any, i:number) => {
+                //   console.log(tooltipItem);
+                //   //x+=y // x= x+y
+                //   //sum = sum + tooltipItem.parsed.y ;
+                //   deduct = deduct - (tooltipItem.parsed.y);
+                // });
+                return 'Diff: ' + deduct;
+              },
+              label: (tooltipItems: any)=> {
+                return tooltipItems.dataset.label + ': ' + postfix + tooltipItems.formattedValue;
+            },
+            }
+             //postfix: "%"
+          },
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Days'
+            },
+            grid: {
+              display: false,
+              drawBorder: false
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Transaction Values'
+            },
+            grid: {
+              drawBorder: false,
+              color: "#e7eaf3",
+            },
+             min: 0,
+             //max: 100000,
+            ticks: {
+              stepSize: stepSize,
+              //padding: 10,
+            },
+          }
+        },
+        
+      }
+     }
+
   ngOnInit(): void {
+    this.getLast12Months();
     this.getUserDetails();
     this.getAllCustomers();
     this.getAllTrxs();
@@ -123,7 +209,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
           <p class="mb-0">No data to show</p>
           </div>`,
           paginate: {
@@ -179,7 +265,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.savingsRecords = timeline === 'All' ? this.savingsTrnxRecords : this.filterDate(startDate, endDate, this.savingsTrnxRecords);
         this.withdrawalRecords = timeline === 'All' ? this.withTrnxRecords : this.filterDate(startDate, endDate, this.withTrnxRecords); 
         this.commissionRecords = timeline === 'All' ? this.commTrnxRecords : this.filterDate(startDate, endDate, this.commTrnxRecords);
-        this.randomize(this.withdrawalRecords, this.savingsRecords, this.commissionRecords);
+        this.updateGraph(this.withdrawalRecords, this.savingsRecords, this.commissionRecords);
       });
     }
   }
@@ -188,22 +274,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     return record.filter((m: any) => new Date(m.transDate) >= new Date(startDate) && new Date(m.transDate) <= new Date(endDate));
   }
 
-  public randomize(withdrawalRecords: any, savingsRecords: any, commissionRecords: any): void {
+  public updateGraph(withdrawalRecords: any, savingsRecords: any, commissionRecords: any): void {
     for (let i = 0; i < this.pieChartData.datasets.length; i++) {
         this.pieChartData.datasets[i].data[0] = withdrawalRecords?.length;
         this.pieChartData.datasets[i].data[1] = savingsRecords?.length;
         this.pieChartData.datasets[i].data[2] = commissionRecords?.length;
     }
-    this.chart?.update();
+    // console.log(this.charts);
+    this.charts.get(0)?.update();    
+    // if we want to update all the charts together
+  //   this.charts?.forEach((child, i) => {
+  //     if(i == 0){
+  //       child?.update();
+  //     }      
+  // });
   }
   ranges = {
-    'TodayWithFormat': [moment('').format('MMM D'), moment().format('MMM D, YYYY')],
+    'TodayWithFormat': [moment().format('MMM D'), moment().format('MMM D, YYYY')],
+  }
+  ranges2 = {
+    'TodayWithFormat': [moment().format('MMM YYYY'), moment().format('MMM YYYY')],
   }
 
   dateRanges = [
     {
       timeline: 'All',
-      date: [moment('2022-04-07'), moment()]
+      date: [moment('04-07-2022'), moment()]
     },
     {
       timeline: 'Today',
@@ -229,9 +325,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       timeline: 'Last Month',
       date: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     }
-    
-    
-]
+
+
+  ]
+
+  getLast12Months(){
+    this.last12Months = new Array(12).fill(null).map((x, i) => moment().subtract(i, 'months').format('MMMM YYYY')); //this.statService.getMonthDate();
+    console.log(this.last12Months);
+  }
 
   // var start = moment();
   //     var end = moment();
@@ -242,6 +343,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const startDate = start.format('YYYY-MM-DD');
     const endDate = end.format('YYYY-MM-DD');
      this.onChangeDate(startDate, endDate, timeline);
+  }
+
+  filterDataByMonth(date: string, timeline?: string) {
+    const start = moment(date).startOf('month')
+    const end = moment(date).endOf('month')
+    const format = timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
+    $('#js-daterangepicker .js-daterangepicker-preview').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+    const startDate = start.format('YYYY-MM-DD');
+    const endDate = end.format('YYYY-MM-DD');
+    const value = this.statService.getAverageByMonth(this.allRecords, startDate);
+    if(Array.isArray(value)){
+     this.avgSavings = value[0].totalSavings > 0 ? value[0].totalSavings / value[0].savingsVolume : 0;
+     this.avgWithdrawals = value[0].totalWithdrawal > 0 ? value[0].totalWithdrawal / value[0].WithdrawalVolume : 0;
+    }
   }
 
 
@@ -339,7 +454,49 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             cutout: '85%',
           }],
         }
+        const labels = this.statService.getLastDays(this.dayDiff);
+        const lastdaysSavings = this.statService.getNumberOfDaysTransaction(this.allRecords, this.dayDiff);
+        const lastfewDays = this.statService.getTransactionByDays(lastdaysSavings);
+        //const label = [];
+        const label: any = [];
+        const lab = new Array(lastfewDays.length).fill(null).map((x, i) =>{
+          label.push(moment(lastfewDays[i].transDate).format('MMM D YYYY'));          
+      })
+        console.log(label);
+        //const dates = new Array(lastfewDays.length).fill(null).map((x, i) => moment().subtract(9, 'days').add(i, 'days').format('MMM D'));
+        //console.log(dates);
+        const savings = [];
+        const withdrawals = [];
+        for (let i = 0; i < lastfewDays.length; i++) {
+          const element = lastfewDays[i];  
+          savings.push(element?.savings);
+          withdrawals.push(element?.withdraw);     
+        }
+        console.log(savings);
+        console.log(withdrawals);
+        this.savingsGraphSum = savings.reduce((acc: any, cur: any)=>  acc + cur);
+        this.withdrawalGraphSum = withdrawals.reduce((acc: any, cur: any)=>  acc + cur);
+        this.barChartData = {
+          labels: label, //dates,//labels, //() => { for (let i = 0; i < label.length; i++) { const element = label[i];}}, //labels, //["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7", "May 8", "May 9", "May 10"], ////this.barChartLabels,
+          datasets: [{
+              label: 'Savings',
+              data: savings,
+              backgroundColor: "#377dff",
+              hoverBackgroundColor: "#377dff",
+              borderColor: "#377dff"
+          },
+          {
+            label: 'Withdrawal',
+            data: withdrawals,
+            backgroundColor: "#e7eaf3",
+            borderColor: "#e7eaf3"
+          }
+        ],
+        }
         this.getCalculatedTransactions();
+        this.filterDataByMonth(moment().format('MMM D, YYYY'));
+        
+        
       }), (error: any) => {
         console.log(error);
         this.toastService.showError(error[0]?.message, 'Error');
@@ -352,6 +509,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     
 
   }
+
+  getChartConfig(){
+    const val = [];
+    const array = this.statService.getMonthDate();
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i];
+      const array2 = this.statService.getTransactionsByDays(this.savingsRecords, i);
+      for (let ix = 0; ix < array2.length; ix++) {
+        const el = array2[ix];
+        const v = this.statService.calculateTransactions(array2);
+        val.push(v);        
+      }      
+    }
+    console.log(val);
+  }
+
 
   getCalculatedTransactions(){
     const yesterdaySavings = this.statService.getYesterdayTransactions(this.savingsRecords);
@@ -367,13 +540,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     console.log(this.yesterdaytrnxSum);
   }
 
-  getBase64() {
-    return this.chart?.toBase64Image();
+  
+
+  getBase64(chartId: number) {
+    //console.log(this.charts.get(chartId)?.toBase64Image());
+    return this.charts.get(chartId)?.toBase64Image();
   }
 
-  downloadGraph(){
-    const fileName = new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
-    const src = this.getBase64()+'';
+  downloadGraph(chartId: number){
+    console.log(chartId);
+    console.log(this.charts)
+    const fileName = this.charts.get(chartId)?.type +'chart'+ new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
+    const src = this.getBase64(chartId)+'';
     const link = document.createElement("a");
     link.href = src
     link.download = fileName
@@ -381,13 +559,33 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     link.remove()
   }
 
-  downloadDoughnut(){
-    this.downloadGraph();
-    }
-
-    downloadPie(){
-      this.downloadGraph();
-    }
+  switchGraph(id: number, tab: string) {
+    //console.log(this.charts);
+    // const gradient1 = [
+    //   [this.gradient, this.gradient2, this.gradient3],
+    //   [this.gradient11, this.gradient12, this.gradient13]
+    // ];
+      const element = this.barChartData.datasets;
+      if(tab === 'bar'){
+        if (this.barChartType === 'line'  ) {
+          this.barChartType = 'bar';
+          // for (let i = 0; i < element.length; i++) {
+          //   element[i].backgroundColor = this.gradients[i][0];
+          //   element[i].hoverBackgroundColor = this.gradients[i][0];        
+          // }       
+        }
+      } else if(tab === 'line') {
+        if (this.barChartType === 'bar') {
+          this.barChartType = 'line'
+          // for (let i = 0; i < element.length; i++) {
+          //   element[i].backgroundColor = gradient1[0][i];  
+          //   element[i].hoverBackgroundColor = gradient1[0][i];        
+          // } 
+        }
+        this.charts.get(id)?.update();
+      }
+        
+  }
 
   rerender(event: any){
     var value = event.target.value;
@@ -438,8 +636,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }); 
   }
 
-
-  
   jsInit(){
     (function() {
     
@@ -538,7 +734,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     //   },
     //   language: {
     //     zeroRecords: `<div class="text-center p-4">
-    //           <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+    //           <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
     //           <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
     //         <p class="mb-0">No data to show</p>
     //         </div>`

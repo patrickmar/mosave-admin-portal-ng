@@ -11,7 +11,7 @@
                     <li class="breadcrumb-item active" aria-current="page">View Tickets</li>
                 </ol>
             </nav>
-          <h1 class="page-header-title">View Tickets <span class="badge bg-soft-dark text-dark ms-2">{{allTickets?.length}}</span></h1>
+          <h1 class="page-header-title" *ngIf="allTickets != undefined">View Tickets <span class="badge bg-soft-dark text-dark ms-2">{{allTickets.length}}</span></h1>
 
           <div class="mt-2">
             <a class="text-body me-3" href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportProductsModal">
@@ -105,20 +105,18 @@
               <div class="input-group-prepend input-group-text">
                 <i class="bi-search"></i>
               </div>
-              <input id="datatableSearch" type="search" class="form-control" (input)="filter($event, 1, 'datatable')" placeholder="Search ticket" aria-label="Search users">
+              <input id="datatableSearch" type="search" class="form-control" (input)="filter($event, 'datatable')" placeholder="Search ticket" aria-label="Search users">
             </div>
             <!-- End Search -->
           </form>
         </div>
 
         <div class="d-grid d-sm-flex gap-2">
-          <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEcommerceProductFilter" aria-controls="offcanvasEcommerceProductFilter">
-            <i class="bi-filter me-1"></i> Filters
-          </button>
+          
 
           <!-- Dropdown -->
       <div class="dropdown">
-        <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="ticketExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-white dropdown-toggle w-100" id="ticketExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi-download me-2"></i> Export
         </button>
 
@@ -153,7 +151,7 @@
           <!-- Dropdown -->
           <div class="dropdown">
             <button type="button" class="btn btn-white w-100" id="showHideDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-              <i class="bi-table me-1"></i> Columns <span class="badge bg-soft-dark text-dark rounded-circle ms-1">6</span>
+              <i class="bi-table me-1"></i> Columns <span class="badge bg-soft-dark text-dark rounded-circle ms-1">{{header.length}}</span>
             </button>
 
             <div class="dropdown-menu dropdown-menu-end dropdown-card" aria-labelledby="showHideDropdown" style="width: 15rem;">
@@ -161,89 +159,12 @@
                 <div class="card-body">
                   <div class="d-grid gap-3">
                     <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_product">
+                    <label class="row form-check form-switch" for="toggleColumn_{{i+1}}" *ngFor="let item of header; let i = index;">
                       <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">Product</span>
+                        <span class="me-2">{{item | titlecase}}</span>
                       </span>
                       <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_product" checked>
-                      </span>
-                    </label>
-                    <!-- End Form Switch -->
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_type">
-                      <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">Type</span>
-                      </span>
-                      <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_type" checked>
-                      </span>
-                    </label>
-                    <!-- End Form Switch -->
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_vendor">
-                      <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">Vendor</span>
-                      </span>
-                      <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_vendor">
-                      </span>
-                    </label>
-                    <!-- End Form Switch -->
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_stocks">
-                      <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">Stocks</span>
-                      </span>
-                      <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_stocks" checked>
-                      </span>
-                    </label>
-                    <!-- End Form Switch -->
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_sku">
-                      <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">SKU</span>
-                      </span>
-                      <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_sku" checked>
-                      </span>
-                    </label>
-                    <!-- End Form Switch -->
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_price">
-                      <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">Price</span>
-                      </span>
-                      <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_price" checked>
-                      </span>
-                    </label>
-                    <!-- End Form Switch -->
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_quantity">
-                      <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">Quantity</span>
-                      </span>
-                      <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_quantity">
-                      </span>
-                    </label>
-                    <!-- End Form Switch -->
-
-                    <!-- Form Switch -->
-                    <label class="row form-check form-switch" for="toggleColumn_variants">
-                      <span class="col-8 col-sm-9 ms-0">
-                        <span class="me-2">Variants</span>
-                      </span>
-                      <span class="col-4 col-sm-3 text-end">
-                        <input type="checkbox" class="form-check-input" id="toggleColumn_variants" checked>
+                        <input type="checkbox" class="form-check-input" id="toggleColumn_{{i+1}}" (change)="showColumn($event, i+1, 'datatable')" checked>
                       </span>
                     </label>
                     <!-- End Form Switch -->
@@ -299,7 +220,7 @@
               <td class="table-column-ps-0">
                 <a class="d-flex align-items-center" [routerLink]="['/ticket', t?.sn, 'update']">
                   <div class="flex-shrink-0">
-                    <img class="avatar avatar-lg" src="{{path + t?.image1}}" alt="{{t?.image1}}">
+                    <img class="avatar avatar-lg" src="{{path + t?.image1}}" alt="{{t?.image1}}" onerror="this.src='https:/'+'/placehold.co/600x400?text=No+Banner'">
                   </div>
                   <!-- <div class="flex-grow-1 ms-3">
                     <h5 class="text-inherit mb-0">{{t?.title}}</h5>
@@ -312,7 +233,7 @@
                 </a>
             </td>
               <td>{{t?.submerchantId}}</td>              
-              <td>{{t?.from_date}}</td>
+              <td>{{t?.from_date | date:'MMM d, y.'}}</td>
               <td>{{t?.qtySold}}</td>
               <td>{{t?.status}}</td>              
               <td>
@@ -329,7 +250,7 @@
                       <a class="dropdown-item" [routerLink]="['/ticket', t?.sn, 'update']">
                         <i class="bi-pencil-fill dropdown-item-icon me-1"></i> Edit
                       </a>
-                      <a class="dropdown-item" href="javascript:;">
+                      <a class="dropdown-item" href="javascript:;" type="button" (click)="openModal(content, t)">
                         <i class="bi-trash dropdown-item-icon text-danger"></i> 
                         <span class="text-danger">Delete</span>
                       </a>
@@ -356,3 +277,50 @@
     <!-- End Card -->
   </div>
   <!-- End Content -->
+  <ng-template #content let-modal>
+  <!-- <div class="modal fade" id="createAKIKeyModal" tabindex="-1" aria-labelledby="createAKIKeyModalLabel" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document"> -->
+      <div class="modal-content">
+        <!-- Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" id="createAKIKeyModalLabel">Delete Event</h4>
+          <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <!-- End Header -->
+
+        <!-- Body -->
+        <div class="modal-body text-center">
+          <span>Are you sure you want to delete this event <strong>{{modalContent?.title}}</strong>?</span>
+        </div>
+        <!-- End Body -->
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <div class="row align-items-sm-center flex-grow-1 mx-n2">
+            <div class="col-sm mb-2 mb-sm-0">
+              <p class="modal-footer-text">What you need to know? 
+                <i class="bi-question-circle" data-bs-toggle="tooltip" data-bs-placement="top" 
+                title="Deleting this event means you wont be able to have access to the sales report and you want see it on the front end."></i></p>
+            </div>
+            <!-- End Col -->
+
+            <div class="col-sm-auto">
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-white" (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
+                <button type="button" class="btn btn-danger" (click)="deleteEvent(modalContent?.sn)" [disabled]="loading">
+                  <i class="bi-trash"></i> Delete
+                  <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Row -->
+        </div>
+        <!-- End Footer -->
+      </div>
+    <!-- </div>
+  </div> -->
+  </ng-template>

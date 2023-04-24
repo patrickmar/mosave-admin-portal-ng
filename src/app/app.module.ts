@@ -7,8 +7,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataTablesModule } from 'angular-datatables';
 import { NgOtpInputModule } from 'ng-otp-input';
+import { ClipboardModule } from 'ngx-clipboard';
 
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { UserDataResolver } from './resolvers/userData.resolvers';
 
 import { AppComponent } from './app.component';
@@ -46,6 +47,16 @@ import { RecipientsComponent } from './pages/transfers/recipients/recipients.com
 import { TransferDetailsComponent } from './pages/transfers/transfer-details/transfer-details.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgChartsModule } from 'ng2-charts';
+import { OverviewComponent } from './pages/transactions/overview/overview.component';
+import { ProgramComponent } from './pages/programs/program/program.component';
+import { ChartComponent } from './components/chart/chart.component';
+import { ViewProgramComponent } from './pages/programs/view-program/view-program.component';
+import { CreateProgramComponent } from './pages/programs/create-program/create-program.component';
+import { ShowHidePasswordComponent } from './components/show-hide-password/show-hide-password.component';
+import { UpdateProgramComponent } from './pages/programs/update-program/update-program.component';
+import { ShortNumberPipe } from './pipes/short-number.pipe';
+//import { ClipboardModule } from 'ngx-clipboard';
+
 
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
@@ -68,6 +79,10 @@ const appRoutes: Routes = [
   {path: "transfers/listing", component: ListingComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "transfers/recipients", component: RecipientsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "transfers/:id/details", component: TransferDetailsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "overview", component: OverviewComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "programs/create/:type", component: CreateProgramComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "programs/view/:type", component: ViewProgramComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: "programs/update/:id/:type", component: UpdateProgramComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "page-not-found", component: PageNotFoundComponent},
   { path: '**', redirectTo: 'page-not-found'},
 ]
@@ -103,6 +118,14 @@ const appRoutes: Routes = [
     ListingComponent,
     RecipientsComponent,
     TransferDetailsComponent,
+    OverviewComponent,
+    ProgramComponent,
+    ChartComponent,
+    ViewProgramComponent,
+    CreateProgramComponent,
+    ShowHidePasswordComponent,
+    UpdateProgramComponent,
+    ShortNumberPipe,
   ],
   imports: [
     BrowserModule,
@@ -115,11 +138,12 @@ const appRoutes: Routes = [
     NgxDropzoneModule,
     BrowserAnimationsModule,
     NgChartsModule,
+    ClipboardModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'})
   ],
-  providers: [DatePipe, DateAgoPipe, DecimalPipe, FormCheckService],
+  providers: [DatePipe, DateAgoPipe, DecimalPipe, TitleCasePipe, FormCheckService],
   bootstrap: [AppComponent],
-  exports: [RouterModule]
+  exports: [RouterModule, ShowHidePasswordComponent,]
 })
 export class AppModule { }

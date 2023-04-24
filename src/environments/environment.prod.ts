@@ -15,5 +15,10 @@ export const environment = {
     url: "https://api.paystack.co",
     secretKey: "sk_live_283e8912e82f34b275a577b97659aec29bf778d1",
     publicKey: "pk_live_e7aeb0482ff06017ee7c4912a081ca679125532e",
-  }
+  },
+  countries:{
+    url: 'https://restcountries.com/v2/all',
+    url2: 'https://restcountries.com/v3/all',
+    state: 'https://countriesnow.space/api/v0.1/countries/'
+  } 
 };

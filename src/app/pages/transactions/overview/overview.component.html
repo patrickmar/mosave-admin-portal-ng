@@ -1,0 +1,151 @@
+<div class="bg-dark">
+    <div class="content container-fluid" style="height: 25rem;">
+        <!-- Page Header -->
+        <div class="page-header page-header-light">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="page-header-title">Overview</h1>
+                </div>
+                <!-- End Col -->
+
+                <!-- <div class="col-auto">
+                    <button id="js-daterangepicker-predefined" class="btn btn-ghost-light btn-sm dropdown-toggle">
+                        <i class="bi-calendar-week"></i>
+                        <span class="js-daterangepicker-predefined-preview ms-1"></span>
+                    </button>
+                </div> -->
+                <!-- End Col -->
+            </div>
+            <!-- End Row -->
+
+            <!-- Nav Scroller -->
+            <div class="js-nav-scroller hs-nav-scroller-horizontal">
+                <span class="hs-nav-scroller-arrow-prev hs-nav-scroller-arrow-dark-prev" style="display: none;">
+                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                        <i class="bi-chevron-left"></i>
+                    </a>
+                </span>
+
+                <span class="hs-nav-scroller-arrow-next hs-nav-scroller-arrow-dark-next" style="display: none;">
+                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                        <i class="bi-chevron-right"></i>
+                    </a>
+                </span>
+
+               
+            </div>
+            <!-- End Nav Scroller -->
+        </div>
+        <!-- End Page Header -->
+    </div>
+</div>
+<!-- End Content -->
+<div class="content container-fluid" style="margin-top: -22rem;">
+
+    <!-- <ng-container *ngIf="lineChartData != undefined"> -->
+        <!-- <app-chart #chart
+        [index]="0"
+        [type]="lineChartType[0]"
+        [data]="lineChartData" 
+        [options]="lineChartOptions[0]"
+        [totalValue]="totalBalance | currency:'₦'" 
+        [percentage]="25"
+        [currency]="'NGN'"
+        [title]="'Transaction Values'"
+        [label]="lineChartLabels"
+        (download)="downloadGraph(0)" 
+        (switch)="switchGraph(0)"        
+        >
+        </app-chart> -->
+
+    <!-- </ng-container> -->
+
+    <!-- <ng-container *ngIf="dataSets != undefined && dataSets[0].data.length > 0 && labels.length > 0">
+        <app-chart
+          [type]="lineChartType[0]"
+          [dataSets]="dataSets"
+          [labels]="labels"
+          [index]="0"
+          [options]="lineChartOptions[0]"
+          [totalValue]="totalBalance | currency:'₦'" 
+        [percentage]="25"
+        [currency]="'NGN'"
+        [title]="'Transaction Values'"
+        (download)="downloadGraph(0)"
+        (switch)="switchGraph(0)" 
+        ></app-chart>
+      </ng-container> -->
+
+
+      
+        <!-- Card -->
+<ng-container >
+    <div class="card mb-3 mb-lg-5" *ngFor="let item of lineChartData; let index = index">
+        <!-- Header -->
+        <div class="card-header card-header-content-sm-between">
+            <h4 class="card-header-title mb-2 mb-sm-0">{{chartTitle[index]}}</h4>
+    
+            <!-- Nav -->
+            <ul class="nav nav-segment nav-fill" id="graphTab{{index}}" role="tablist">
+                <li class="nav-item" data-bs-toggle="chart" data-datasets="0" data-trigger="click" data-action="toggle">
+                    <a class="nav-link active" href="javascript:;" type="button" (click)="switchGraph(index, 'line')" data-bs-toggle="tab">Line Chart</a>
+                </li>
+                <li class="nav-item" data-bs-toggle="chart" data-datasets="1" data-trigger="click" data-action="toggle">
+                    <a class="nav-link" href="javascript:;" type="button" (click)="switchGraph(index, 'bar')" data-bs-toggle="tab">Bar Chart</a>
+                </li>
+            </ul>
+            <!-- End Nav -->
+        </div>
+        <!-- End Header -->
+        <!-- Body -->
+        <div class="card-body">
+            <div class="row align-items-sm-center mb-4">
+                <div class="col-sm mb-3 mb-sm-0">
+                    <div class="d-flex align-items-center">
+                        <span class="h1 mb-0">{{ index == 0 || index == 1 ? (totalValue[index] | currency:'₦') + ' NGN' : totalValue[index] }}</span>
+    
+                        <!-- <span class="text-success ms-2">
+                            <i class="bi-graph-up"></i> {{25 + '%'}}
+                        </span> -->
+                    </div>
+                </div>
+                <!-- End Col -->
+    
+                <div class="col-sm-auto">
+                    <!-- Legend Indicators -->
+                    <div class="row fs-6">
+                        <div class="col-auto" *ngFor="let it of lineChartLabels[index]; let i = index;">
+                            <span [class]=" 'legend-indicator ' + ( i+'' | i18nSelect:bgMap)" [style]="i == 2 ? 'background-color: #7000f2;' : '' "></span> {{it}}
+                        </div>
+                    </div>
+                    <!-- End Legend Indicators -->
+                </div>
+                <!-- End Col -->
+            </div>
+            <!-- End Row -->
+    
+            <!-- Bar Chart -->
+    
+            <div class="chartjs-custom" style="display: block; height: 18rem;" >
+                <!-- style="height: 18rem;" -->
+                <!-- <div style="display: block;">  -->
+                    <!-- <canvas #chart></canvas> -->
+                    <canvas id="lineChart{{index}}" baseChart [data]="lineChartData[index]" [options]="lineChartOptions[index]" [type]="lineChartType[index]">
+                    </canvas>
+                <!-- </div>             -->
+            </div>
+            <!-- End Bar Chart -->
+        </div>
+        <!-- End Body -->
+    
+        <!-- Card Footer -->
+        <a class="card-footer text-center" type="button" (click)="downloadGraph(index)">
+            Download Chart 
+            <!-- <i class="bi-chevron-right"></i> -->
+        </a>
+        <!-- End Card Footer -->
+    </div>
+    </ng-container>
+    <!-- End Card -->
+      
+</div>

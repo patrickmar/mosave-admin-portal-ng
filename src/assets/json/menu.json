@@ -1,0 +1,131 @@
+[
+    {
+        "id": 1,
+        "title": "Savings",
+        "navItem": [
+            {
+                "title": "Customers",
+                "icon": "people",
+                "page": [
+                    {
+                        "name": "Listing",
+                        "url": "customers"
+                    },
+                    {
+                        "name": "Register",
+                        "url": "customer/register"
+                    }
+                ]
+            },
+            {
+                "title": "Transactions",
+                "icon": "credit-card",
+                "page": [
+                    {
+                        "name": "Overview",
+                        "url": "overview",
+                        "new": true
+                    },
+                    {
+                        "name": "All",
+                        "url": "transactions/all"
+                    },
+                    {
+                        "name": "Savings",
+                        "url": "transactions/savings"
+                    },
+                    {
+                        "name": "Withdrawals",
+                        "url": "transactions/withdrawals"
+                    },
+                    {
+                        "name": "Commissions",
+                        "url": "transactions/commissions"
+                    }
+                ]
+            },
+            {
+                "title": "Transfers",
+                "icon": "cash",
+                "new": true,
+                "page": [
+                    {
+                        "name": "Transfers",
+                        "url": "transfers/listing"                        
+                    },
+                    {
+                        "name": "Recipients",
+                        "url": "transfers/recipients"
+                    }
+                ]
+            },
+            {
+                "title": "Account",
+                "icon": "person-badge",
+                "page": [
+                    {
+                        "name": "Settings",
+                        "url": "profile"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Event Ticketing",
+        "navItem": [
+            {
+                "title": "Events",
+                "icon": "calendar4-event",
+                "new": true,
+                "page": [
+                    {
+                        "name": "View",
+                        "url": "ticket/view"
+                    },
+                    {
+                        "name": "Create",
+                        "url": "ticket/create"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Programs",
+        "navItem": [
+            {
+                "title": "Program",
+                "icon": "building",
+                "new": true,
+                "page": [
+                    {
+                        "name": "View",
+                        "url": "programs/view/program"
+                    },
+                    {
+                        "name": "Create",
+                        "url": "programs/create/program"
+                    }
+                ]
+            },
+            {
+                "title": "Merchant",
+                "icon": "person-video3",
+                "new": true,
+                "page": [
+                    {
+                        "name": "View",
+                        "url": "programs/view/merchant"
+                    },
+                    {
+                        "name": "Create",
+                        "url": "programs/create/merchant"
+                    }
+                ]
+            }
+        ]
+    }
+]

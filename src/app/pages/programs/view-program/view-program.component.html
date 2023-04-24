@@ -1,0 +1,193 @@
+<!-- Content -->
+<div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-no-gutter">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/programs/view/program">Programs</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Create {{programType | titlecase}}</li>
+            </ol>
+          </nav>
+
+          <h1 class="page-header-title">View {{programType | titlecase}}</h1>
+        </div>
+        <!-- End Col -->
+        <div class="col-sm-auto">
+            <a class="btn btn-primary" routerLink="/programs/create/{{programType}}">Create {{programType | titlecase}}</a>
+        </div>
+        <!-- End Col -->
+      </div>
+      <!-- End Row -->
+    </div>
+    <!-- End Page Header -->
+
+
+    <!-- Card -->
+    <div class="card">
+        <!-- Header -->
+        <div class="card-header card-header-content-sm-between">
+          <!-- <div class="mb-2 mb-sm-0">
+            <h4 class="card-header-title">API Keys</h4>
+            <p class="card-text fs-5">Keys you have generated to connect with third-party clients or access the <a class="link" href="javascript:;">Front API.</a></p>
+          </div> -->
+  
+          <div class="mb-2 mb-md-0">
+              <form>
+                <!-- Search -->
+                <div class="input-group input-group-merge input-group-flush">
+                  <div class="input-group-prepend input-group-text">
+                    <i class="bi-search"></i>
+                  </div>
+                  <input id="datatableSearch1" type="search" class="form-control" (input)="filter($event, 1, 'datatable')" placeholder="Search customers" aria-label="Search users">
+                </div>
+                <!-- End Search -->
+              </form>
+            </div>
+  
+          <div class="d-grid d-sm-flex justify-content-sm-between align-items-sm-center gap-2">
+            <!-- Datatable Info -->
+            <div id="datatableCounterInfo" style="display: none;">
+              <div class="d-flex align-items-center">
+                <span class="fs-6 me-3">
+                  <span id="datatableCounter">0</span>
+                  Selected
+                </span>
+                <a class="btn btn-outline-danger btn-sm" href="javascript:;"><i class="bi-trash"></i> Delete</a>
+              </div>
+            </div>
+            <!-- End Datatable Info -->
+  
+            <!-- Dropdown -->
+            <div class="dropdown">
+              <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi-download me-2"></i> Export
+              </button>
+  
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="usersExportDropdown">
+                <span class="dropdown-header">Select option:</span>
+                <a id="export-copy" class="dropdown-item" type="button" (click)="download('copy')">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg" alt="Image Description">
+                  Copy
+                </a>
+                <a id="export-print" class="dropdown-item" type="button" (click)="download('print')">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg" alt="Image Description">
+                  Print
+                </a>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-header">Download options</span>
+                <a id="export-excel" class="dropdown-item" type="button" (click)="download('excel')">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg" alt="Image Description">
+                  Excel
+                </a>
+                <a id="export-csv" class="dropdown-item" type="button" (click)="download('csv')">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
+                  CSV
+                </a>
+                <a id="export-pdf" class="dropdown-item" type="button" (click)="download('pdf')">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg" alt="Image Description">
+                  PDF
+                </a>
+              </div>
+            </div>
+            <!-- End Dropdown -->
+          </div>
+        </div>
+        <!-- End Header -->
+  
+        <!-- Table -->
+        <div class="table-responsive position-relative">
+          <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+            <thead class="thead-light">			
+              <tr>
+                <th *ngFor="let item of tableHead" [ngClass]="item.class">{{item.value}}</th>
+              </tr>
+            </thead>
+  
+            <tbody>
+              <ng-container *ngIf="records != undefined && records.length > 0 else elseTemplate">
+              <tr *ngFor="let item of records; let i = index;">
+                <td class="table-column-pe-2">
+                  <div class="text-inherit">{{i+1 +'.'}}</div>
+                </td>
+                <!-- <td class="table-column-ps-0">
+                  <div class="d-flex align-items-center text-dark" >
+                    <div class="flex-shrink-0">
+                        <ng-container *ngIf="item?.image else elseTemplate2">
+                            <div class="avatar avatar-xs avatar-circle">
+                                <img class="avatar-img" [src]="imageBaseURL+item?.image" alt="{{item?.recipient?.name}}"
+                                    onerror="this.src=avatar">
+                            </div>
+                        </ng-container>
+                        <ng-template #elseTemplate2>
+                            <div class="avatar avatar-soft-primary avatar-circle" *ngIf="!item.image">
+                                <span class="avatar-initials">{{item?.name | slice:0:1}}{{item?.name | slice:0:1}}</span>
+                            </div>
+                        </ng-template>
+                    </div>
+                    </div>
+  
+                </td> -->
+                <td class="table-column-ps-0">
+                    <div class="d-flex align-items-center text-dark">
+                      <div class="flex-grow-1 ms-3">
+                        <span class="text-inherit">{{programType === 'merchant' ? item?.merchantId : item?.programId}}</span>
+                      </div>
+                    </div>
+                  </td>
+                <td >
+                  <div class="d-flex align-items-center text-dark">
+                    <div class="flex-grow-1 ms-3">
+                      <span class="text-inherit">{{programType === 'merchant' ? item?.merchantName: item?.programName}}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="flex-grow-1 ms-3">
+                      <span class="text-inherit">{{programType === 'merchant' ? item?.programEmail : item?.programEmail}}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex-grow-1 ms-3">
+                        <strong class="text-body">{{programType === 'merchant' ? item?.programName : item?.contactPersonSurname}}</strong>
+                      </div>
+                  </td>
+                <td>
+                  {{programType === 'merchant' ? item?.programId : item?.contactPhone}}
+              </td>
+                
+                <td>
+                  <div class="">
+                    <button type="button" class="btn btn-white btn-sm" id="button"  aria-expanded="false" 
+                    (click)="viewRecord(programType === 'merchant' ? item?.merchantId : item?.programId);">
+                      <i class="bi-eye ms-1"></i> View
+                    </button>
+                  </div>
+                </td>
+              </tr>
+          </ng-container>
+  
+          <ng-template #elseTemplate>
+              <tr>
+                  <td valign="top" colspan="8" class="dataTables_empty">
+                    <div class="text-center p-4">
+                      <img class="mb-3" src="{{emptyTable}}" alt="Image Description" style="width: 10rem;"
+                        data-hs-theme-appearance="default">
+                      <p class="mb-0">No tranfer record found</p>
+                    </div>
+                  </td>
+                </tr>
+  
+          </ng-template>            
+            </tbody>
+          </table>
+        </div>
+        <!-- End Table -->
+  
+        
+      </div>
+      <!-- End Card -->
+  </div>
+  <!-- End Content -->

@@ -7,6 +7,7 @@ import { ReceiptService } from 'src/app/services/receipt.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
 import { DataTableDirective } from 'angular-datatables';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class TransactionHistoryComponent implements OnInit {
 
   @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;
+  emptyTable = environment.emptyTable;
 
   constructor(private dataService: DataService,
     private authservice: AuthService,
@@ -60,7 +62,7 @@ export class TransactionHistoryComponent implements OnInit {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
           <p class="mb-0">No data to show</p>
           </div>`,
           paginate: {

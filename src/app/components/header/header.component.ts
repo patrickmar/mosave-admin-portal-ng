@@ -70,12 +70,9 @@ export class HeaderComponent implements OnInit {
 
   getUserDetails(){
     this.authService.userData$.subscribe((response: any) => {
-      console.log(response);
       this.user = response;
       var titleCasePipe = new TitleCasePipe();
       this.firstname = titleCasePipe.transform(this.user?.firstname);
-      console.log(this.user.sn);
-      console.log(this.roles);
       this.userRole = this.roles.filter((i: any) => i.id === Number(this.user.level));
       console.log(this.userRole);
     });
@@ -89,7 +86,6 @@ export class HeaderComponent implements OnInit {
 
   searchCustomer(event: any) {
     let query = event.target.value;
-    console.log(query);
     this.search(query);
   }
 

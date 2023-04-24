@@ -7,6 +7,7 @@ import { forkJoin, Subject } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { ReceiptService } from 'src/app/services/receipt.service';
 import { StatService } from 'src/app/services/stat.service';
+import { environment } from 'src/environments/environment';
 //import { moment} from 'moment';
 //import * as moment from 'moment';
 //import moment = require('moment');
@@ -93,6 +94,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   commTrnxRecords: any;
 
   bestSavers!: Array<any>;
+  emptyTable = environment.emptyTable;
 
   // @ViewChild(TransactionsTableComponent)
   // private btnIcon: btn;
@@ -117,7 +119,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
           <p class="mb-0">No data to show</p>
           </div>`,
       },
@@ -641,7 +643,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
       //   },
       //   language: {
       //     zeroRecords: `<div class="text-center p-4">
-      //         <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+      //         <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
       //         <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
       //       <p class="mb-0">No data to show</p>
       //       </div>`

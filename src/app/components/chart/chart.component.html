@@ -1,0 +1,68 @@
+<!-- Card -->
+<ng-container *ngFor="let item of data">
+<div class="card mb-3 mb-lg-5">
+    <!-- Header -->
+    <div class="card-header card-header-content-sm-between">
+        <h4 class="card-header-title mb-2 mb-sm-0">{{title}}</h4>
+
+        <!-- Nav -->
+        <ul class="nav nav-segment nav-fill" id="graphTab{{index}}" role="tablist">
+            <li class="nav-item" data-bs-toggle="chart" data-datasets="0" data-trigger="click" data-action="toggle">
+                <a class="nav-link active" href="javascript:;" type="button" (click)="switchgraph(index)" data-bs-toggle="tab">Line Chart</a>
+            </li>
+            <li class="nav-item" data-bs-toggle="chart" data-datasets="1" data-trigger="click" data-action="toggle">
+                <a class="nav-link" href="javascript:;" type="button" (click)="switchgraph(index)" data-bs-toggle="tab">Bar Chart</a>
+            </li>
+        </ul>
+        <!-- End Nav -->
+    </div>
+    <!-- End Header -->
+    <!-- Body -->
+    <div class="card-body">
+        <div class="row align-items-sm-center mb-4">
+            <div class="col-sm mb-3 mb-sm-0">
+                <div class="d-flex align-items-center">
+                    <span class="h1 mb-0">{{totalValue}} {{currency}}</span>
+
+                    <span class="text-success ms-2">
+                        <i class="bi-graph-up"></i> {{percentage + '%'}}
+                    </span>
+                </div>
+            </div>
+            <!-- End Col -->
+
+            <div class="col-sm-auto">
+                <!-- Legend Indicators -->
+                <div class="row fs-6">
+                    <div class="col-auto" *ngFor="let item of label; let i = index;">
+                        <span [class]=" 'legend-indicator ' + ( i+'' | i18nSelect:bgMap)" [style]="i == 2 ? 'background-color: #7000f2;' : '' "></span> {{item}}
+                    </div>
+                </div>
+                <!-- End Legend Indicators -->
+            </div>
+            <!-- End Col -->
+        </div>
+        <!-- End Row -->
+
+        <!-- Bar Chart -->
+
+        <div class="chartjs-custom" style="height: 18rem;" >
+            <!-- style="height: 18rem;" -->
+            <div style="display: block;"> 
+                <!-- <canvas #chart></canvas> -->
+                <canvas id="lineChart0" baseChart [data]="data" [options]="options" [type]="type">
+                </canvas>
+            </div>            
+        </div>
+        <!-- End Bar Chart -->
+    </div>
+    <!-- End Body -->
+
+    <!-- Card Footer -->
+    <a class="card-footer text-center" type="button" (click)="downloadGraph(index)">
+        Download Chart <i class="bi-chevron-right"></i>
+    </a>
+    <!-- End Card Footer -->
+</div>
+</ng-container>
+<!-- End Card -->

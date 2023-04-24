@@ -37,6 +37,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
   avatar = environment.avatar;
+  emptyTable = environment.emptyTable;
 
   @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;
@@ -68,7 +69,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
       //searching: false,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
           <p class="mb-0">No data to show</p>
           </div>`,
           paginate: {
@@ -93,21 +94,21 @@ export class CustomersComponent implements OnInit, OnDestroy {
         extend: 'excel',
         className: 'd-none',
         filename: function () {
-          return 'MoSave_Customers'+new Date().getTime();
+          return 'MoSave_Customers_'+new Date().getTime();
        }
       },
       {
         extend: 'csv',
         className: 'd-none',
         filename: function () {
-          return 'MoSave_Customers'+new Date().getTime();
+          return 'MoSave_Customers_'+new Date().getTime();
        }
       },      
       {
         extend: 'pdf',
         className: 'd-none',
         filename: function () {
-          return 'MoSave_Customers'+new Date().getTime();
+          return 'MoSave_Customers_'+new Date().getTime();
        }
       },
       ],      
@@ -319,7 +320,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
       //   },
       //   language: {
       //     zeroRecords: `<div class="text-center p-4">
-      //         <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+      //         <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
       //         <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
       //       <p class="mb-0">No data to show</p>
       //       </div>`

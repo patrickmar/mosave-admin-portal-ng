@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 declare var HSCore: any;
 declare var HSSideNav: any;
@@ -18,7 +20,7 @@ declare var HSCore: any;
 })
 export class UpdateComponent implements OnInit {
 
-  tableHead = ["Name", "Price", "Disc. Price", "Quantity", "Action"];
+  tableHead = ["Name", "Price", "Disc. Price", "Wallet Disc.", "Quantity", "Action"];
   eventTypes = ["Festival", "Conference", "Seminar", "Executive Meeting", "Webinar", "Comedy", "Gala Night", "Musical show", "Trade Fair", "Others",]
   ticketForm!: FormGroup;
   showEndDate: boolean = false;
@@ -26,10 +28,18 @@ export class UpdateComponent implements OnInit {
   showSeat: boolean = false;
   data: object | any;
   maxCategory = 10;
-  merchantList!: Array<any>
+  merchantList!: Array<any>;
+  allMerchants!: Array<any>;
+  setFiles: Array<any> = [];
+  files: File[] = [];
+  bearers = [{name:"MoLoyal", value: "account"}, {name:"Client", value: "subaccount"}]
+  loading!: boolean;
+  path = environment.app.baseUrl+ environment.app.path+ environment.app.allImagesPath;
 
   constructor(private fb: FormBuilder, private dataService: DataService, 
     private route: ActivatedRoute, private toastService: ToastService) { 
+      this.getAllMerchants();
+
       this.ticketForm = this.fb.group({
         eventTitle: ['', [Validators.required, Validators.minLength(5)]],  
         venue: ['', [Validators.required, Validators.minLength(5)]],
@@ -50,41 +60,55 @@ export class UpdateComponent implements OnInit {
     this.getTicket();  
   }
 
+  validations = {
+    eventTitle: [
+      { type: 'required', message: 'Title is required.' }
+    ],
+    name: [
+      { type: 'required', message: 'Name is required.' }
+    ],
+    price: [
+      { type: 'required', message: 'Price is required.' }
+    ],
+    qty: [
+      { type: 'required', message: 'Qty is required.' }
+    ],
+    walletDiscount: [
+      { type: 'required', message: 'Wallet discount is required.' }
+    ],
+    venue: [
+      { type: 'required', message: 'Venue is required.' }
+    ],
+    description: [
+      { type: 'required', message: 'Description is required.' }
+    ],
+    chargesBearer: [
+      { type: 'required', message: 'Bearer is required.' }
+    ],
+    eventType: [
+      { type: 'required', message: 'Event type is required.' }
+    ],
+    merchantId: [
+      { type: 'required', message: 'Merchant Id is required.' }
+    ],
+    submerchantId: [
+      { type: 'required', message: 'Submerchant Id is required.' }
+    ],
+    paystackAcctId: [
+      { type: 'required', message: 'Paystack Account is required.' }
+    ],
+
+  };
+
   ngOnInit(): void {
     this.jsInit();
     this.jsInit2();
     // this.addTicket();
-    this.addStartDate();
-    this.addEndDate();
+    // this.addStartDate();
+    // this.addEndDate();
     //this.getAllTickets();
     // this.getTicketId();
-    this.merchantList = [
-      {
-        id: 1,
-        name: 'BME',
-        merchantId: '201501'
-      },
-      {
-        id: 2,
-        name: 'Dangote',
-        merchantId: '201502'
-      },
-      {
-        id: 3,
-        name: 'Fair acres',
-        merchantId: '201503'
-      },
-      {
-        id: 4,
-        name: 'Muson',
-        merchantId: '201504'
-      },
-      {
-        id: 5,
-        name: 'Flytime',
-        merchantId: '201505'
-      },
-    ]
+    
   }
 
   displayEndDate(){
@@ -105,66 +129,71 @@ export class UpdateComponent implements OnInit {
 
   getTicket(){
     this.dataService.getAllTickets().subscribe((res: any) => {
-      console.log(res);    
-      const filter = res.filter((val: any) =>{
-        return val.id == this.getTicketId();
+      console.log(res);   
+      const filter = res.data.filter((val: any) =>{
+        return val.sn == this.getTicketId();
       });
-      console.log(filter[0]);
       this.data = filter[0];
-      const data = filter[0];
+      const data = this.data;
 
       const ticketForm = {
-        eventTitle: data?.eventTitle,  
+        eventTitle: data?.title,  
         venue: data?.venue,
-        submerchantId: parseInt(data?.submerchantId),
-        paystackAcctId: data?.paystackAcctId,
+        submerchantId: data?.submerchantId,
+        paystackAcctId: data?.Paystack_Acct,
         vendor: data?.vendor,
-        chargesBearer: data?.chargesBearer,
-        eventType: data?.eventType,
-        description: data?.description,
+        chargesBearer: data?.paystack_bearer,
+        eventType: data?.event_cat,
+        description: data?.des,
         tags: data?.tags,
-        seatCapacity: data?.seatCapacity,
-        enableEvent: data?.enableEvent,
-        enableSeat: data?.enableSeat,
+        seatCapacity: Number(data?.seat_capacity),
+        enableEvent: data?.status === "Active" ? true : false,
+        enableSeat: data?.enableseat === "1" ? true : false,
       };
 
       this.ticketForm.patchValue(ticketForm);
-
+      if(Array.isArray(this.data?.ticketCategories) && this.data?.ticketCategories?.length > 0){
       this.data?.ticketCategories?.map((item: any) => {
         const ticket = this.fb.group({
           name: item?.name,
           price: item?.price,
-          qty: item?.qty,
-          discountPrice: item?.discountPrice
+          qty: item?.quantity,
+          discountPrice: item?.discount_price,
+          walletDiscount: item?.wallet_discount,
         });
         this.ticketCategories().push(ticket);
       });
+    }
 
-      if(Array.isArray(this.data?.start) && this.data?.start?.length > 0){
-        this.data?.start?.map((item: any) => {
+    const start = [ {date: data?.from_date, time: data?.from_time}]
+    const end = [ { date: data?.to_date, time: data?.to_time }  ]
+
+      if(Array.isArray(start) && start?.length > 0 ){  
+        start?.map((item: any) => {      
           const start = this.fb.group({
             date: item?.date,
             time: item?.time
           });
-          this.startDate().push(start);
-        });
+          this.startDate().push(start); 
+        });         
       }else{
         this.addStartDate();
       }      
 
-      if(Array.isArray(this.data?.end) && this.data?.end?.length > 0){
-        this.data?.end?.map((item: any) => {
+        if(Array.isArray(end) && end?.length > 0 ){ 
+          end?.map((item: any) => {       
           const end = this.fb.group({
             date: item?.date,
             time: item?.time
           });
-          this.endDate().push(end);
-        });
+          this.endDate().push(end); 
+        });      
       }else{
         this.addEndDate();
       }
 
-      
+      this.showEndDate = this.ticketForm.value.end[0].date !== '' ? true : false;
+      this.showSeat = this.ticketForm.value.enableSeat == true ? true : false;    
 
     });
   }
@@ -172,6 +201,17 @@ export class UpdateComponent implements OnInit {
   getTicketId() {
     const ticketId = this.route.snapshot.paramMap.get('sn');
     return ticketId; 
+  }
+
+  getAllMerchants() {
+    try {
+      this.dataService.getAllMerchants().subscribe((res: any) => {
+        this.allMerchants = res;
+      })
+    } catch (error) {
+      console.log(error);
+      this.toastService.showError('Could not fetch all Merchants', 'Error');
+    }
   }
 
 
@@ -200,6 +240,10 @@ export class UpdateComponent implements OnInit {
         Validators.maxLength(6),
         Validators.minLength(1),
         Validators.min(1),
+        Validators.max(this.maxQty)
+      ])),
+      walletDiscount: this.fb.control(0, Validators.compose([
+        Validators.min(0),
         Validators.max(this.maxQty)
       ])),
       discountPrice: this.fb.control('', Validators.compose([
@@ -242,29 +286,88 @@ export class UpdateComponent implements OnInit {
 
   
 
-  handleMinus(e: any, index: number) {
-    let value = this.ticketForm.get("ticketCategories")?.value[index]?.qty;
-    if (value === 1) {
+  handleMinus(e: any, index: number, name: string, minQty: number) {
+    let value = this.ticketForm.get("ticketCategories")?.value[index]?.[name];
+    if (value === minQty) {
       e.preventDefault();
     } else {
-      const newValue = Number(value) - 1;
-      this.ticketCategories().at(index).get('qty')?.setValue(newValue);
+      const newValue = value - 1;
+      this.ticketCategories().at(index).get(name)?.setValue(newValue);
     }
   }
-  handlePlus(e: any, index: number) {
-    let value = this.ticketForm.get("ticketCategories")?.value[index]?.qty;
-    if (value === this.maxQty) {
+  handlePlus(e: any, index: number, name: string, maxQty: number) {
+    let value = this.ticketForm.get("ticketCategories")?.value[index]?.[name];
+    if (value === maxQty) {
       e.preventDefault();
     } else {
-      const newValue = Number(value) + 1;
-      this.ticketCategories().at(index).get('qty')?.setValue(newValue);
+      const newValue = value + 1;
+      this.ticketCategories().at(index).get(name)?.setValue(newValue);
+    }
+  }
+
+  removeAll(array: Array<any>){
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i]; 
+      array.splice(array.indexOf(element), 1);
     }
   }
      
-  onSubmit() {
+  async onSubmit() {
     var val = $("#quillArea .ql-editor").html();
     this.ticketForm.get('description')?.setValue(val);  
-    console.log(this.ticketForm.value);
+    const form = this.ticketForm.value;
+    console.log(form);
+     
+      const startDate = moment(this.ticketForm.value.start[0].date);
+      const endDate = moment(this.ticketForm.value.end[0].date);
+      if (endDate.isBefore(startDate)) {
+        this.toastService.showError('Event end date must be greater than start date.', 'Error');
+    }else {     
+      this.loading = true;
+      const formData = new FormData();
+      const eventId = String(this.getTicketId());
+      formData.append("eventid", eventId);
+      if (this.setFiles.length > 0) {
+        for (var i = 0; i < this.setFiles.length; i++) {
+          const fileName = new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
+          const response = await fetch(this.setFiles[i].file.base64);
+          const blob = await response.blob();
+          formData.append("banner[]", blob, fileName);
+        }
+      }      
+
+      Object.keys(form).forEach((key) => {
+          Array.isArray(form[key]) ? 
+          form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value))}) : formData.append(key, form[key])
+      });
+      // formData.forEach((value, key) => {
+      //   console.log(key + ": " + value);
+      // });
+
+      try {
+        this.dataService.updateEventTicket(formData).subscribe((res: any) => {
+          console.log(res);
+          this.loading = false;
+          if (res.error == false) {
+            this.toastService.showSuccess(res?.message, 'Success');
+            this.removeAll(this.setFiles)
+            this.removeAll(this.files);            
+          } else {
+            this.toastService.showError(res?.message, 'Error');   
+          }
+        }, (error: any)=>{
+          this.loading = false;
+          console.log(error);
+          this.toastService.showError(error?.message, 'Error');
+        })
+      } catch (error) {
+        this.loading = false;
+        console.log(error);
+        this.toastService.showError('Could not create ticket. Please try again later', 'Error');
+      }
+    }
+
+    
   }  
 
   

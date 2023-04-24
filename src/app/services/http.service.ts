@@ -39,6 +39,7 @@ export class HttpService {
     const headers = new HttpHeaders();
     const options = { headers: headers, withCredentials: false };
     const url = environment.app.baseUrl + environment.app.path + serviceName;
+    //const data2 = JSON.stringify(data);
     return this.http.post(url, data, options).pipe(
       finalize(() => {
     })
@@ -46,7 +47,6 @@ export class HttpService {
   }
 
   get(serviceName: string) {
-
     const headers = new HttpHeaders();
     const options = { headers: headers, withCredentials: false };
     const url = environment.app.baseUrl + environment.app.path + serviceName;
@@ -64,5 +64,26 @@ export class HttpService {
     const url = environment.paystack.url + serviceName;
     return this.http.get(url, options).pipe(finalize(() => {
     }))
+  }
+
+  getCountries(){
+    const headers = new HttpHeaders();
+    const options = { headers: headers, withCredentials: false };
+    const url = environment.countries.url;
+    return this.http.get(url, options).pipe(finalize(() => {
+    }))
+  }
+
+  postExternal(serviceName: string, data: any){
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    const options = { headers: headers, withCredentials: false };
+    const url = environment.countries.state + serviceName;
+    const JsonData = JSON.stringify(data);
+    return this.http.post(url, JsonData, options).pipe(
+      finalize(() => {
+    })
+    );
   }
 }

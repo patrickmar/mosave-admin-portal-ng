@@ -1,0 +1,30 @@
+export interface transactions {
+    BVN_num: string
+    accountCode: string
+    accountId: string
+    accountNo: string
+    accountType: string
+    agentId: string
+    agent_firstname: string
+    agent_lastname: string
+    city: string
+    createdDate: string
+    customerId: string
+    email: string
+    firstName: string
+    gender: string
+    ip: string
+    lastName: string
+    mname: string
+    planId: string
+    plan_name: string
+    sn: string
+    state: string
+    status: string
+    time: string
+    transAmount: string
+    transDate: string
+    transType: string
+    transref: string
+    userId: string
+}

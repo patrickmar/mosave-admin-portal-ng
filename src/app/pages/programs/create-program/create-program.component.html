@@ -1,0 +1,374 @@
+<!-- Content -->
+<div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-sm mb-2 mb-sm-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-no-gutter">
+                        <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/programs/view/program">Programs</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Create {{programType | titlecase}}</li>
+                    </ol>
+                </nav>
+
+                <h1 class="page-header-title">Create {{programType | titlecase}}</h1>
+            </div>
+            <!-- End Col -->
+            <div class="col-sm-auto">
+                <a class="btn btn-primary" routerLink="/programs/view/{{programType}}">View All {{programType | titlecase}}s</a>
+            </div>
+            <!-- End Col -->
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Page Header -->
+    <form [formGroup]="programForm" (ngSubmit)="submit()" enctype="multipart/form-data" *ngIf="programForm">
+        <div class="row">
+            <div class="col-lg-8 mb-3 mb-lg-0">
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h4 class="card-header-title">{{programType | titlecase}} information</h4>
+                    </div>
+                    <!-- End Header -->
+                    <!-- Body -->
+                    <div class="card-body">
+                        <!-- Form -->
+                        <div class="row mb-4">
+                            <label class="col-sm-3 col-form-label form-label">{{programType | titlecase}} Logo</label>
+                            <div class="col-sm-9">
+                                <div class="d-flex align-items-center">
+                                    <!-- Avatar -->
+                                    <label class="avatar avatar-xl avatar-circle avatar-uploader me-5"
+                                        for="avatarUploader">
+                                        <img id="avatarImg" class="avatar-img" src="./assets/img/160x160/img1.jpg"
+                                            alt="Image Description">
+
+                                        <input type="file" class="js-file-attach avatar-uploader-input"
+                                            (change)="checkImg()" formControlName="img" id="avatarUploader"
+                                            data-hs-file-attach-options='{
+                                "textTarget": "#avatarImg",
+                                "mode": "image",
+                                "targetAttr": "src",
+                                "resetTarget": ".js-file-attach-reset-img",
+                                "resetImg": "./assets/img/160x160/img1.jpg",
+                                "allowTypes": [".png", ".jpeg", ".jpg"]
+                             }'>
+
+                                        <span class="avatar-uploader-trigger">
+                                            <i class="bi-pencil avatar-uploader-icon shadow-sm"></i>
+                                        </span>
+                                    </label>
+                                    <!-- End Avatar -->
+
+                                    <button type="button" class="js-file-attach-reset-img btn btn-white">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+
+                        <!-- Form -->
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-4">
+                                    <label for="merchantIdLabel" class="form-label">{{programType | titlecase}} Id</label>
+                                    <input type="text" class="form-control" formControlName="merchantId"
+                                        id="merchantIdLabel" aria-label="merchantId">
+                                        <div class="error-container">
+                                            <ng-container *ngFor="let v of validations.merchantId">
+                                                <div class="error-message"
+                                                    *ngIf="programForm.get('merchantId')?.hasError(v.type) && (programForm.get('merchantId')?.dirty || programForm.get('merchantId')?.touched)">
+                                                    <small class="text-danger">{{ v.message }}</small>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-4">
+                                    <label for="merchantNameLabel" class="form-label">{{programType | titlecase}} Name <i
+                                            class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="The name of the merchant"></i>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="merchantName" id="merchantNameLabel">
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.merchantName">
+                                            <div class="error-message"
+                                                *ngIf="programForm.get('merchantName')?.hasError(v.type) && (programForm.get('merchantName')?.dirty || programForm.get('merchantName')?.touched)">
+                                                <small class="text-danger">{{ v.message }}</small>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+
+                        <!-- Form -->
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-4">
+                                    <label for="emailLabel" class="form-label">Email</label>
+                                    <input type="email" class="form-control" formControlName="email" id="emailLabel">
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.email">
+                                          <div class="error-message" *ngIf="programForm.get('email')?.hasError(v.type) && (programForm.get('email')?.dirty || programForm.get('email')?.touched)">
+                                            <span class="text-danger">{{ v.message }}</span>
+                                          </div>
+                                        </ng-container>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-4" formGroupName="country_phone">
+                                    <label for="phoneLabel" class="form-label">Phone</label>
+                                    <div class="input-group input-group-sm-vertical">
+                                        <input type="text" class="js-input-mask form-control" formControlName="phoneno"
+                                            id="phoneLabel" placeholder="{{ programForm.value.country_phone.country.sample_phone }}" aria-label="xxxx xxx xxxx"
+                                            data-hs-mask-options='{
+                             "mask": "00000000000"
+                           }'>
+
+                                        <!-- Select -->
+                                        <div class="tom-select-custom tom-select-custom-end">
+                                            <select class="js-select form-select" autocomplete="off"
+                                                data-hs-tom-select-options='{
+                                "searchInDropdown": true,
+                                "hideSearch": false,
+                                "dropdownWidth": "8rem"
+                              }'>
+                                                <option value="Mobile" selected>Mobile</option>
+                                                <option value="Home">Home</option>
+                                                <option value="Work">Work</option>
+                                                <option value="Fax">Fax</option>
+                                                <option value="Direct">Direct</option>
+                                            </select>
+                                        </div>
+                                        <!-- End Select -->
+                                    </div>
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.phoneno">
+                                          <div class="error-message" *ngIf="programForm.get('country_phone')?.get('phoneno')?.hasError(v.type) && (programForm.get('country_phone')?.get('phoneno')?.dirty || programForm.get('country_phone')?.get('phoneno')?.touched)">
+                                            <span class="text-danger">{{ v.message }}</span>
+                                          </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- End Form -->
+
+                        <!-- Form -->
+                        <div class="row inputs-list" formGroupName="matching_passwords">
+                            <div class="col-sm-6">
+                                <div class="mb-4">
+                                    <label for="passwordLabel" class="form-label">Password</label>
+                                    <!-- <app-show-hide-password> -->
+                                    <input type="password" #passwordInput class="form-control" formControlName="password" id="passwordLabel" aria-label="passwordLabel">
+                                    <!-- </app-show-hide-password> -->
+                                <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.password">
+                                          <div class="error-message" *ngIf="programForm.get('matching_passwords')?.get('password')?.hasError(v.type) && 
+                                          (programForm.get('matching_passwords')?.get('password')?.dirty || programForm.get('matching_passwords')?.get('password')?.touched)">
+                                            <span class="text-danger">{{ v.message }}</span>
+                                          </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-4">
+                                    <label for="confirmPasswordLabel" class="form-label">Confirm Password </label>
+                                    <input type="password" class="form-control" formControlName="confirmPassword" id="confirmPasswordLabel">
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.confirmPassword" >
+                                          <div class="error-message" *ngIf="programForm.get('matching_passwords')?.get('confirmPassword')?.hasError(v.type) && 
+                                          (programForm.get('matching_passwords')?.get('confirmPassword')?.dirty || programForm.get('matching_passwords')?.get('confirmPassword')?.touched)">
+                                            <span class="text-danger">{{ v.message }}</span>
+                                          </div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.matching_passwords">
+                                          <div class="error-message" *ngIf="programForm.get('matching_passwords')?.hasError(v.type) && (programForm.get('matching_passwords')?.get('confirmPassword')?.dirty || programForm.get('matching_passwords')?.get('confirmPassword')?.touched)">
+                                            <span class="text-danger">{{ v.message }}</span>
+                                          </div>
+                                        </ng-container>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+
+                    </div>
+                    <!-- End Body -->
+                </div>
+
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h4 class="card-header-title">Country Information</h4>
+                    </div>
+                    <!-- End Header -->
+
+                    <!-- Body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <!-- Form -->
+                                <div class="mb-4" formGroupName="country_phone">
+                                    <label for="countryLabel" class="form-label">Country</label>
+                                    <!-- Select -->
+                                    <div class="tom-select-custom">
+                                        <select class=" form-select" autocomplete="off" id="countryLabel"
+                                            (change)="fetchStates()" formControlName="country" data-hs-tom-select-options='{
+                                          "searchInDropdown": false,
+                                          "hideSearch": true,
+                                          "placeholder": "Select Country"
+                                        }'>
+                                            <option *ngFor="let item of countries" [ngValue]="item">{{item.name}}</option>
+                                            <!-- <option [value]="item" *ngFor="let item of countries"  data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="./assets/vendor/flag-icon-css/flags/1x1/ng.svg" alt="Nigeria Flag" /><span class="text-truncate">Nigeria</span></span>'>Nigeria</option> -->
+                                        </select>
+                                    </div>
+                                    <!-- End Select -->
+                                </div>
+                            </div>
+                    
+                    
+                    
+                            <div class="col-sm-6">
+                                <!-- Form -->
+                                <div class="mb-4">
+                                    <label for="stateLabel" class="form-label">States</label>
+                                    <!-- Select -->
+                                    <div class="tom-select-custom">
+                                        <select class="js-select form-select" autocomplete="off" id="stateLabel" formControlName="state"
+                                            data-hs-tom-select-options='{
+                                          "searchInDropdown": false,
+                                          "hideSearch": true,
+                                          "placeholder": "Select State"
+                                        }'>
+                                            <option *ngFor="let item of states" [value]="item.name">{{item.name}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- End Select -->
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <!-- Form -->
+                                <div class="mb-4">
+                                    <label for="cityLabel" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="cityLabel" placeholder="City" formControlName="city">
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.city">
+                                            <div class="error-message" *ngIf="programForm.get('city')?.hasError(v.type) && (programForm.get('city')?.dirty 
+                                                            || programForm.get('city')?.touched)">
+                                                <small class="text-danger">{{ v.message }}</small>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <!-- Form -->
+                                <div class="mb-4">
+                                    <label for="addressLabel" class="form-label">Address</label>
+                                    <input type="text" class="form-control" formControlName="address" id="addressLabel"
+                                        placeholder="22, Oke Street">
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.address">
+                                            <div class="error-message" *ngIf="programForm.get('address')?.hasError(v.type) && (programForm.get('address')?.dirty 
+                                                            || programForm.get('address')?.touched)">
+                                                <small class="text-danger">{{ v.message }}</small>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <!-- End Form -->
+                            </div>
+                            
+                        </div>                  
+                    
+                    </div>
+                    <!-- Body -->
+                </div>
+                <!-- End Card -->
+            </div>
+            <div class="col-lg-4">
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h4 class="card-header-title">Contact Information</h4>
+                    </div>
+                    <!-- End Header -->
+
+                    <!-- Body -->
+                    <div class="card-body">
+                        <!-- Form -->
+                        <div class="mb-4">
+                            <label for="contactNameLabel" class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" formControlName="cperson" id="contactNameLabel"
+                                    placeholder="Funmi Williams">
+                            </div>
+                            <div class="error-container">
+                                <ng-container *ngFor="let v of validations.cperson">
+                                    <div class="error-message" *ngIf="programForm.get('cperson')?.hasError(v.type) && (programForm.get('cperson')?.dirty 
+                                        || programForm.get('cperson')?.touched)">
+                                        <small class="text-danger">{{ v.message }}</small>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+
+                        <div class="mb-4" formGroupName="country_phone">
+                            <label for="phonenoLabel" class="form-label">Phone Number <i
+                                    class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="The phone number of the contact person"></i></label>
+
+                            <div class="input-group">
+                                <input type="text" class="form-control" formControlName="contactPhoneNumber"
+                                    id="phonenoLabel" placeholder="{{programForm.value.country_phone.country.sample_phone }}">
+                            </div>
+                            <div class="error-container">
+                                <ng-container *ngFor="let v of validations.contactPhoneNumber">
+                                    <div class="error-message" *ngIf="programForm.get('contactPhoneNumber')?.hasError(v.type) && (programForm.get('contactPhoneNumber')?.dirty 
+                                                || programForm.get('contactPhoneNumber')?.touched)">
+                                        <small class="text-danger">{{ v.message }}</small>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <!-- End Form -->
+
+
+                    </div>
+                    <!-- Body -->
+                </div>
+                <!-- End Card -->
+
+                
+            </div>
+            <!-- End Col -->
+        </div>
+
+        <!-- [disabled]="loading || !programForm.valid" -->
+        <button type="submit" class="btn btn-primary" [disabled]="loading || !programForm.valid" >Submit
+            <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </button>
+    </form>
+</div>

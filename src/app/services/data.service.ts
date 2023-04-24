@@ -12,10 +12,16 @@ export class DataService {
   constructor(private httpService: HttpService, private http: HttpClient) { }
 
   readonly sampleTicket: string = './assets/json/tickets.json';
+  readonly PageMenu: string = './assets/json/menu.json';
 
   // Get Data Bundle API call
   public getAllTickets2() {
     return this.http.get(this.sampleTicket);
+  }
+
+  // get page menus
+  public getPageMenu() {
+    return this.http.get(this.PageMenu);
   }
 
   //get request from paystack
@@ -29,6 +35,10 @@ export class DataService {
     return this.httpService.getPaystack('bank/resolve?'+ options);
   }
 
+  public getAllCountries() {
+    return this.httpService.getCountries();
+  }
+
   //get all Mosave Transfers on paystack
   public getAllTransfers(options: string) {
     return this.httpService.getPaystack('transfer?'+options);
@@ -37,6 +47,11 @@ export class DataService {
   //fetch all Mosave Transfers on paystack by customer Id
   public getCustomerTransferRecord(value: string) {
     return this.httpService.getPaystack('transfer/'+ value);
+  }
+
+  // fet all Transfer Recipients
+  public getTransferRecipients(options: string) {
+    return this.httpService.getPaystack('transferrecipient?'+ options);
   }
 
   // ALL GET REQUEST
@@ -130,17 +145,24 @@ export class DataService {
   }
 
   // Get all merchants
-  public getProgramMerchants() {
+  public getAllMerchants() {
     return this.httpService.get('all/programmerchants');
   }
-
   
   // Get all merchants  - view all tickets - GET
   public getAllTickets() {
     return this.httpService.get('all/eventickets');
   }
 
+  // Get all merchants
+  public getAllPrograms() {
+    return this.httpService.get('all/programs');
+  }
 
+  //tickets/sold/:eventid', supply event id
+  public getTicketsById(eventid: number) {
+    return this.httpService.get('tickets/sold/'+eventid);
+  }
 
   // ALL POST REQUEST
   // Post Customer Registration API
@@ -215,15 +237,35 @@ export class DataService {
 
   // create event ticket
   createEventTicket(data: any): Observable<any> {
+    //const api = 'create/eventticket';
     return this.httpService.postWithImage('create/eventticket', data);
   }
 
   // create merchant
   createMerchant(data: any): Observable<any> {
-    return this.httpService.postWithImage('create/merchant', data);
+    return this.httpService.post('create/merchant', data);
   }
 // '$merchantid','$password','$merchantname','$email','$address','$city','$state','$country',
 // '$cperson','$phonno',
+
+// create program
+createProgram(data: any): Observable<any> {
+  return this.httpService.post('create/program', data);
+}
+
+// - POST- supply eventid
+deleteEventticket(data: any): Observable<any> {
+  return this.httpService.post('delete/eventticket', data);
+}
+// - POST - supply eventid including all other params
+updateEventTicket(data: any): Observable<any> {
+  return this.httpService.postWithImage('update/eventticket', data);
+}
+
+//fetch all states by country
+fetchStatesByCountry(data: any) {
+  return this.httpService.postExternal('states', data);
+}
   
 
 

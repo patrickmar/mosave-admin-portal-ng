@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment';
 import { DataService } from 'src/app/services/data.service';
 import { StatService } from 'src/app/services/stat.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -36,10 +37,11 @@ export class CreateComponent implements OnInit {
   allMerchants!: Array<any>;
   setFiles: Array<any> = [];
   files: File[] = [];
+  bearers = [{name:"MoLoyal", value: "account"}, {name:"Client", value: "subaccount"}]
 
   constructor(private fb: FormBuilder, private dataService: DataService, 
     private toastService: ToastService, private statService: StatService) {
-    this.getProgramMerchants();
+    this.getAllMerchants();
 
     this.ticketForm = this.fb.group({
       eventTitle: ['', [Validators.required, Validators.minLength(5)]],
@@ -77,12 +79,6 @@ export class CreateComponent implements OnInit {
     walletDiscount: [
       { type: 'required', message: 'Wallet discount is required.' }
     ],
-    phone: [
-      { type: 'required', message: 'Phone Number is required.' },
-      { type: 'invalidCountryPhone', message: 'Phone number is incorrect for the selected country.' },
-      { type: 'minlength', message: 'Phone number  must be at least 11 characters long.' },
-      { type: 'maxlength', message: 'Phone number cannot be more than 11 characters long.' },
-    ],
     venue: [
       { type: 'required', message: 'Venue is required.' }
     ],
@@ -96,13 +92,13 @@ export class CreateComponent implements OnInit {
       { type: 'required', message: 'Event type is required.' }
     ],
     merchantId: [
-      { type: 'required', message: 'merchant Id is required.' }
+      { type: 'required', message: 'Merchant Id is required.' }
     ],
     submerchantId: [
-      { type: 'required', message: 'submerchant Id is required.' }
+      { type: 'required', message: 'Submerchant Id is required.' }
     ],
     paystackAcctId: [
-      { type: 'required', message: 'paystack Account is required.' }
+      { type: 'required', message: 'Paystack Account is required.' }
     ],
 
   };
@@ -204,10 +200,12 @@ export class CreateComponent implements OnInit {
     this.ticketForm.get('merchantId')?.setValue(value[0].programId);
   }
 
-  getProgramMerchants() {
+  getAllMerchants() {
     try {
-      this.dataService.getProgramMerchants().subscribe((res: any) => {
+      this.dataService.getAllMerchants().subscribe((res: any) => {
         this.allMerchants = res;
+      }, (error: any)=>{
+        this.toastService.showError(error?.message, 'Error');
       })
     } catch (error) {
       console.log(error);
@@ -329,12 +327,22 @@ export class CreateComponent implements OnInit {
     // console.log(formData);
   }
 
-  onRemove(item: any, e: any) {
+  onRemove(item: any, e?: any) {
+    console.log(e);
     this.files.splice(this.files.indexOf(item), 1);
     this.setFiles.splice(this.setFiles.indexOf(item), 1);
-    e.preventDefault();
-    e.stopPropagation();
-}  
+    if(e != undefined){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+}
+
+removeAll(array: Array<any>){
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i]; 
+    array.splice(array.indexOf(element), 1);
+  }
+}
 
 async onSubmit() {
     var val = $("#quillArea .ql-editor").html();
@@ -343,7 +351,13 @@ async onSubmit() {
     console.log(form);
     if (this.setFiles.length == 0) {
       this.toastService.showError('Banner can not be empty', 'Error');
-    } else {       
+    } else {
+      const startDate = moment(this.ticketForm.value.start[0].date);
+      const endDate = moment(this.ticketForm.value.end[0].date);
+      console.log(endDate.isBefore(startDate));
+      if (endDate.isBefore(startDate)) {
+        this.toastService.showError('Event end date must be greater than start date.', 'Error');
+    }else {     
       this.loading = true;
       const formData = new FormData();
       for (var i = 0; i < this.setFiles.length; i++) {
@@ -352,20 +366,19 @@ async onSubmit() {
         const blob = await response.blob();
         // const blob2 = this.dataURItoBlob4(this.setFiles[i].file.base64);
         formData.append("banner[]", blob, fileName);
-      } 
-      
+      }      
     //remove array from the form object
-    // const  {ticketCategories, start, end, ...newForm} = form;
-    // console.log(newForm);
+    //  const  {ticketCategories, start, end, ...newForm} = form;
+    //  console.log(newForm);
+    //  console.log(form);
 
       Object.keys(form).forEach((key) => {
-        //   Array.isArray(newForm[key]) ? newForm[key].forEach((value: any) => formData.append(key + '[]', JSON.stringify(value))) : formData.append(key, newForm[key]) 
-        formData.append(key, JSON.stringify((form[key])));
+          Array.isArray(form[key]) ? 
+          form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value))}) : formData.append(key, form[key])
       });
-
-      formData.forEach((value, key) => {
-        console.log(key + ": " + value);
-      });
+      // formData.forEach((value, key) => {
+      //   console.log(key + ": " + value);
+      // });
 
       try {
         this.dataService.createEventTicket(formData).subscribe((res: any) => {
@@ -374,6 +387,8 @@ async onSubmit() {
           if (res.error == false) {
             this.toastService.showSuccess(res?.message, 'Success');
             this.ticketForm.reset();
+            this.removeAll(this.setFiles)
+            this.removeAll(this.files);            
           } else {
             this.toastService.showError(res?.message, 'Error');   
           }
@@ -387,6 +402,7 @@ async onSubmit() {
         console.log(error);
         this.toastService.showError('Could not create ticket. Please try again later', 'Error');
       }
+    }
 
     }
   }

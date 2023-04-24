@@ -37,6 +37,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   lastWeekTransferSum!: number;
   thisWeekTransferSum!: number;
   thisMonthTransferSum!: number;
+  
 
   constructor(private dataService: DataService, private toastService: ToastService,
     private route: Router) {
@@ -51,7 +52,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
           <p class="mb-0">No data to show</p>
           </div>`,
       },
@@ -198,10 +199,10 @@ export class ListingComponent implements OnInit, OnDestroy {
     $(table).DataTable().button('.buttons-'+name).trigger();
   }
 
-  filter(event: any, tableid: number, tableName: string,) {
+  filter(event: any, tableid: number, tableName: string) {
     var value = event.target.value;
       if(value.length > 0){
-        $("#datatableSearch" + tableid).on("keyup", function () {
+        $("#datatableSearch" + tableid).on("keyup", ()=> {
           if (value === null) value = '';
           $("#" + tableName).DataTable().search(value).draw();
         });
@@ -249,23 +250,23 @@ export class ListingComponent implements OnInit, OnDestroy {
 
       const datatable = HSCore.components.HSDatatables.getItem(0)
 
-      $('#export-copy').click(function() {
+      $('#export-copy').click(()=> {
         datatable.button('.buttons-copy').trigger()
       });
 
-      $('#export-excel').click(function() {
+      $('#export-excel').click(()=> {
         datatable.button('.buttons-excel').trigger()
       });
 
-      $('#export-csv').click(function() {
+      $('#export-csv').click(()=> {
         datatable.button('.buttons-csv').trigger()
       });
 
-      $('#export-pdf').click(function() {
+      $('#export-pdf').click(()=> {
         datatable.button('.buttons-pdf').trigger()
       });
 
-      $('#export-print').click(function() {
+      $('#export-print').click(()=> {
         datatable.button('.buttons-print').trigger()
       });
 

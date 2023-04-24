@@ -149,7 +149,7 @@
                         <h4 class="card-header-title">Media</h4>
 
                         <!-- Dropdown -->
-                        <div class="dropdown">
+                        <!-- <div class="dropdown">
                             <a class="btn btn-ghost-secondary btn-sm" href="#!" id="mediaDropdown"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 Add media from URL <i class="bi-chevron-down"></i>
@@ -165,7 +165,7 @@
                                     <i class="bi-youtube dropdown-item-icon"></i> Embed video
                                 </a>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- End Dropdown -->
                     </div>
                     <!-- End Header -->
@@ -582,14 +582,13 @@
 
                             <!-- Select -->
                             <div class="tom-select-custom">
-                                <select class="js-select form-select" autocomplete="off" id="bearerLabel"
-                                    formControlName="chargesBearer" data-hs-tom-select-options='{
-                          "searchInDropdown": false,
-                          "hideSearch": true,
-                          "placeholder": "Select bearer"
-                        }'>
-                                    <option value="account">MoLoyal</option>
-                                    <option value="subaccount">Client</option>
+                                <select class="js-select form-select" autocomplete="off" id="bearerLabel" formControlName="chargesBearer"
+                                    data-hs-tom-select-options='{
+                                                          "searchInDropdown": false,
+                                                          "hideSearch": true,
+                                                          "placeholder": "Select bearer"
+                                                        }'>
+                                    <option [ngValue]="item.value" *ngFor="let item of bearers">{{item.name}}</option>
                                 </select>
                             </div>
                             <!-- End Select -->

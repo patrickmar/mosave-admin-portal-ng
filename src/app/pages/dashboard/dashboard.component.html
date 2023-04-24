@@ -180,7 +180,7 @@
                   <a class="dropdown-item" href="javascript:;">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
-                  <a class="dropdown-item" type="button" (click)="downloadPie()">
+                  <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(0)">
                     <i class="bi-download dropdown-item-icon"></i> Download
                   </a>
 
@@ -246,7 +246,7 @@
                   <a class="dropdown-item" href="javascript:;">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
-                  <a class="dropdown-item" type="button" (click)="downloadDoughnut()">
+                  <a class="dropdown-item" type="button" (click)="downloadGraph(1)">
                     <i class="bi-download dropdown-item-icon"></i> Download
                   </a>
 
@@ -264,8 +264,10 @@
             <!-- End Header -->
 
             <!-- Body -->
-            <div class="card-body text-center">
-              <!-- Badge -->
+            <div class="card-body ">
+
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- Badge -->
               <div class="h3">
                 <span class="badge bg-soft-info text-info rounded-pill">
                   <i class="bi-check-circle-fill me-1"></i> On track
@@ -273,22 +275,29 @@
               </div>
               <!-- End Badge -->
 
+              <!-- Checkbox Switch -->
+              <div class="form-check form-switch form-switch-between" title="switch to see Bank Account">
+                <input id="updatingBarChartControl" class="form-check-input" type="checkbox" (change)="switch = !switch;">
+              </div>
+              <!-- End Checkbox Switch -->
+
+              </div>
+
+              <div class="text-center">             
               <!-- Chart Half -->
               <div class="chartjs-doughnut-custom" style="height: 15rem;">
                 <canvas 
                  id="doughnutHalfChart"
                  class="js-chartjs-doughnut-half"
-
                  baseChart
                 [data]="doughnutHalfChartData"
                 [options]="doughnutHalfChartOptions"
-                [legend]="pieChartLegend" 
                 [type]="doughnutHalfChartType">
               </canvas>
 
                 <div class="chartjs-doughnut-custom-stat" style="top: 12rem;">
-                  <small class="text-cap">Account balance</small>
-                  <span class="h1">{{totalBalance | currency :'₦'}}</span>
+                  <small class="text-cap">{{!switch ? 'Account balance' : 'Bank balance' }}</small>
+                  <span class="h1">{{(!switch ? totalBalance : totalBalance + commissionSum) | currency :'₦'}}</span>
                 </div>
               </div>
               <!-- End Chart Half -->
@@ -309,6 +318,7 @@
                 </div>
               </div>
               <!-- End Row -->
+            </div>
             </div>
             <!-- End Body -->
           </div>
@@ -394,6 +404,219 @@
           </div>
           <!-- End Card -->
         </div>
+      </div>
+      <!-- End Row -->
+
+      <div class="row">
+        <div class="col-lg-5 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <!-- Header -->
+            <div class="card-header card-header-content-between">
+              <h4 class="card-header-title">Average Trans.</h4>
+
+              <!-- Daterangepicker -->
+              <div class="btn-group">
+                <button id="js-daterangepicker" class="btn btn-ghost-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi-calendar-week"></i>
+                  <span class="js-daterangepicker-preview ms-1" >{{ranges2.TodayWithFormat[0] +' - '+ ranges2.TodayWithFormat[1] }}</span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" type="button" *ngFor="let item of last12Months" (click)="filterDataByMonth(item, 'All')">{{item}}</a>
+                </div>
+                <!-- End Daterangepicker -->
+              </div>
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+        <div class="card-body">
+          <div class="row col-sm-divider">
+            <div class="col-sm-6">
+              <!-- Stats -->
+              <div class="d-lg-flex align-items-lg-center">
+                <div class="flex-shrink-0">
+                  <i class="bi-credit-card fs-1"></i>
+                </div>
+
+                <div class="flex-grow-1 ms-lg-3">
+                  <span class="d-block fs-6">Average Savings</span>
+                  <div class="d-flex align-items-center">
+                    <h3 class="mb-0">{{avgSavings | currency :'₦'}}</h3>
+                    <!-- <span class="badge bg-soft-success text-success ms-2">
+                      <i class="bi-graph-up"></i> 12.5%
+                    </span> -->
+                  </div>
+                </div>
+              </div>
+              <!-- End Stats -->
+            </div>
+
+            <div class="col-sm-6">
+              <!-- Stats -->
+              <div class="d-lg-flex align-items-lg-center">
+                <div class="flex-shrink-0">
+                  <i class="bi-cash fs-1"></i>
+                </div>
+
+                <div class="flex-grow-1 ms-lg-3">
+                  <span class="d-block fs-6">Average Withdrawals</span>
+                  <div class="d-flex align-items-center">
+                    <h3 class="mb-0">{{avgWithdrawals| currency :'₦'}}</h3>
+                  </div>
+                </div>
+              </div>
+              <!-- End Stats -->
+            </div>
+
+            
+          </div>
+          <!-- End Row -->
+        </div>
+        <!-- End Body -->
+
+        <hr class="my-0">
+
+        <!-- Header -->
+        <div class="card-header card-header-content-between">
+          <h4 class="card-header-title">Third Party Applications</h4>
+        </div>
+        <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body">
+              <p>Launch our third party applications from here</p>
+
+              <ul class="list-group list-group-flush list-group-no-gutters">
+                <!-- <li class="list-group-item">
+                  <h5 class="card-title">Import users from:</h5>
+                </li> -->
+
+                <!-- List Group Item -->
+                <li class="list-group-item" *ngFor="let item of thirdPartyApps">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <img class="avatar avatar-xs avatar-4x3" src="./assets/svg/brand/{{item.src}}" alt="Image Description">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <h5 class="mb-0">{{item.name}}</h5>
+                          <span class="d-block fs-6 text-body">{{item.service}}</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-auto">
+                          <a class="btn btn-primary btn-sm" href="{{item.url}}" title="Go to website" target="_blank">
+                            Launch <span class="d-none d-sm-inline-block"></span>
+                            <i class="bi-box-arrow-up-right ms-1"></i>
+                          </a>
+                        </div>
+                        <!-- End Col -->
+                      </div>
+                      <!-- End Row -->
+                    </div>
+                  </div>
+                </li>
+                <!-- End List Group Item -->                
+
+                <!-- <li class="list-group-item"><span class="small text-muted">Or you can <a class="link" href="javascript:;">sync data to Dashboard</a> to ensure data is always up-to-date.</span></li> -->
+              </ul>
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+        <!-- End Col -->
+
+        <div class="col-lg-7 mb-3 mb-lg-5">
+          <!-- Card -->
+          <div class="card h-100">
+            <!-- Header -->
+            <div class="card-header card-header-content-sm-between">
+              <h4 class="card-header-title mb-2 mb-sm-0">Last {{dayDiff}} days Transaction values</h4>
+
+              <!-- Nav -->
+              <ul class="nav nav-segment nav-fill" id="expensesTab" role="tablist">
+                <li class="nav-item" data-bs-toggle="chart-bar" data-datasets="thisWeek" data-trigger="click" data-action="toggle">
+                  <a class="nav-link active" href="javascript:;" data-bs-toggle="tab" type="button" (click)="switchGraph(0, 'bar')"> Bar Chart</a>
+                </li>
+                <li class="nav-item" data-bs-toggle="chart-bar" data-datasets="lastWeek" data-trigger="click" data-action="toggle">
+                  <a class="nav-link" href="javascript:;" data-bs-toggle="tab" type="button" (click)="switchGraph(0, 'line')">Line Chart</a>
+                </li>
+              </ul>
+              <!-- End Nav -->
+
+              <!-- Dropdown -->
+              <div class="dropdown">
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown2"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi-three-dots-vertical"></i>
+                </button>
+              
+                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown2">
+                  <span class="dropdown-header">Settings</span>
+              
+                  <a class="dropdown-item" href="javascript:;">
+                    <i class="bi-share-fill dropdown-item-icon"></i> Share chart
+                  </a>
+                  <a class="dropdown-item" (click)="downloadGraph(2)">
+                    <i class="bi-download dropdown-item-icon"></i> Download
+                  </a>
+                </div>
+              </div>
+              <!-- End Dropdown -->
+
+
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body">
+              <div class="row mb-4">
+                <div class="col-sm mb-2 mb-sm-0">
+                  <div class="d-flex align-items-center">
+                    <span class="h1 text-success mb-0" title="Savings Collected during this period">{{savingsGraphSum > 0 ? (savingsGraphSum | shortNumber) : 0}}</span>
+                    <span class="h1 ms-2 mb-0">|</span>
+                    <span class="h1 text-danger me-2 ms-2 mb-0" title="Withdrawals completed during this period">{{withdrawalGraphSum > 0 ? (withdrawalGraphSum | shortNumber) : 0}}</span>
+                  </div>
+                </div>
+                <!-- End Col -->
+
+                <div class="col-sm-auto align-self-sm-end">
+                  <div class="row fs-6 text-body">
+                    <div class="col-auto">
+                      <span class="legend-indicator bg-primary"></span> Savings
+                    </div>
+                    <!-- End Col -->
+
+                    <div class="col-auto">
+                      <span class="legend-indicator"></span> Withdrawal
+                    </div>
+                    <!-- End Col -->
+                  </div>
+                  <!-- End Row -->
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+
+              <!-- Bar Chart -->
+              <div class="chartjs-custom">
+                <canvas id="updatingBarChart" style="height: 20rem;"
+                baseChart
+                [data]="barChartData"
+                [options]="barChartOptions"
+                [type]="barChartType"
+                ></canvas>
+              </div>
+              <!-- End Bar Chart -->
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+        <!-- End Col -->
       </div>
       <!-- End Row -->
 
