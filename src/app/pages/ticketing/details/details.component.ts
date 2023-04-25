@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChartType } from 'chart.js';
 import { ClipboardService } from 'ngx-clipboard';
 import { Subject } from 'rxjs';
@@ -35,10 +36,13 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
   color: Array<string> =  ["#377dff", "#00c9db", "#7000f2"]
   usedTicket: any;
   isCopied!: boolean;
+  img = environment.mini_logo;
+  modalContent!: object | any;
 
   constructor(private route: ActivatedRoute, private router: Router,
      private dataService: DataService, private toastService: ToastService,
-     private statService: StatService, private _clipboardService: ClipboardService) { }
+     private statService: StatService, private _clipboardService: ClipboardService,
+     private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.initDatatable();
@@ -231,6 +235,13 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
       if(value.length > 0){
           $("#" + tableName).DataTable().search(value).draw();
       }
+  }
+
+  open(content: any, tableRow: any) {
+    console.log(content);
+    console.log(tableRow);
+    this.modalContent = tableRow;
+    this.modalService.open(content);
   }
 
   initDatatable(){

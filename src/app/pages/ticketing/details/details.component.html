@@ -302,7 +302,7 @@
               <td>{{item.buy_date_time | date:'medium'}}</td>
               <td>
                 <div class="">
-                  <button type="button" class="btn btn-white btn-sm" id="apiKeyDropdown1" disabled aria-expanded="false" (click)="viewRecord(item?.id);">
+                  <button type="button" class="btn btn-white btn-sm" id="apiKeyDropdown1" aria-expanded="false" (click)="open(content, item)">
                     <i class="bi-eye ms-1"></i> View
                   </button>
                 </div>
@@ -319,3 +319,105 @@
     <!-- End Card -->
   </div>
   <!-- End Content -->
+
+
+  <ng-template #content let-modal>
+  <div class="modal-content">
+    <!-- Header -->
+    <div class="modal-top-cover bg-dark text-center" id="modal-basic-title">
+    <figure class="position-absolute end-0 bottom-0 start-0">
+        <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1920 100.1">
+        <path fill="#fff" d="M0,0c0,0,934.4,93.4,1920,0v100.1H0L0,0z" />
+        </svg>
+    </figure>
+
+    <div class="modal-close">
+        <button type="button" class="btn-close btn-close-light" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    </div>
+    <!-- End Header -->
+
+    <div class="modal-top-cover-icon">
+    <span class="icon icon-lg icon-light icon-circle icon-centered shadow-sm">
+        <img class="avatar" src="{{img}}" alt="Logo">
+    </span>
+    
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+    <div class="text-center mb-5">
+        <h3 class="mb-1">Ticket Receipt</h3>
+        <span class="d-block">Reference: {{ modalContent?.pay_reference }}</span>
+    </div>
+
+    <div class="row mb-6">
+        <div class="col-md-4 mb-3 mb-md-0">
+        <small class="text-cap text-secondary mb-0">Ticket Amount:</small>
+        <span class="text-dark">{{modalContent?.amount | currency: '₦'}}</span>
+        </div>
+        <!-- End Col -->
+
+        <div class="col-md-4 mb-3 mb-md-0">
+        <small class="text-cap text-secondary mb-0">Date paid:</small>
+        <span class="text-dark">{{modalContent?.buy_date_time | date: 'MMMM d, y, h:mm a'}}</span>
+        </div>
+        <!-- End Col -->
+
+        <div class="col-md-4">
+        <small class="text-cap text-secondary mb-0">Payment Channel</small>
+        <div class="d-flex align-items-center">
+            <span class="text-dark">{{modalContent?.payment_channel}}</span>
+        </div>
+        </div>
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+
+    <small class="text-cap mb-2">Summary</small>
+
+    <ul class="list-group mb-4">
+        <li class="list-group-item text-dark">
+        <div class="d-flex justify-content-between align-items-center">
+            <span>Full name:</span>
+            <span>{{modalContent.fname?.concat(' ').concat(modalContent?.lname) | titlecase }}</span>
+        </div>
+        </li>
+        <li class="list-group-item text-dark">
+          <div class="d-flex justify-content-between align-items-center">
+              <span>Email:</span>
+              <span>{{modalContent?.email}}</span>
+          </div>
+          </li>
+        <li class="list-group-item text-dark">
+        <div class="d-flex justify-content-between align-items-center">
+            <span>Phone number:</span>
+            <span>{{modalContent?.user_id}}</span>
+        </div>
+        </li>
+        <li class="list-group-item text-dark">
+        <div class="d-flex justify-content-between align-items-center">
+            <span>Ticket Category:</span>
+            <span>{{modalContent?.ticket_class}}</span>
+        </div>
+        </li>
+        <li class="list-group-item list-group-item-light text-dark">
+        <div class="d-flex justify-content-between align-items-center">
+            <strong>Amount:</strong>
+            <strong>{{modalContent?.amount | currency: '₦'}}</strong>
+        </div> 
+        </li>
+    </ul>
+
+    <!-- <div class="d-flex justify-content-end gap-3">
+        <button class="btn btn-white btn-sm" (click)="openPdf(content)"><i class="bi-file-earmark-arrow-down-fill me-1"></i> PDF</button>
+        <button class="btn btn-white btn-sm" (click)="printPdf(content)"><i class="bi-printer-fill me-1"></i> Print Receipt</button>
+    </div> -->
+
+    <hr class="my-5">
+
+    <p class="modal-footer-text">If you have any questions, please contact us at <a class="link" href="mailto:support@moloyal.com">support@moloyal.com</a> or call at <a class="link text-nowrap" href="tel:+2348188775534">+234 818 877 5534</a></p>
+    </div>
+    <!-- End Body -->
+</div>
+</ng-template>
