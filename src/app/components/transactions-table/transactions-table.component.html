@@ -1,94 +1,44 @@
-        <!-- Table -->
-        <!-- <div class="table-responsive datatable-custom"> 
-            <table id="datatable"class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
-                     "columnDefs": [{
-                        "targets": [0, 7],
-                        "orderable": false
-                      }],
-                     "order": [],
-                     "info": {
-                       "totalQty": "#datatableWithPaginationInfoTotalQty"
-                     },
-                     "search": "#datatableSearch",
-                     "entries": "#datatableEntries",
-                     "pageLength": 12,
-                     "isResponsive": false,
-                     "isShowPaging": false,
-                     "pagination": "datatablePagination"
-                   }'>
-              <thead class="thead-light">
-                <tr>
-                  <th class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                      <label class="form-check-label" for="datatableCheckAll"></label>
-                    </div>
-                  </th>
-                  <th class="table-column-ps-0">Reference</th>
-                  <th>Customer</th>
-                  <th>Amount</th>
-                  <th>Plan</th>
-                  <th>Transaction Type</th>                
-                  <th>Date</th>
-                  <th>Phone No</th>              
-                  <th>Actions</th>
-                </tr>
-              </thead>
-  
-              <tbody>
-                <tr *ngFor="let r of records; let i = index;"> -->
-                  <td class="table-column-pe-0">
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="ordersCheck{{transref}}">
-                      <label class="form-check-label" for="ordersCheck{{transref}}"></label>
-                    </div>
-                  </td>
-                  <td class="table-column-ps-0">
-                    <a type="button" (click)="openModal(content, r)">{{transref}}</a>
-                  </td>
-                  <td>
-                    <a class="text-body" [routerLink]="['/customer', customerId, 'details']">{{ fullName }}</a>
-                  </td>
-                  <td>{{transAmount | currency: '₦'}}</td>
-                  <td>
-                    <span class="">{{plan_name | titlecase}}</span>
-                  </td>                
-                  <td>
-                    <span  *ngIf="transType === 'Savings' " class="badge bg-soft-success text-success">
-                      <span class="legend-indicator bg-success"></span>
-                      <span>{{transType | titlecase}}</span>
-                    </span>
-                    <span  *ngIf="transType === 'Withdrawal' " class="badge bg-soft-danger text-danger">
-                      <span class="legend-indicator bg-danger"></span>
-                      <span>{{transType | titlecase}}</span>
-                    </span>
-                    <span  *ngIf="transType === 'commission' " class="badge bg-soft-warning text-warning">
-                      <span class="legend-indicator bg-warning"></span>
-                      <span>{{transType | titlecase}}</span>
-                    </span>
-                  </td>                
-                  <!-- {{transDate}} {{time | date: 'h:mm a' }} -->
-                  <td>{{transDate | date: 'MMMM d yyyy,'}} {{ transDateConcat}}</td>             
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <span class="text-dark">{{agentFullName}}</span>
-                    </div>
-                  </td>                  
-                  <td>
-                    <div class="btn-group" role="group">
-                      <button class="btn btn-white btn-sm" (click)="openModal(content, r)">
-                        <i class="bi-eye"></i> View
-                      </button>
-                    </div>
-                  </td>
-                <!-- </tr>
-              </tbody>
-            </table>
-          </div> -->
-          <!-- End Table -->
-  
-          <!-- Footer -->
-          
-          <!-- End Footer -->
-
-          
+<td class="table-column-pe-0">
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="ordersCheck{{transref}}">
+    <label class="form-check-label" for="ordersCheck{{transref}}"></label>
+  </div>
+</td>
+<td class="table-column-ps-0">
+  <a type="button" (click)="openModal(content, r)">{{transref}}</a>
+</td>
+<td>
+  <a class="text-body" [routerLink]="['/customer', customerId, 'details']">{{ fullName }}</a>
+</td>
+<td>{{transAmount | currency: '₦'}}</td>
+<td>
+  <span class="">{{plan_name | titlecase}}</span>
+</td>
+<td>
+  <span *ngIf="transType === 'Savings' " class="badge bg-soft-success text-success">
+    <span class="legend-indicator bg-success"></span>
+    <span>{{transType | titlecase}}</span>
+  </span>
+  <span *ngIf="transType === 'Withdrawal' " class="badge bg-soft-danger text-danger">
+    <span class="legend-indicator bg-danger"></span>
+    <span>{{transType | titlecase}}</span>
+  </span>
+  <span *ngIf="transType === 'commission' " class="badge bg-soft-warning text-warning">
+    <span class="legend-indicator bg-warning"></span>
+    <span>{{transType | titlecase}}</span>
+  </span>
+</td>
+<!-- {{transDate}} {{time | date: 'h:mm a' }} -->
+<td>{{transDate | date: 'MMMM d yyyy,'}} {{ transDateConcat}}</td>
+<td>
+  <div class="d-flex align-items-center">
+    <span class="text-dark">{{agentFullName}}</span>
+  </div>
+</td>
+<td>
+  <div class="btn-group" role="group">
+    <button class="btn btn-white btn-sm" (click)="openModal(content, r)">
+      <i class="bi-eye"></i> View
+    </button>
+  </div>
+</td>

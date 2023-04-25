@@ -95,6 +95,9 @@ export class CustomersComponent implements OnInit, OnDestroy {
         className: 'd-none',
         filename: function () {
           return 'MoSave_Customers_'+new Date().getTime();
+       },
+       exportOptions: {
+         columns: [1, 2, 3, 4, 5, 6, 7]
        }
       },
       {
@@ -102,6 +105,9 @@ export class CustomersComponent implements OnInit, OnDestroy {
         className: 'd-none',
         filename: function () {
           return 'MoSave_Customers_'+new Date().getTime();
+       },
+       exportOptions: {
+         columns: [1, 2, 3, 4, 5, 6, 7]
        }
       },      
       {
@@ -109,6 +115,9 @@ export class CustomersComponent implements OnInit, OnDestroy {
         className: 'd-none',
         filename: function () {
           return 'MoSave_Customers_'+new Date().getTime();
+       },
+       exportOptions: {
+         columns: [1, 2, 3, 4, 5, 6, 7]
        }
       },
       ],      

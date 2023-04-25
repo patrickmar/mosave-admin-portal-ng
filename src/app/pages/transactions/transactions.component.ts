@@ -138,22 +138,31 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
         {
           extend: 'excel',
           className: 'd-none',
-          filename: function () {
+          filename: () => {
             return 'MoSave_report_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [1, 2, 3, 4, 5, 6, 7]
           }
         },
         {
           extend: 'csv',
           className: 'd-none',
-          filename: function () {
+          filename: () => {
             return 'MoSave_report_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [1, 2, 3, 4, 5, 6, 7]
           }
         },
         {
           extend: 'pdf',
           className: 'd-none',
-          filename: function () {
+          filename: () => {
             return 'MoSave_report_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [1, 2, 3, 4, 5, 6, 7]
           }
         },
       ],
@@ -169,7 +178,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     //this.cdr.detectChanges();
   }
 
-  
+
 
   ngAfterViewInit(): void {
     //this.dtTrigger.next('');
@@ -205,7 +214,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   filter(event: any, tableid: number, tableName: string,) {
     var value = event.target.value;
     // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-    $("#datatableSearch" + tableid).on("keyup", function () {
+    $("#datatableSearch" + tableid).on("keyup", () => {
       if (value === 'null') value = '';
       $("#" + tableName).DataTable().search(value).draw();
       // if (dtInstance.search() !== value) {
@@ -221,14 +230,14 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
       dtElement.dtInstance.then((dtInstance: any) => {
         console.log(`The DataTable ${id} instance ID is: ${dtInstance.table().node().id}`);
         if (dtInstance.table().node().id == id) {
-          $("#datatableSearch").on("keyup", function () {
+          $("#datatableSearch").on("keyup", () => {
             if (value === 'null') value = '';
             if (dtInstance.search() !== value) {
               dtInstance.search(value).draw();
             }
           });
         } else if (dtInstance.table().node().id == id) {
-          $("#datatableSearch").on("keyup", function () {
+          $("#datatableSearch").on("keyup", () => {
             if (value === 'null') value = '';
             if (dtInstance.search() !== value) {
               dtInstance.search(value).draw();
@@ -243,7 +252,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   rerenderForATable(event: any) {
     var value = event.target.value;
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      $("#datatableSearch").on("keyup", function () {
+      $("#datatableSearch").on("keyup", () => {
         if (value === 'null') value = '';
         if (dtInstance.search() !== value) {
           dtInstance.search(value).draw();
@@ -490,6 +499,12 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(content);
   }
 
+  showColumn(ev: any, id: number, tableName: string){
+    if(typeof (ev.target.checked) === 'boolean'){
+        $("#" + tableName).DataTable().columns(id).visible(ev.target.checked)
+    }
+  }
+
   download() {
     $('#export-excel').on('click', () => {
       $("#datatable").DataTable().button('.buttons-excel').trigger();
@@ -519,7 +534,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     //   if (oldValue == "") return;
 
-    //   setTimeout(function () {
+    //   setTimeout(()=> {
     //     var newValue = $input.val();
 
     //     if (newValue == "") {

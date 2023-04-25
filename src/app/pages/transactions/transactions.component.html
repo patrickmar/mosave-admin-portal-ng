@@ -11,47 +11,8 @@
               <a class="text-body me-3" href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportOrdersModal">
                 <i class="bi-download me-1"></i> Export
               </a>
-
-              <!-- Dropdown -->
-              <!-- <div class="dropdowm">
-                <a class="text-body" href="javascript:;" id="moreOptionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                  More options <i class="bi-chevron-down"></i>
-                </a>
-
-                <div class="dropdown-menu mt-1" aria-labelledby="moreOptionsDropdown">
-                  <a class="dropdown-item" href="javascript:;">
-                    <i class="bi-folder-plus dropdown-item-icon"></i> New order
-                  </a>
-                  <a class="dropdown-item" href="javascript:;">
-                    <i class="bi-folder dropdown-item-icon"></i> New order - Development
-                  </a>
-                  <a class="dropdown-item" href="javascript:;">
-                    <i class="bi-folder dropdown-item-icon"></i> New order - Staging
-                  </a>
-                </div>
-              </div> -->
-              <!-- End Dropdown -->
             </div>
           </div>
-          <!-- End Col -->
-
-          <!-- <div class="col-auto">
-            <button id="js-daterangepicker-predefined" class="btn btn-ghost-secondary btn-sm dropdown-toggle">
-              <i class="bi-calendar-week"></i>
-              <span class="js-daterangepicker-predefined-preview ms-1"></span>
-            </button>
-          </div> -->
-          <!-- End Col -->
-
-          <!-- <div class="col-auto">
-            <input type="text" class="js-daterangepicker-clear form-control daterangepicker-custom-input" placeholder="Select custom dates"
-        data-hs-daterangepicker-options='{
-         "autoUpdateInput": false,
-         "locale": {
-           "cancelLabel": "Clear"
-         }
-       }'>
-          </div> -->
           <!-- End Col -->
 
         </div>
@@ -256,22 +217,7 @@
 
         <!-- Table -->
         <div class="table-responsive"> 
-          <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" [attr.data-hs-datatables-options]='{
-                   "columnDefs": [{
-                      "targets": [0, 7],
-                      "orderable": false
-                    }],
-                   "order": [],
-                   "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
-                   },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
-                   "pageLength": 12,
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatablePagination"
-                 }'>
+          <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%">
             <thead class="thead-light">
               <tr>
                 <th class="table-column-pe-0">
@@ -328,22 +274,7 @@
 
         <!-- Table -->
         <div class="table-responsive ">
-          <table datatable [dtOptions]="dtOptions[1]" [dtTrigger]="dtTrigger" id="savingsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
-                   "columnDefs": [{
-                      "targets": [0],
-                      "orderable": false
-                    }],
-                   "order": [],
-                   "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
-                   },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
-                   "pageLength": 12,
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatablePagination"
-                 }'>
+          <table datatable [dtOptions]="dtOptions[1]" [dtTrigger]="dtTrigger" id="savingsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%">
             <thead class="thead-light">
               <tr>
                 <th class="table-column-pe-0">
@@ -402,22 +333,7 @@
          <!-- End Header -->
         <!-- Table -->
         <div class="table-responsive ">
-          <table datatable [dtOptions]="dtOptions[2]" [dtTrigger]="dtTrigger" id="withdrawalsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
-                   "columnDefs": [{
-                      "targets": [0],
-                      "orderable": false
-                    }],
-                   "order": [],
-                   "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
-                   },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
-                   "pageLength": 12,
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatablePagination"
-                 }'>
+          <table datatable [dtOptions]="dtOptions[2]" [dtTrigger]="dtTrigger" id="withdrawalsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%">
             <thead class="thead-light">
               <tr>
                 <th class="table-column-pe-0">
@@ -473,22 +389,7 @@
          <!-- End Header -->
         <!-- Table -->
         <div class="table-responsive">
-          <table datatable [dtOptions]="dtOptions[3]" [dtTrigger]="dtTrigger" id="commissionsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" data-hs-datatables-options='{
-                   "columnDefs": [{
-                      "targets": [0],
-                      "orderable": false
-                    }],
-                   "order": [],
-                   "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
-                   },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
-                   "pageLength": 12,
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatablePagination"
-                 }'>
+          <table datatable [dtOptions]="dtOptions[3]" [dtTrigger]="dtTrigger" id="commissionsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" >
             <thead class="thead-light">
               <tr>
                 <th class="table-column-pe-0">

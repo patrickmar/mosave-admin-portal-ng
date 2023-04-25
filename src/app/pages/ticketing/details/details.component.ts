@@ -234,6 +234,7 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
   }
 
   initDatatable(){
+    var self = this;
     const dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 20,
@@ -266,21 +267,18 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
         {
           extend: 'excel',
           className: 'd-none',
-          filename: function () {
-            return 'ticket_customers' + new Date().getTime();
+          filename: ()=> {
+            return self.data?.title+'_event_customers' + new Date().getTime();
           },
           exportOptions: {
             columns: [ 0, 1, 2, 3, 4, 5]
           },
-          // customize: function (pdf: any) { // or use customizeData
-          //   this.addExtraColumn(pdf);
-          // }
         },
         {
           extend: 'csv',
           className: 'd-none',
-          filename: function () {
-            return 'ticket_customers' + new Date().getTime();
+          filename: ()=> {
+            return self.data?.title + '_event_customers' + new Date().getTime();
           },
           exportOptions: {
             columns: [ 0, 1, 2, 3, 4, 5]
@@ -289,8 +287,8 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
         {
           extend: 'pdf',
           className: 'd-none',
-          filename: function () {
-            return 'ticket_customers' + new Date().getTime();
+          filename: ()=> {
+            return self.data?.title + '_event_customers' + new Date().getTime();
           },
           exportOptions: {
             columns: [ 0, 1, 2, 3, 4, 5]

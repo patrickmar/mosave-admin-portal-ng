@@ -31,7 +31,7 @@ export class TransactionHistoryComponent implements OnInit {
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
 
-  @ViewChild(DataTableDirective, {static: false})
+  @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
   emptyTable = environment.emptyTable;
 
@@ -40,21 +40,21 @@ export class TransactionHistoryComponent implements OnInit {
     private receiptService: ReceiptService,
     private route: ActivatedRoute,
     private toastService: ToastService) {
-      this.getUserDetails();
-      this.getCustomerId();
-      this.getCustomerTotalBalances();
-     }
+    this.getUserDetails();
+    this.getCustomerId();
+    this.getCustomerTotalBalances();
+  }
 
   ngOnInit(): void {
     this.getCustomerDetails();
     this.tableConfig(this.customerInfo);
     this.getCustomerTrxs();
-    this.download();    
+    this.download();
     this.receiptService.loadLocalAssetToBase64();
     this.receiptService.convertToWords(this.allRecords);
   }
 
-  tableConfig(data: any){
+  tableConfig(data: any) {
     var self = this;
     this.dtOptions = {
       pagingType: 'full_numbers',
@@ -65,60 +65,69 @@ export class TransactionHistoryComponent implements OnInit {
             <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
           <p class="mb-0">No data to show</p>
           </div>`,
-          paginate: {
-            next: 'Next',
-            previous: 'Prev',
-            first: '<i class="bi bi-skip-backward"></i>',
-            last: '<i class="bi bi-skip-forward"></i>'
-         },
+        paginate: {
+          next: 'Next',
+          previous: 'Prev',
+          first: '<i class="bi bi-skip-backward"></i>',
+          last: '<i class="bi bi-skip-forward"></i>'
+        },
       },
       lengthMenu: [10, 15, 20],
       dom: 'Bfrtip',
       buttons: [
-      {
-        extend: 'copy',
-        className: 'd-none'
-      },
-      {
-        extend: 'print',
-        className: 'd-none'
-      },
-      {
-        extend: 'excel',
-        className: 'd-none',
-        filename: function () {
-          return 'trnx_statement_'+self.customerInfo?.[0]?.firstName+'-'+self.customerInfo?.[0]?.lastName+'_'+new Date().getTime();
-       }
-      },
-      {
-        extend: 'csv',
-        className: 'd-none',
-        filename: function () {
-          return 'trnx_statement_'+self.customerInfo?.[0]?.firstName+'-'+self.customerInfo?.[0]?.lastName+'_'+new Date().getTime();
-       }
-      },      
-      {
-        extend: 'pdf',
-        className: 'd-none',
-        filename: function () {
-          return 'trnx_statement_'+self.customerInfo?.[0]?.firstName+'-'+self.customerInfo?.[0]?.lastName+'_'+new Date().getTime();
-       }
-      },
-      ],      
+        {
+          extend: 'copy',
+          className: 'd-none'
+        },
+        {
+          extend: 'print',
+          className: 'd-none'
+        },
+        {
+          extend: 'excel',
+          className: 'd-none',
+          filename: () => {
+            return 'trnx_statement_' + self.customerInfo?.[0]?.firstName + '-' + self.customerInfo?.[0]?.lastName + '_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6]
+          }
+        },
+        {
+          extend: 'csv',
+          className: 'd-none',
+          filename: () => {
+            return 'trnx_statement_' + self.customerInfo?.[0]?.firstName + '-' + self.customerInfo?.[0]?.lastName + '_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6]
+          }
+        },
+        {
+          extend: 'pdf',
+          className: 'd-none',
+          filename: () => {
+            return 'trnx_statement_' + self.customerInfo?.[0]?.firstName + '-' + self.customerInfo?.[0]?.lastName + '_' + new Date().getTime();
+          },
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6]
+          }
+        },
+      ],
       info: true,
       lengthChange: true,
     };
   }
 
-  getCustomerId(){
+  getCustomerId() {
     this.customerId = this.route.snapshot.paramMap.get('sn');
     console.log(this.customerId);
   }
-  getCustomerDetails(){
+  getCustomerDetails() {
     this.dataService.getCustomerProfile(this.customerId).subscribe((result: any) => {
       console.log(result);
       this.customerInfo = result;
-    }), (error: any) => { 
+    }), (error: any) => {
       console.log(error);
     }
   }
@@ -126,64 +135,64 @@ export class TransactionHistoryComponent implements OnInit {
     this.dtTrigger.unsubscribe();
   }
 
-  getCustomerTrxs(){ 
+  getCustomerTrxs() {
     console.log(this.customerId);
     forkJoin([
-    this.dataService.getAllCustomersTnxs(this.customerId), 
-    this.dataService.getCustomersSavingsTnxs(this.customerId), 
-    this.dataService.getCustomersWithdrawTnxs(this.customerId)
-  ]).subscribe((result: any) => {
-    console.log(result[0]);
-    console.log(result[1]);
-    console.log(result[2]);
-    this.allRecords = result[0];
-    this.savingsRecords = result[1];
-    this.withdrawalRecords = result[2];
-    this.dtTrigger.next('');
-  }), (error: any) => { 
-    console.log(error);
-  }
+      this.dataService.getAllCustomersTnxs(this.customerId),
+      this.dataService.getCustomersSavingsTnxs(this.customerId),
+      this.dataService.getCustomersWithdrawTnxs(this.customerId)
+    ]).subscribe((result: any) => {
+      console.log(result[0]);
+      console.log(result[1]);
+      console.log(result[2]);
+      this.allRecords = result[0];
+      this.savingsRecords = result[1];
+      this.withdrawalRecords = result[2];
+      this.dtTrigger.next('');
+    }), (error: any) => {
+      console.log(error);
+    }
 
   }
 
-  getCustomerTotalBalances(){ 
+  getCustomerTotalBalances() {
     console.log(this.customerId);
     forkJoin([
-    this.dataService.getCustomerTotalBalance(this.customerId), 
-    this.dataService.getCustomerTotalBalances(this.customerId),
-  ]).subscribe((result: any) => {
-    console.log(result[0]);
-    console.log(result[1]);
-    this.totalSum = result[0];
-    this.savingsSum = result[1][0][0]?.savings_sum;
-    this.withdrawalSum = result[1][1][0]?.withdraw_sum;
-    this.commissionSum = result[1][2][0]?.commission_sum;
-    console.log(this.savingsSum);
-    console.log(this.withdrawalSum);
-    console.log(this.commissionSum );
-  }), (error: any) => {  
-    console.log(error);
-  }
+      this.dataService.getCustomerTotalBalance(this.customerId),
+      this.dataService.getCustomerTotalBalances(this.customerId),
+    ]).subscribe((result: any) => {
+      console.log(result[0]);
+      console.log(result[1]);
+      this.totalSum = result[0];
+      this.savingsSum = result[1][0][0]?.savings_sum;
+      this.withdrawalSum = result[1][1][0]?.withdraw_sum;
+      this.commissionSum = result[1][2][0]?.commission_sum;
+      console.log(this.savingsSum);
+      console.log(this.withdrawalSum);
+      console.log(this.commissionSum);
+    }), (error: any) => {
+      console.log(error);
+    }
 
   }
 
-  getUserDetails(){
+  getUserDetails() {
     this.authservice.userData$.subscribe((response: any) => {
       this.user = response;
     });
   }
 
-  viewReceipt(record:any){
+  viewReceipt(record: any) {
     this.receiptService.viewPdf(record, this.user);
   }
 
-  convertNum(number: any){
+  convertNum(number: any) {
     return Number(number);
-  }  
+  }
 
-  download(){
+  download() {
     $('#export-excel').on('click', () => {
-      $('.buttons-excel').click(); 
+      $('.buttons-excel').click();
       //$(".buttons-excel").trigger("click");
       // $("#datatable").DataTable().button('.buttons-excel').trigger();
     });

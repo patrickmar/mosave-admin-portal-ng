@@ -41,7 +41,6 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   constructor(private dataService: DataService, private toastService: ToastService,
     private route: Router) {
-    //this.jsInit();
     this.jsInit2(); 
   }
 
@@ -78,7 +77,7 @@ export class ListingComponent implements OnInit, OnDestroy {
         {
           extend: 'excel',
           className: 'd-none',
-          filename: function () {
+          filename: ()=> {
             return 'MoSave_paystack_report_' + new Date().getTime();
           },
           exportOptions: {
@@ -91,7 +90,7 @@ export class ListingComponent implements OnInit, OnDestroy {
         {
           extend: 'csv',
           className: 'd-none',
-          filename: function () {
+          filename: ()=> {
             return 'MoSave_paystack_report_' + new Date().getTime();
           },
           exportOptions: {
@@ -101,7 +100,7 @@ export class ListingComponent implements OnInit, OnDestroy {
         {
           extend: 'pdf',
           className: 'd-none',
-          filename: function () {
+          filename: ()=> {
             return 'MoSave_paystack_report_' + new Date().getTime();
           },
           exportOptions: {
@@ -209,76 +208,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       }
   }
 
-  jsInit(){
-    $(document).on('ready', function () {
-      // INITIALIZATION OF DATATABLES
-      // =======================================================
-      HSCore.components.HSDatatables.init($('#datatable'), {
-        dom: 'Bfrtip',
-        buttons: [
-          {
-            extend: 'copy',
-            className: 'd-none'
-          },
-          {
-            extend: 'excel',
-            className: 'd-none'
-          },
-          {
-            extend: 'csv',
-            className: 'd-none'
-          },
-          {
-            extend: 'pdf',
-            className: 'd-none'
-          },
-          {
-            extend: 'print',
-            className: 'd-none'
-          },
-        ],
-        select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
-          classMap: {
-            checkAll: '#datatableCheckAll',
-            counter: '#datatableCounter',
-            counterInfo: '#datatableCounterInfo'
-          }
-        }
-      });
-
-      const datatable = HSCore.components.HSDatatables.getItem(0)
-
-      $('#export-copy').click(()=> {
-        datatable.button('.buttons-copy').trigger()
-      });
-
-      $('#export-excel').click(()=> {
-        datatable.button('.buttons-excel').trigger()
-      });
-
-      $('#export-csv').click(()=> {
-        datatable.button('.buttons-csv').trigger()
-      });
-
-      $('#export-pdf').click(()=> {
-        datatable.button('.buttons-pdf').trigger()
-      });
-
-      $('#export-print').click(()=> {
-        datatable.button('.buttons-print').trigger()
-      });
-
-      $('.js-datatable-filter').on('change', function (this: any) {
-        var $this = $(this),
-          elVal = $this.val(),
-          targetColumnIndex = $this.data('target-column-index');
-
-        datatable.column(targetColumnIndex).search(elVal).draw();
-      });
-    });
-  }
+  
 
   jsInit2(){
     window.onload = function () {
