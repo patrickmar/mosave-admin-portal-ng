@@ -9,12 +9,15 @@ export class TransactionsHeaderComponent implements OnInit {
   @Input() dateId?: number;
   @Input() tableId?: number;
   @Input() tableName?: string;
+  @Input() header!: Array<any>
+  @Input() event!: any;
   @Output() onRender: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadCopy: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadPrint: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadExcel: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadCsv: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadPdf: EventEmitter<any> = new EventEmitter();
+  @Output() onShowColumn: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -38,6 +41,9 @@ export class TransactionsHeaderComponent implements OnInit {
   }
   downloadPdf(value:any){
     this.onDownloadPdf?.emit(value);
+  }
+  showColumn(value:any, number: number){
+    this.onShowColumn?.emit({value: value, id: number});
   }
 
 }

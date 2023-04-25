@@ -7,11 +7,11 @@
           <div class="col-sm">
             <h1 class="page-header-title">Transactions <span class="badge bg-soft-dark text-dark ms-2">{{allRecords?.length}}</span></h1>
 
-            <div class="d-flex mt-2">
+            <!-- <div class="d-flex mt-2">
               <a class="text-body me-3" href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportOrdersModal">
                 <i class="bi-download me-1"></i> Export
               </a>
-            </div>
+            </div> -->
           </div>
           <!-- End Col -->
 
@@ -26,7 +26,7 @@
           <!-- Card -->
           <div class="text-center">
             <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
-            <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;">
+            <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
             <span class="text-cap text-body">Total Amount Saved</span>
             <span class="d-block display-4 text-dark mb-2">{{savingsSum | currency: '₦'}}</span>
 
@@ -59,7 +59,7 @@
           <!-- Card -->
           <div class="text-center">
             <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-money-profits.svg" alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
-            <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-money-profits.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;">
+            <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-money-profits.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
             <span class="text-cap text-body">Total Amount earned</span>
             <span class="d-block display-4 text-dark mb-2">{{commissionSum | currency: '₦'}}</span>
 
@@ -91,7 +91,7 @@
           <!-- Card -->
           <div class="text-center">
             <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-collection.svg" alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
-            <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collection.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;">
+            <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collection.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
             <span class="text-cap text-body">Total Amount Withdrawn</span>
             <span class="d-block display-4 text-dark mb-2">{{withdrawalSum | currency: '₦'}}</span>
 
@@ -197,7 +197,6 @@
 
       <!-- Card -->
       <div class="card">
-
         <!-- Tab Content -->
         <div class="tab-content" id="transactionsTabContent">
           <div [ngClass]="transactionType === '' || transactionType === 'all' ? 'tab-pane fade show active' : 'tab-pane fade' "
@@ -205,13 +204,15 @@
         <!-- Header -->
         <app-transactions-header 
         [dateId]="1" 
-        (onRender)="filter($event, 1, 'datatable')"
-        [tableName]="'datatable'" 
-        (onDownloadCopy)="downloadAll('datatable', 'copy')"
-        (onDownloadPrint)="downloadAll('datatable', 'print')"
-        (onDownloadExcel)="downloadAll('datatable', 'excel')"
-        (onDownloadCsv)="downloadAll('datatable', 'csv')"
-        (onDownloadPdf)="downloadAll('datatable', 'pdf')">
+        [tableName]="table[0]" 
+        [header]="tableHead"
+        (onShowColumn)="showColumn($event, table[0])"
+        (onRender)="filter($event, 1, table[0])"        
+        (onDownloadCopy)="downloadAll(table[0], 'copy')"
+        (onDownloadPrint)="downloadAll(table[0], 'print')"
+        (onDownloadExcel)="downloadAll(table[0], 'excel')"
+        (onDownloadCsv)="downloadAll(table[0], 'csv')"
+        (onDownloadPdf)="downloadAll(table[0], 'pdf')">
       </app-transactions-header>
         <!-- End Header -->
 
@@ -262,13 +263,15 @@
          <!-- Header -->
          <app-transactions-header 
          [dateId]="2" 
-         [tableName]="'savingsDatatable'"
-         (onRender)="filter($event, 2, 'savingsDatatable')"
-         (onDownloadCopy)="downloadAll('savingsDatatable', 'copy')"
-         (onDownloadPrint)="downloadAll('savingsDatatable', 'print')"
-         (onDownloadExcel)="downloadAll('savingsDatatable', 'excel')"
-         (onDownloadCsv)="downloadAll('savingsDatatable', 'csv')"
-         (onDownloadPdf)="downloadAll('savingsDatatable', 'pdf')"
+         [tableName]="table[1]"
+         [header]="tableHead"
+         (onShowColumn)="showColumn($event, table[1])"
+         (onRender)="filter($event, 2, table[1])"
+         (onDownloadCopy)="downloadAll(table[1], 'copy')"
+         (onDownloadPrint)="downloadAll(table[1], 'print')"
+         (onDownloadExcel)="downloadAll(table[1], 'excel')"
+         (onDownloadCsv)="downloadAll(table[1], 'csv')"
+         (onDownloadPdf)="downloadAll(table[1], 'pdf')"
          ></app-transactions-header>
          <!-- End Header -->
 
@@ -322,13 +325,15 @@
          <!-- Header -->
          <app-transactions-header 
          [dateId]="3"
-         [tableName]="'withdrawalsDatatable'" 
-         (onRender)="filter($event, 3, 'withdrawalsDatatable')" 
-         (onDownloadCopy)="downloadAll('withdrawalsDatatable', 'copy')"
-         (onDownloadPrint)="downloadAll('withdrawalsDatatable', 'print')"
-         (onDownloadExcel)="downloadAll('withdrawalsDatatable', 'excel')"
-         (onDownloadCsv)="downloadAll('withdrawalsDatatable', 'csv')"
-         (onDownloadPdf)="downloadAll('withdrawalsDatatable', 'pdf')"
+         [tableName]="table[2]" 
+         [header]="tableHead"
+         (onShowColumn)="showColumn($event, table[2])"
+         (onRender)="filter($event, 3, table[2])" 
+         (onDownloadCopy)="downloadAll(table[2], 'copy')"
+         (onDownloadPrint)="downloadAll(table[2], 'print')"
+         (onDownloadExcel)="downloadAll(table[2], 'excel')"
+         (onDownloadCsv)="downloadAll(table[2], 'csv')"
+         (onDownloadPdf)="downloadAll(table[2], 'pdf')"
          ></app-transactions-header>
          <!-- End Header -->
         <!-- Table -->
@@ -378,14 +383,18 @@
       <!-- Tab Panel -->
       <div [ngClass]="transactionType === 'commissions' ? 'tab-pane fade show active' : 'tab-pane fade' " id="commissions" role="tabpanel" aria-labelledby="commissions-tab">
          <!-- Header -->
-         <app-transactions-header [dateId]="4"
-         [tableName]="'commissionsDatatable'" 
-         (onRender)="filter($event, 4, 'commissionsDatatable')" 
-         (onDownloadCopy)="downloadAll('commissionsDatatable', 'copy')"
-         (onDownloadPrint)="downloadAll('commissionsDatatable', 'print')"
-         (onDownloadExcel)="downloadAll('commissionsDatatable', 'excel')"
-         (onDownloadCsv)="downloadAll('commissionsDatatable', 'csv')"
-         (onDownloadPdf)="downloadAll('commissionsDatatable', 'pdf')"></app-transactions-header>
+         <app-transactions-header 
+         [dateId]="4"
+         [tableName]="table[3]" 
+         [header]="tableHead"
+         (onShowColumn)="showColumn($event, table[3])"
+         (onRender)="filter($event, 4, table[3])" 
+         (onDownloadCopy)="downloadAll(table[3], 'copy')"
+         (onDownloadPrint)="downloadAll(table[3], 'print')"
+         (onDownloadExcel)="downloadAll(table[3], 'excel')"
+         (onDownloadCsv)="downloadAll(table[3], 'csv')"
+         (onDownloadPdf)="downloadAll(table[3], 'pdf')">
+        </app-transactions-header>
          <!-- End Header -->
         <!-- Table -->
         <div class="table-responsive">

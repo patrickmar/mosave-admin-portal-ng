@@ -325,8 +325,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       timeline: 'Last Month',
       date: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     }
-
-
   ]
 
   getLast12Months(){

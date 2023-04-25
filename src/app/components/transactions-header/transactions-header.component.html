@@ -71,89 +71,12 @@
             <div class="card-body">
               <div class="d-grid gap-3">
                 <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_ref">
+                <label class="row form-check form-switch" for="toggleColumn_{{i+1}}" *ngFor="let item of header; let i = index;">
                   <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Reference</span>
+                    <span class="me-2">{{item.name}}</span>
                   </span>
                   <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_ref" checked>
-                  </span>
-                </label>
-                <!-- End Form Switch -->
-
-                <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_customer">
-                  <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Customer</span>
-                  </span>
-                  <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_customer" checked>
-                  </span>
-                </label>
-                <!-- End Form Switch -->
-
-                <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_amount">
-                  <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Amount</span>
-                  </span>
-                  <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_amount" checked>
-                  </span>
-                </label>
-                <!-- End Form Switch -->
-
-                <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_plan">
-                  <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Plan</span>
-                  </span>
-                  <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_plan" checked>
-                  </span>
-                </label>
-                <!-- End Form Switch -->
-
-                <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_transaction_type">
-                  <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Transaction Type</span>
-                  </span>
-                  <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_transaction_type" checked>
-                  </span>
-                </label>
-                <!-- End Form Switch -->
-
-                <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_date">
-                  <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Date</span>
-                  </span>
-                  <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_date" checked>
-                  </span>
-                </label>
-                <!-- End Form Switch -->                      
-
-                <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_phone_no">
-                  <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Performed By</span>
-                  </span>
-                  <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_phone_no" >
-                  </span>
-                </label>
-                <!-- End Form Switch -->                      
-
-                <!-- Form Switch -->
-                <label class="row form-check form-switch" for="toggleColumn_actions">
-                  <span class="col-8 col-sm-9 ms-0">
-                    <span class="me-2">Actions</span>
-                  </span>
-                  <span class="col-4 col-sm-3 text-end">
-                    <input type="checkbox" class="form-check-input" id="toggleColumn_actions" checked>
+                    <input type="checkbox" class="form-check-input" id="toggleColumn_{{i+1}}" (change)="showColumn($event, i+1)" checked>
                   </span>
                 </label>
                 <!-- End Form Switch -->

@@ -139,6 +139,33 @@
               <!-- End Daterangepicker -->
             </div>
 
+            <!-- Dropdown -->
+            <div class="dropdown">
+              <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi-three-dots-vertical"></i>
+              </button>
+
+              <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsDropdown">
+                <span class="dropdown-header">Settings</span>
+
+                <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                  <i class="bi-share-fill dropdown-item-icon"></i> Share reports
+                </a>
+                <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(0)">
+                  <i class="bi-download dropdown-item-icon"></i> Download
+                </a>
+
+                <div class="dropdown-divider"></div>
+
+                <span class="dropdown-header">Feedback</span>
+
+                <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                  <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
+                </a>
+              </div>
+            </div>
+            <!-- End Dropdown -->
+
             </div>
             <!-- End Header -->
 
@@ -170,17 +197,17 @@
 
               <!-- Dropdown -->
               <div class="dropdown">
-                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi-three-dots-vertical"></i>
                 </button>
 
-                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown1">
+                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsDropdown1">
                   <span class="dropdown-header">Settings</span>
 
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
-                  <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(0)">
+                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true" (click)="downloadGraph(0)">
                     <i class="bi-download dropdown-item-icon"></i> Download
                   </a>
 
@@ -188,7 +215,7 @@
 
                   <span class="dropdown-header">Feedback</span>
 
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
                     <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                   </a>
                 </div>
@@ -236,17 +263,17 @@
 
               <!-- Dropdown -->
               <div class="dropdown">
-                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsDropdown2" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi-three-dots-vertical"></i>
                 </button>
 
-                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown1">
+                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsDropdown2">
                   <span class="dropdown-header">Settings</span>
 
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
-                  <a class="dropdown-item" type="button" (click)="downloadGraph(1)">
+                  <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(1)">
                     <i class="bi-download dropdown-item-icon"></i> Download
                   </a>
 
@@ -254,7 +281,7 @@
 
                   <span class="dropdown-header">Feedback</span>
 
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
                     <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                   </a>
                 </div>
@@ -557,10 +584,10 @@
                 <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown2">
                   <span class="dropdown-header">Settings</span>
               
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item" href="javascript:;" type="button" disabled="true">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share chart
                   </a>
-                  <a class="dropdown-item" (click)="downloadGraph(2)">
+                  <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(2)">
                     <i class="bi-download dropdown-item-icon"></i> Download
                   </a>
                 </div>

@@ -357,7 +357,7 @@ getTicketTrnxByDays(elements: Array<any>) {
     if (current.payment_channel === "" || current.payment_channel === "Paystack") newRecord.others += Number(current.amount);
     return previous;
   }, []);
-  const data = result.reverse();
+  const data = result///.reverse();
   console.log(data);
   return data;
 };

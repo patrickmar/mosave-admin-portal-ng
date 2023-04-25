@@ -95,10 +95,45 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   bestSavers!: Array<any>;
   emptyTable = environment.emptyTable;
+  table = ['datatable', 'savingsDatatable', 'withdrawalsDatatable', 'commissionsDatatable']
 
-  // @ViewChild(TransactionsTableComponent)
-  // private btnIcon: btn;
-  // @ViewChild('TransactionsTableComponent', {static: false}) TransactionsTableComponent: any;
+  ranges = {
+    'TodayWithFormat': [moment().format('MMM D'), moment().format('MMM D, YYYY')],
+  }
+  ranges2 = {
+    'TodayWithFormat': [moment().format('MMM YYYY'), moment().format('MMM YYYY')],
+  }
+
+  dateRanges = [
+    {
+      timeline: 'All',
+      date: [moment('04-07-2022'), moment()]
+    },
+    {
+      timeline: 'Today',
+      date: [moment(), moment()]
+    },
+    {
+      timeline: 'Yesterday',
+      date: [moment().subtract(1, 'days'), moment().subtract(1, 'days')]
+    },
+    {
+      timeline: 'Last 7 Days',
+      date: [moment().subtract(6, 'days'), moment()]
+    },
+    {
+      timeline: 'Last 30 Days',
+      date: [moment().subtract(29, 'days'), moment()],
+    },
+    {
+      timeline: 'This Month',
+      date: [moment().startOf('month'), moment().endOf('month')],
+    },
+    {
+      timeline: 'Last Month',
+      date: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+  ]
 
   constructor(private dataService: DataService, private datePipe: DatePipe,
     private receiptService: ReceiptService, private modalService: NgbModal,
@@ -499,9 +534,9 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(content);
   }
 
-  showColumn(ev: any, id: number, tableName: string){
-    if(typeof (ev.target.checked) === 'boolean'){
-        $("#" + tableName).DataTable().columns(id).visible(ev.target.checked)
+  showColumn(ev: any, tableName: string){
+    if(typeof (ev.value.target.checked) === 'boolean'){
+        $("#" + tableName).DataTable().columns(ev.id).visible(ev.value.target.checked)
     }
   }
 
