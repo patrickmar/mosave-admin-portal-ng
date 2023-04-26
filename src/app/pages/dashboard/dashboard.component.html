@@ -193,7 +193,7 @@
           <div class="card h-100">
             <!-- Header -->
             <div class="card-header card-header-content-between">
-              <h4 class="card-header-title">Overall Top 5 Savers</h4>
+              <h4 class="card-header-title">Overall Top {{maxCount}} Savers</h4>
 
               <!-- Dropdown -->
               <div class="dropdown">
@@ -232,7 +232,7 @@
               <div class="table-responsive">
                 <table class="table table-lg table-nowrap card-table mb-0">
                   <tbody>
-                  <tr *ngFor="let item of bestSavers | slice:0:5; let i = index;">
+                  <tr *ngFor="let item of bestSavers | slice:0:maxCount; let i = index;">
                     <th scope="row">
                       <span class="legend-indicator bg-primary"></span>{{item?.firstName.concat(' ').concat(item?.lastName) | titlecase}}
                     </th>
@@ -651,7 +651,7 @@
       <!-- Card -->
       <div class="card mb-3 mb-lg-5">
         <!-- Header -->
-        <div class="card-header">
+        <div class="card-header" *ngIf="thisMonthCustomer != undefined">
           <div class="row justify-content-between align-items-center flex-grow-1">
             <div class="col-md">
               <div class="d-flex justify-content-between align-items-center">
@@ -739,7 +739,7 @@
                 </div>
                 <!-- End Col -->
 
-                <div class="col-md">
+                <div class="col-md"  >
                   <form>
                     <!-- Search -->
                     <div class="input-group input-group-merge input-group-flush">
@@ -763,22 +763,7 @@
 
         <!-- Table -->
         <div class="table-responsive">
-          <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
-                   "columnDefs": [{
-                      "targets": [0, 1, 4],
-                      "orderable": false
-                    }],
-                   "order": [],
-                   "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
-                   },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
-                   "pageLength": 8,
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatablePagination"
-                 }'>
+          <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
             <thead class="thead-light">
               <tr>
                 <th scope="col" class="table-column-pe-0">

@@ -128,7 +128,7 @@
         <!-- Card -->
         <div class="card">
           <!-- Header -->
-          <div class="card-header card-header-content-md-between">
+          <div class="card-header card-header-content-md-between" *ngIf="customer != undefined">
             <div class="mb-2 mb-md-0">
               <form>
                 <!-- Search -->
@@ -303,8 +303,8 @@
                   <th>Action</th> 
                 </tr>
               </thead>
-              <tbody>
-                <tr *ngFor="let data of customer; let i = index;">
+              <tbody *ngIf="customer != undefined">
+                <tr *ngFor="let data of customer.slice().reverse(); let i = index;">
                   <td class="table-column-pe-0">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="datatableCheck{{data?.sn}}">
@@ -357,7 +357,7 @@
               </tbody>
             </table>
 
-            <!-- <table  id="datatableer" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" [attr.data-hs-datatables-options]=' '>
+            <!-- <table  id="datatableer" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
               <thead class="thead-light">
                 <tr>
                   <th class="table-column-pe-0">

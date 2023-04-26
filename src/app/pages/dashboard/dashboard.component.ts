@@ -54,6 +54,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   dayDiff: number = 10;
   switch!: boolean;
   emptyTable = environment.emptyTable;
+  maxCount = 5;
 
 
   @ViewChild(DataTableDirective, {static: false})

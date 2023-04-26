@@ -171,22 +171,7 @@
 
       <!-- Table -->
       <div class="table-responsive position-relative">
-        <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" [attr.data-hs-datatables-options]='{
-          "columnDefs": [{
-             "targets": [0, 1, 2, 3, 5],
-             "orderable": false
-           }],
-          "order": [],
-          "info": {
-            "totalQty": "#datatableWithPaginationInfoTotalQty"
-          },
-          "search": "#datatableSearch",
-          "entries": "#datatableEntries",
-          "pageLength": 6,
-          "isResponsive": false,
-          "isShowPaging": false,
-          "pagination": "datatablePagination"
-        }'>
+        <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
           <thead class="thead-light">
             <tr>
               <th scope="col" class="table-column-pe-0">
