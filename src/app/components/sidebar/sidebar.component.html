@@ -1,4 +1,4 @@
-<div *ngIf="isLoggedIn$ | async as isLoggedIn ; else other_content">
+<ng-container *ngIf="isLoggedIn$ | async as isLoggedIn ; else other_content">
 <aside class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered bg-white  ">
     <div class="navbar-vertical-container">
       <div class="navbar-vertical-footer-offset">
@@ -162,7 +162,7 @@
       </div>
     </div>
 </aside>
-</div>
+</ng-container>
 
 <ng-template #other_content>
 

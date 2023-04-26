@@ -77,12 +77,22 @@
 
               <span *ngIf="!loading" class="dropdown-header">Recent searches</span>
 
+              <ng-container *ngIf="recentSearches.length > 0;else elseTemplate">
               <div *ngIf="!loading"  class="dropdown-item bg-transparent text-wrap">
-                <a *ngFor="let s of recentSearches.slice().reverse() | slice:0:3; let i = index;"  class="btn btn-soft-dark btn-xs rounded-pill m-1" type="button" (click)="Paste(s)">
+                <a *ngFor="let s of recentSearches?.slice()?.reverse() | slice:0:3; let i = index;"  class="btn btn-soft-dark btn-xs rounded-pill m-1" type="button" (click)="Paste(s)">
                   {{s}} <i class="bi-search ms-1"></i>
-                </a>
-                
-              </div>              
+                </a>                
+              </div>  
+            </ng-container>
+            
+            <ng-template #elseTemplate>
+              <div class="text-center p-4">
+                <img class="mb-3" src="{{emptyTable}}" alt="Image Description" style="width: 10rem;"
+                  data-hs-theme-appearance="default">
+                <p class="mb-0">No recent searches</p>
+              </div>
+              
+            </ng-template>
 
               <ng-container *ngIf="searchResult.length > 0" >
                 <div class="dropdown-divider"></div>
@@ -101,7 +111,12 @@
 
               <ng-container *ngIf="noRecord">
                 <div class="dropdown-divider"></div>
-                <div class="text-center">No customer found.</div>
+                <!-- <div class="text-center">No customer found.</div> -->
+                <div class="text-center p-4">
+                  <img class="mb-3" src="{{emptyTable}}" alt="Image Description" style="width: 10rem;"
+                    data-hs-theme-appearance="default">
+                  <p class="mb-0">No customer found</p>
+                </div>
               </ng-container>
 
               

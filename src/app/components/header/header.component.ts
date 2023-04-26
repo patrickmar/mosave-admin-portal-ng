@@ -30,6 +30,7 @@ export class HeaderComponent implements OnInit {
   noRecord: boolean = false;;
   avatar = environment.avatar;
   searchForm!: FormGroup;
+  emptyTable = environment.emptyTable;
   roles = [
     {
       id: 1,
@@ -80,7 +81,11 @@ export class HeaderComponent implements OnInit {
 
   getRecentSearches(){
     this.storageService.get('search').then(resp => {
-      this.recentSearches = resp;
+      console.log(this.recentSearches);
+      if(resp != false){
+        this.recentSearches = resp;        
+      }
+      
     })
   }
 
