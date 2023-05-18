@@ -79,6 +79,7 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   ctx3!: any;
   gradient31!: any;
   gradient32!: any;
+  tnxVolumeSum!: number;
 
 
   constructor(private dataService: DataService, 
@@ -209,6 +210,7 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
           withdrawals.push(element?.withdrawal);
           commissions.push(element?.commission);
         })
+        
         const labelVolume: Array<string> = [];
         const savingsVolume: Array<number> = [];
         const withdrawalsVolume: Array<number> = [];
@@ -222,8 +224,68 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
           withdrawalsVolume.push(element?.withdrawal);
           commissionsVolume.push(element?.commission);
         });
+        const savingsVolumeSum = savingsVolume.reduce((acc: any, cur: any)=>  acc + cur);
+        const withdrawalVolumeSum = withdrawalsVolume.reduce((acc: any, cur: any)=>  acc + cur);
+        const commissionVolumeSum = commissionsVolume.reduce((acc: any, cur: any)=>  acc + cur);
+        this.tnxVolumeSum = savingsVolumeSum + withdrawalVolumeSum + commissionVolumeSum;
 
-         this.getCanvasConfig();
+        //  this.getCanvasConfig();
+
+        this.canvas = <HTMLCanvasElement> document.getElementById('lineChart0'); // $("#canvas");  
+    this.ctx = this.canvas?.getContext('2d');
+    console.log(this.ctx);
+    //this.charts?.get(0)?.ctx
+    console.log(this.charts?.get(0)?.ctx);
+    this.gradient = this.ctx?.createLinearGradient(0, 0, 0, 200);
+    this.gradient2 = this.ctx?.createLinearGradient(0, 0, 0, 200);
+    this.gradient3 = this.ctx?.createLinearGradient(0, 0, 0, 200);
+
+    // this.canvas1 = <HTMLCanvasElement> document.getElementById('lineChart1');
+    // this.ctx1 = this.canvas1?.getContext('2d');
+    // this.gradient11 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
+    // this.gradient12 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
+    // this.gradient13 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
+
+    // this.canvas2 = <HTMLCanvasElement> document.getElementById('lineChart2');
+    // this.ctx2 = this.canvas2?.getContext('2d');    
+    // this.gradient21 = this.ctx2?.createLinearGradient(0, 0, 0, 200);
+
+    // this.canvas3 = <HTMLCanvasElement> document.getElementById('lineChart3');
+    // this.ctx3 = this.canvas3?.getContext('2d');
+    
+    // this.gradient31 = this.ctx3?.createLinearGradient(0, 0, 0, 200);
+    // this.gradient32 = this.ctx3?.createLinearGradient(0, 0, 0, 200); 
+    
+
+    this.gradient?.addColorStop(0, 'rgba(55,125,255, .5)');
+    this.gradient?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient2?.addColorStop(0, 'rgba(0, 201, 219, .5)');
+    this.gradient2?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient3?.addColorStop(0, 'rgba(100, 0, 214, 0.8)');
+    this.gradient3?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient11?.addColorStop(0, 'rgba(55,125,255, .5)');
+    this.gradient11?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient12?.addColorStop(0, 'rgba(0, 201, 219, .5)');
+    this.gradient12?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient13?.addColorStop(0, 'rgba(100, 0, 214, 0.8)');
+    this.gradient13?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient21?.addColorStop(0, 'rgba(55,125,255, .5)');
+    this.gradient21?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient31?.addColorStop(0, 'rgba(55,125,255, .5)');
+    this.gradient31?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+    this.gradient32?.addColorStop(0, 'rgba(0, 201, 219, .5)');
+    this.gradient32?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+
+
 
         const data = [savings, withdrawals, commissions];
         const data2 = [savingsVolume, withdrawalsVolume, commissionsVolume]; 
@@ -246,9 +308,9 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
 
         this.getAllUsers(result[2]);
         this.getGenderPerMonth(this.savingsRecords);
-        this.getCanvasConfig();
+        //this.getCanvasConfig();
 
-        this.totalValue = [this.totalBalance, this.totalBalance, this.userVolume, this.genderVolume];
+        this.totalValue = [this.totalBalance, this.tnxVolumeSum, this.userVolume, this.genderVolume];
 
       }), (error: any) => {
         console.log(error);
@@ -263,10 +325,15 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   
   }
 
-  dataSetConfig(label: string, data: any, bgColor: string, color: string) {
+  dataSetConfig(label: string, data: any, bgColor: any, color: string) {
+    console.log(label);
+    console.log(data);
+    console.log(bgColor);
+    console.log(color);
     return { data: data, label: label, backgroundColor: bgColor, borderColor: color,
       borderWidth: 2, pointRadius: 0, hoverBorderColor: color, pointBackgroundColor: color, 
       pointBorderColor: "#fff", pointHoverRadius: 0, fill: true,
+      fillColor: bgColor,
     }
   }
 

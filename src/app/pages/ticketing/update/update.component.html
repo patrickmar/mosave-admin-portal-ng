@@ -6,8 +6,7 @@
             <div class="col-sm mb-2 mb-sm-0">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link"
-                            routerLink="/ticket/view">Events</a></li>
+                        <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/ticket/view">Events</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Edit Ticket</li>
                     </ol>
                 </nav>
@@ -17,8 +16,8 @@
             <!-- End Col -->
             <div class="col-sm-auto">
                 <a class="btn btn-primary" routerLink="/ticket/create">Add new Tickets</a>
-              </div>
-              <!-- End Col -->
+            </div>
+            <!-- End Col -->
         </div>
         <!-- End Row -->
     </div>
@@ -26,79 +25,81 @@
 
     <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
 
-    <div class="row">
-        <div class="col-lg-8 mb-3 mb-lg-0">
-            <!-- Card -->
-            <div class="card mb-3 mb-lg-5">
-                <!-- Header -->
-                <div class="card-header">
-                    <h4 class="card-header-title">Event information</h4>
-                </div>
-                <!-- End Header -->
-
-                <!-- Body -->
-                <div class="card-body">
-                    <!-- Form -->
-                    <div class="mb-4">
-                        <label for="eventTitleLabel" class="form-label">Title <i
-                                class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title="The title of the event ticket you intend to sell"></i></label>
-
-                        <input type="text" class="form-control" formControlName="eventTitle" id="eventTitleLabel"
-                            placeholder="Flytime Festival" aria-label="Title" value="">
+        <div class="row">
+            <div class="col-lg-8 mb-3 mb-lg-0">
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h4 class="card-header-title">Event information</h4>
                     </div>
-                    <!-- End Form -->
+                    <!-- End Header -->
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <!-- Form -->
-                            <div class="mb-4">
-                                <label for="venueLabel" class="form-label">Venue</label>
+                    <!-- Body -->
+                    <div class="card-body">
+                        <!-- Form -->
+                        <div class="mb-4">
+                            <label for="eventTitleLabel" class="form-label">Title <i
+                                    class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="The title of the event ticket you intend to sell"></i></label>
 
-                                <input type="text" class="form-control" formControlName="venue" id="venueLabel"
-                                    placeholder="Lagos, Nigeria" aria-label="">
-                            </div>
-                            <!-- End Form -->
+                            <input type="text" class="form-control" formControlName="eventTitle" id="eventTitleLabel"
+                                placeholder="Flytime Festival" aria-label="Title" value="">
                         </div>
-                        <!-- End Col -->
+                        <!-- End Form -->
 
-                        <div class="col-sm-6" *ngIf="allMerchants != undefined">
-                            <!-- Form -->
-                            <div class="mb-4">
-                                <label for="merchantLabel" class="form-label">Merchant</label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <!-- Form -->
+                                <div class="mb-4">
+                                    <label for="venueLabel" class="form-label">Venue</label>
 
-                                <!-- Select -->
-                        <div class="tom-select-custom">
-                            <select class="js-select form-select" autocomplete="off" id="merchantLabel" formControlName="submerchantId"
-                                data-hs-tom-select-options='{
+                                    <input type="text" class="form-control" formControlName="venue" id="venueLabel"
+                                        placeholder="Lagos, Nigeria" aria-label="">
+                                </div>
+                                <!-- End Form -->
+                            </div>
+                            <!-- End Col -->
+
+                            <div class="col-sm-6" *ngIf="allMerchants != undefined">
+                                <!-- Form -->
+                                <div class="mb-4">
+                                    <label for="merchantLabel" class="form-label">Merchant</label>
+
+                                    <!-- Select -->
+                                    <div class="tom-select-custom">
+                                        <select class="js-select form-select" autocomplete="off" id="merchantLabel" (change)="updateMerchant($event)"
+                                            formControlName="submerchantId" data-hs-tom-select-options='{
                           "searchInDropdown": false,
                           "hideSearch": false,
                           "placeholder": "Select Merchant"
                         }'>
-                                <option *ngFor="let m of allMerchants; let i = index;" [ngValue]="m?.merchantId">{{m?.merchantName}}</option>
-                            </select>
-                        </div>
-                        <!-- End Select -->
+                                            <option *ngFor="let m of allMerchants; let i = index;"
+                                                [ngValue]="m?.merchantId">{{m?.merchantName}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- End Select -->
 
-                                <!-- <div class="input-group">
+                                    <!-- <div class="input-group">
                                     <input type="text" class="form-control" formControlName="merchantName" id="merchantLabel" autocomplete="off"
                                         placeholder="merchant ID" aria-label="merchant">                                    
                                 </div> -->
 
-                                
+
+                                </div>
+                                <!-- End Form -->
                             </div>
-                            <!-- End Form -->
+                            <!-- End Col -->
                         </div>
-                        <!-- End Col -->
-                    </div>
-                    <!-- End Row -->
+                        <!-- End Row -->
 
-                    <label class="form-label">Description <span class="form-label-secondary">(Optional)</span></label>
+                        <label class="form-label">Description <span
+                                class="form-label-secondary">(Optional)</span></label>
 
-                    <!-- Quill -->
-                    <div class="quill-custom">
-                        <div class="js-quill" id="quillArea" style="height: 15rem;" data-hs-quill-options='{
+                        <!-- Quill -->
+                        <div class="quill-custom">
+                            <div class="js-quill" id="quillArea" style="height: 15rem;" data-hs-quill-options='{
                    "placeholder": "Type your description...",
                     "modules": {
                       "toolbar": [
@@ -106,25 +107,25 @@
                       ]
                     }
                    }' [innerHTML]="data?.des">
+                            </div>
+
+
+                            <textarea formControlName="description" style="display:none" id="textArea"></textarea>
                         </div>
-                        
-
-                        <textarea formControlName="description" style="display:none" id="textArea"></textarea>
+                        <!-- End Quill -->
                     </div>
-                    <!-- End Quill -->
+                    <!-- Body -->
                 </div>
-                <!-- Body -->
-            </div>
-            <!-- End Card -->
+                <!-- End Card -->
 
-            <!-- Card -->
-            <div class="card mb-3 mb-lg-5">
-                <!-- Header -->
-                <div class="card-header card-header-content-between">
-                    <h4 class="card-header-title">Media</h4>
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header card-header-content-between">
+                        <h4 class="card-header-title">Banner</h4>
 
-                    <!-- Dropdown -->
-                    <!-- <div class="dropdown">
+                        <!-- Dropdown -->
+                        <!-- <div class="dropdown">
                         <a class="btn btn-ghost-secondary btn-sm" href="#!" id="mediaDropdown" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Add media from URL <i class="bi-chevron-down"></i>
@@ -141,259 +142,356 @@
                             </a>
                         </div>
                     </div> -->
-                    <!-- End Dropdown -->
-                </div>
-                <!-- End Header -->
+                        <!-- End Dropdown -->
+                    </div>
+                    <!-- End Header -->
 
-                <!-- Body -->
-                <div class="card-body">
-                     <!-- Gallery -->
-              <div id="fancyboxGallery" class="js-fancybox row justify-content-sm-center gx-3">
-                <div [ngClass]=" 'col-6 col-sm-4 col-md-'+12/data?.imgs.length+ ' mb-3 mb-lg-5' " *ngFor="let it of data?.imgs">
-                  <!-- Card -->
-                  <div class="card card-sm">
-                    <img class="card-img-top" src="{{path+it?.img}}" alt="Image Description">
-
+                    <!-- Body -->
                     <div class="card-body">
-                      <div class="row col-divider text-center">
-                        <div class="col">
-                          <a class="text-body" href="{{path+it?.img}}" data-bs-toggle="tooltip" data-bs-placement="top" title="View" data-fslightbox="gallery">
-                            <i class="bi-eye"></i>
-                          </a>
-                        </div>
-                        <!-- End Col -->
+                        <!-- Gallery -->
+                        <div id="fancyboxGallery" class="js-fancybox row justify-content-sm-center gx-3">
+                            <div [ngClass]=" 'col-6 col-sm-4 col-md-'+12/data?.imgs.length+ ' mb-3 mb-lg-5' "
+                                *ngFor="let it of banners">
+                                <!-- Card -->
+                                <div class="card card-sm">
+                                    <img class="card-img-top" src="{{path+it?.img}}" alt="Image Description">
 
-                        <div class="col">
-                          <a class="text-danger" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                            <i class="bi-trash"></i>
-                          </a>
+                                    <div class="card-body">
+                                        <div class="row col-divider text-center">
+                                            <div class="col">
+                                                <a class="text-body" href="{{path+it?.img}}" target="_blank"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="View"
+                                                    data-fslightbox="gallery">
+                                                    <i class="bi-eye"></i>
+                                                </a>
+                                            </div>
+                                            <!-- End Col -->
+
+                                            <div class="col">
+                                                <a class="text-danger" href="javascript:;" type="button"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
+                                                    (click)="deleteModal(content, it)">
+                                                    <i class="bi-trash"></i>
+                                                </a>
+                                            </div>
+                                            <!-- End Col -->
+                                        </div>
+                                        <!-- End Row -->
+                                    </div>
+                                    <!-- End Col -->
+                                </div>
+                                <!-- End Card -->
+                            </div>
+                            <!-- End Col -->
+
+
                         </div>
-                        <!-- End Col -->
-                      </div>
-                      <!-- End Row -->
+                        <!-- End Gallery -->
+                        <!-- Dropzone -->
+                        <div id="attachBanner" (change)="onSelect($event)"
+                            accept="image/jpeg,image/jpg,image/png,image/gif" [multiple]="true"
+                            [maxFileSize]="maxFileSize" class="custom-dropzone dz-dropzone dz-dropzone-card"
+                            ngx-dropzone>
+                            <div class="dz-message mb-2">
+                                <img class="avatar avatar-xl avatar-4x3 mb-3"
+                                    src="./assets/svg/illustrations/oc-browse.svg" alt="Image Description"
+                                    data-hs-theme-appearance="default">
+
+                                <h5>Drag and drop your file here</h5>
+
+                                <p class="mb-2">or</p>
+
+                                <span class="btn btn-white btn-sm">Browse files</span>
+                            </div>
+                            <ng-container>
+                                <div *ngFor="let item of setFiles"
+                                    class="col h-100 mb-4 dz-processing dz-image-preview dz-success dz-complete">
+                                    <div class="dz-preview dz-file-preview">
+                                        <div class="d-flex justify-content-end dz-close-icon">
+                                            <button (click)="onRemove(item, $event)" type="button"
+                                                class="btn btn-link btn-sm p-0">
+                                                <span class="bi-x display-6 text-danger" data-dz-remove=""></span>
+                                            </button>
+                                        </div>
+                                        <div class="dz-details d-flex">
+                                            <div class="dz-img flex-shrink-0">
+                                                <img class="img-fluid dz-img-inner" data-dz-thumbnail=""
+                                                    [alt]="item.file.name" [src]="item.file.base64">
+                                            </div>
+                                            <div class="dz-file-wrapper flex-grow-1">
+                                                <h6 class="dz-filename"> <span class="dz-title" data-dz-name=""
+                                                        [innerHTML]="item.file.name"></span> </h6>
+                                                <div class="dz-size" [innerHTML]="getFilesize(item.file.size)"></div>
+                                            </div>
+                                        </div>
+                                        <div class="dz-progress progress">
+                                            <div class="dz-upload progress-bar bg-success" role="progressbar"
+                                                style="width: 100%;" aria-valuenow="0" aria-valuemin="0"
+                                                aria-valuemax="100" data-dz-uploadprogress=""></div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="dz-success-mark"> <span class="bi-check-lg"></span> </div>
+                                            <div class="dz-error-mark"> <span class="bi-x-lg"></span> </div>
+                                            <div class="dz-error-message"> <small data-dz-errormessage=""></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </ng-container>
+
+                        </div>
+                        <!-- End Dropzone -->
                     </div>
-                    <!-- End Col -->
-                  </div>
-                  <!-- End Card -->
+                    <!-- Body -->
                 </div>
-                <!-- End Col -->
+                <!-- End Card -->
 
-
-              </div>
-              <!-- End Gallery -->
-
-                    <!-- Dropzone -->
-                    <div id="attachFilesNewProjectLabel" class="js-dropzone dz-dropzone dz-dropzone-card">
-                        <div class="dz-message">
-                            <img class="avatar avatar-xl avatar-4x3 mb-3" src="./assets/svg/illustrations/oc-browse.svg"
-                                alt="Image Description" data-hs-theme-appearance="default">
-                            <img class="avatar avatar-xl avatar-4x3 mb-3"
-                                src="./assets/svg/illustrations-light/oc-browse.svg" alt="Image Description"
-                                data-hs-theme-appearance="dark">
-
-                            <h5>Drag and drop your file here</h5>
-
-                            <p class="mb-2">or</p>
-
-                            <span class="btn btn-white btn-sm">Browse files</span>
-                        </div>
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h4 class="card-header-title">Date/Time Information</h4>
                     </div>
-                    <!-- End Dropzone -->
-                </div>
-                <!-- Body -->
-            </div>
-            <!-- End Card -->
+                    <!-- End Header -->
 
-            <!-- Card -->
-            <div class="card mb-3 mb-lg-5">
-                <!-- Header -->
-                <div class="card-header">
-                    <h4 class="card-header-title">Date/Time Information</h4>
-                </div>
-                <!-- End Header -->
+                    <!-- Body -->
+                    <div class="card-body">
+                        <h6 class="text-cap">Start Date</h6>
 
-                <!-- Body -->
-                <div class="card-body">
-                    <h6 class="text-cap">Start Date</h6>
-
-                    <div>
-                        <ng-container formArrayName="start">
-                            <div class="row mb-4" *ngFor="let s of startDate().controls; let id=index">
-                                <ng-container [formGroupName]="id">
-                                    <div class="col-sm-6 mb-2 mb-sm-0">
-                                        <!-- <input type="text" formControlName="date" class="flatpickr-custom form-control"> -->
-                                        <!-- Flatpickr -->
-                                        <input type="text" formControlName="date" id="eventDateRangeLabel"
-                                            class="flatpickr-custom form-control mb-2" placeholder="Select date" data-hs-flatpickr-options='{
-                                                         "dateFormat": "m/d/Y",
+                        <div>
+                            <ng-container formArrayName="start">
+                                <div class="row mb-4" *ngFor="let s of startDate().controls; let id=index">
+                                    <ng-container [formGroupName]="id">
+                                        <div class="col-sm-6 mb-2 mb-sm-0">
+                                            <!-- <input type="text" formControlName="date" class="flatpickr-custom form-control"> -->
+                                            <!-- Flatpickr -->
+                                            <input type="text" formControlName="date" id="eventDateRangeLabel"
+                                                class="flatpickr-custom form-control mb-2" placeholder="Select date"
+                                                data-hs-flatpickr-options='{
+                                                         "dateFormat": "m-d-Y",
                                                          "mode": "single",
                                                          "minDate": "today"
                                                        }'>
-                                        <!-- End Flatpickr -->
-                                    </div>
-                                    <!-- End Col -->
-                            
-                                    <div class="col-sm-6">
-                                        <!-- Flatpickr moment().subtract(18, "years") -->
-                                        <input type="text" formControlName="time" id="eventDateRangeLabel2"
-                                            class="flatpickr-custom form-control mb-2" placeholder="Select time" data-hs-flatpickr-options='{
+                                            <!-- End Flatpickr -->
+                                        </div>
+                                        <!-- End Col -->
+
+                                        <div class="col-sm-6">
+                                            <!-- Flatpickr moment().subtract(18, "years") -->
+                                            <input type="text" formControlName="time" id="eventDateRangeLabel2"
+                                                class="flatpickr-custom form-control mb-2" placeholder="Select time"
+                                                data-hs-flatpickr-options='{
                                                 "noCalendar": true,
                                                 "dateFormat": "H:i",
                                                 "time_24hr": false,
                                                 "enableTime": "true"
                                               }'>
-                                        <!-- End Flatpickr -->
-                                    </div>
-                                    <!-- End Col -->
-
-                                </ng-container>
-                                
-                        
-                            </div>
-                            <!-- End Row -->
-                        </ng-container>
-
-                        <!-- start End date Input Field   -->
-                        <div [hidden]="!showEndDate">
-                            <h6 class="text-cap">End Date</h6>
-                            <ng-container formArrayName="end">
-                                <div class="row mb-4" *ngFor="let e of endDate().controls; let ix=index">
-                                    <ng-container [formGroupName]="ix">
-                                        <div class="col-sm-6 mb-2 mb-sm-0">
-                                            <!-- Flatpickr -->
-                                            <input type="text" formControlName="date" id="eventDateRangeLabel3"
-                                                class="flatpickr-custom form-control mb-2" placeholder="Select date" data-hs-flatpickr-options='{
-                                                                             "dateFormat": "m/d/Y",
-                                                                             "mode": "single",
-                                                                             "minDate": "today"
-                                                                           }'>
                                             <!-- End Flatpickr -->
                                         </div>
                                         <!-- End Col -->
-                        
-                                        <div class="col-sm-6">
-                                            <!-- Flatpickr -->
-                                            <input type="text" formControlName="time" id="eventDateRangeLabel4"
-                                                class="flatpickr-custom form-control mb-2" placeholder="Select time" data-hs-flatpickr-options='{
+
+                                    </ng-container>
+
+
+                                </div>
+                                <!-- End Row -->
+                            </ng-container>
+
+                            <!-- start End date Input Field   -->
+                            <div [hidden]="!showEndDate">
+                                <h6 class="text-cap">End Date</h6>
+                                <ng-container formArrayName="end">
+                                    <div class="row mb-4" *ngFor="let e of endDate().controls; let ix=index">
+                                        <ng-container [formGroupName]="ix">
+                                            <div class="col-sm-6 mb-2 mb-sm-0">
+                                                <!-- Flatpickr -->
+                                                <input type="text" formControlName="date" id="eventDateRangeLabel3"
+                                                    class="flatpickr-custom form-control mb-2" placeholder="Select date"
+                                                    data-hs-flatpickr-options='{
+                                                                             "dateFormat": "m-d-Y",
+                                                                             "mode": "single",
+                                                                             "minDate": "today"
+                                                                           }'>
+                                                <!-- End Flatpickr -->
+                                            </div>
+                                            <!-- End Col -->
+
+                                            <div class="col-sm-6">
+                                                <!-- Flatpickr -->
+                                                <input type="text" formControlName="time" id="eventDateRangeLabel4"
+                                                    class="flatpickr-custom form-control mb-2" placeholder="Select time"
+                                                    data-hs-flatpickr-options='{
                                                                     "noCalendar": true,
                                                                     "dateFormat": "H:i",
                                                                     "time_24hr": false,
                                                                     "enableTime": "true"
                                                                   }'>
-                                            <!-- End Flatpickr -->
-                                        </div>
-                                        <!-- End Col -->
-                                    </ng-container>
-                                </div>
-                                <!-- End Row -->
-                            </ng-container>
-                            <!-- End End date Input Field -->
-                        </div>
-
-                        <a type="button" (click)="displayEndDate()" class="form-link">
-                            <i [ngClass]="showEndDate ? 'bi-dash' : 'bi-plus' "></i> 
-                            <span> {{showEndDate ? 'Remove' : 'Add' }}</span> End Date
-                        </a>
-                    </div>
-
-                    
-                </div>
-                <!-- Body -->
-            </div>
-            <!-- End Card -->
-
-
-            <!-- Card -->
-            <div class="card mb-3 mb-lg-5">
-                <!-- Header -->
-                <div class="card-header card-header-content-sm-between">
-                    <h4 class="card-header-title mb-2 mb-sm-0">Ticket Category</h4>
-
-                    <div class="d-sm-flex align-items-center gap-2">
-                        <!-- Datatable Info -->
-                        <div id="datatableCounterInfo" class="mb-2 mb-sm-0" style="display: none;">
-                            <div class="d-flex align-items-center">
-                                <span class="fs-5 me-3">
-                                    <span id="datatableCounter">0</span>
-                                    Selected
-                                </span>
-                                <a class="btn btn-outline-danger btn-sm" href="javascript:;">
-                                    <i class="bi-trash"></i> Delete
-                                </a>
+                                                <!-- End Flatpickr -->
+                                            </div>
+                                            <!-- End Col -->
+                                        </ng-container>
+                                    </div>
+                                    <!-- End Row -->
+                                </ng-container>
+                                <!-- End End date Input Field -->
                             </div>
+
+                            <a type="button" (click)="displayEndDate()" class="form-link">
+                                <i [ngClass]="showEndDate ? 'bi-dash' : 'bi-plus' "></i>
+                                <span> {{showEndDate ? 'Remove' : 'Add' }}</span> End Date
+                            </a>
                         </div>
-                        <!-- End Datatable Info -->
 
-                        <a class="js-create-fieldsss btn btn-ghost-secondary btn-sm" type="button" (click)="addTicket()">
-                            <i class="bi-plus"></i> Add Category
-                        </a>
+
                     </div>
+                    <!-- Body -->
                 </div>
-                <!-- End Header -->
+                <!-- End Card -->
 
-                <!-- Table -->
-                <div class="table-responsive datatable-custom">
-                    <table id="datatables" formArrayName="ticketCategories"
-                        class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col" class="table-column-pe-0">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                                        <label class="form-check-label" for="datatableCheckAll"></label>
-                                    </div>
-                                </th>
-                                <th *ngFor="let t of tableHead; let i = index;" class="table-column-ps-0">{{t}}</th>
-                            </tr>
-                        </thead>
 
-                        <tbody>
-                            <tr *ngFor="let cat of ticketCategories().controls | slice:0:maxCategory; let i=index" [formGroupName]="i">
-                                <td class="table-column-pe-0">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="productVariationsCheck1">
-                                        <label class="form-check-label" for="productVariationsCheck1"></label>
-                                    </div>
-                                </td>
-                                <th class="table-column-ps-0">
-                                    <input type="text" class="form-control" formControlName="name" placeholder="Regular"
-                                        style="min-width: 6rem;">
-                                </th>
-                                <th class="table-column-ps-0">
-                                    <div class="input-group input-group-merge" style="min-width: 7rem;">
-                                        <div class="input-group-prepend input-group-text p-2">₦</div>
-                                        <input type="text" class="form-control ps-5" formControlName="price" placeholder="2000">
-                                    </div>
-                                </th>
-                                <th class="table-column-ps-0">
-                                    <div class="input-group input-group-merge" style="min-width: 7rem;">
-                                        <div class="input-group-prepend input-group-text p-2">₦</div>
-                                        <input type="text" class="form-control ps-5" formControlName="discountPrice" placeholder="1500">
-                                    </div>
-                                </th>
-                                <th class="table-column-ps-0">
-                                    <div class="input-group input-group-merge" style="min-width: 7rem;">
-                                        <div class="input-group-prepend input-group-text p-2">%</div>
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header card-header-content-sm-between">
+                        <h4 class="card-header-title mb-2 mb-sm-0">Ticket Category</h4>
+
+                        <div class="d-sm-flex align-items-center gap-2">
+                            <!-- Datatable Info -->
+                            <div id="datatableCounterInfo" class="mb-2 mb-sm-0" style="display: none;">
+                                <div class="d-flex align-items-center">
+                                    <span class="fs-5 me-3">
+                                        <span id="datatableCounter">0</span>
+                                        Selected
+                                    </span>
+                                    <a class="btn btn-outline-danger btn-sm" href="javascript:;">
+                                        <i class="bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- End Datatable Info -->
+
+                            <a class="js-create-fieldsss btn btn-ghost-secondary btn-sm" type="button"
+                                (click)="addTicket()">
+                                <i class="bi-plus"></i> Add Category
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Header -->
+
+                    <!-- Table -->
+                    <div class="table-responsive datatable-custom">
+                        <table id="datatables" formArrayName="ticketCategories"
+                            class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col" class="table-column-pe-0">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="datatableCheckAll">
+                                            <label class="form-check-label" for="datatableCheckAll"></label>
+                                        </div>
+                                    </th>
+                                    <th *ngFor="let t of tableHead; let i = index;" class="table-column-ps-0">{{t}}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let cat of ticketCategories().controls | slice:0:maxCategory; let i=index"
+                                    [formGroupName]="i">
+                                    <td class="table-column-pe-0">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="productVariationsCheck1">
+                                            <label class="form-check-label" for="productVariationsCheck1"></label>
+                                        </div>
+                                    </td>
+                                    <th class="table-column-ps-0">
+                                        <input type="text" class="form-control" formControlName="name"
+                                            placeholder="Regular" style="min-width: 6rem;">
+                                    </th>
+                                    <th class="table-column-ps-0">
+                                        <div class="input-group input-group-merge" style="min-width: 7rem;">
+                                            <div class="input-group-prepend input-group-text p-2">₦</div>
+                                            <input type="text" class="form-control ps-5" formControlName="price"
+                                                placeholder="2000">
+                                        </div>
+                                    </th>
+                                    <th class="table-column-ps-0">
+                                        <div class="input-group input-group-merge" style="min-width: 7rem;">
+                                            <div class="input-group-prepend input-group-text p-2">₦</div>
+                                            <input type="text" class="form-control ps-5" formControlName="discountPrice"
+                                                placeholder="1500">
+                                        </div>
+                                    </th>
+                                    <th class="table-column-ps-0">
+                                        <div class="input-group input-group-merge" style="min-width: 7rem;">
+                                            <div class="input-group-prepend input-group-text p-2">%</div>
+                                            <!-- Quantity -->
+                                            <div class="quantity-counter" style="border: none; padding: 0.5rem 1.5rem;">
+                                                <div class="row align-items-center">
+                                                    <div class="col">
+                                                        <input class="form-control form-control-quantity-counter"
+                                                            type="number" formControlName="walletDiscount">
+
+                                                    </div>
+                                                    <!-- End Col -->
+
+                                                    <div class="col-auto">
+                                                        <a class="btn btn-white btn-xs btn-icon rounded-circle"
+                                                            type="button"
+                                                            (click)="handleMinus($event, i, 'walletDiscount', 0)">
+                                                            <i class="bi-dash"></i>
+                                                        </a>
+                                                        <a class=" btn btn-white btn-xs btn-icon rounded-circle"
+                                                            type="button"
+                                                            (click)="handlePlus($event, i, 'walletDiscount', 100)">
+                                                            <i class="bi-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                    <!-- End Col -->
+                                                </div>
+                                                <!-- End Row -->
+                                            </div>
+                                            <!-- End Quantity -->
+                                        </div>
+                                        <div class="error-container">
+                                            <ng-container *ngFor="let validation of validations.walletDiscount">
+                                                <div class="error-message"
+                                                    *ngIf="ticketCategories().at(i).get('walletDiscount')?.hasError(validation.type) 
+                                            && (ticketCategories().at(i).get('walletDiscount')?.dirty || ticketCategories().at(i).get('walletDiscount')?.touched)">
+                                                    <small class="text-danger">{{ validation.message }}</small>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </th>
+                                    <th class="table-column-ps-0">
                                         <!-- Quantity -->
-                                        <div class="quantity-counter" style="border: none; padding: 0.5rem 1.5rem;">
+                                        <div class="quantity-counter">
                                             <div class="row align-items-center">
                                                 <div class="col">
                                                     <input class="form-control form-control-quantity-counter"
-                                                        type="number" formControlName="walletDiscount">
-
+                                                        type="number" formControlName="qty">
+                                                    <div class="error-container">
+                                                        <ng-container *ngFor="let validation of validations.qty">
+                                                            <div class="error-message"
+                                                                *ngIf="ticketCategories().at(i).get('qty')?.hasError(validation.type) 
+                                                            && (ticketCategories().at(i).get('qty')?.dirty || ticketCategories().at(i).get('qty')?.touched)">
+                                                                <small class="text-danger">{{ validation.message
+                                                                    }}</small>
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
                                                 </div>
                                                 <!-- End Col -->
 
                                                 <div class="col-auto">
                                                     <a class="btn btn-white btn-xs btn-icon rounded-circle"
-                                                        type="button"
-                                                        (click)="handleMinus($event, i, 'walletDiscount', 0)">
+                                                        type="button" (click)="handleMinus($event, i, 'qty', 1)">
                                                         <i class="bi-dash"></i>
                                                     </a>
                                                     <a class=" btn btn-white btn-xs btn-icon rounded-circle"
-                                                        type="button"
-                                                        (click)="handlePlus($event, i, 'walletDiscount', 100)">
+                                                        type="button" (click)="handlePlus($event, i, 'qty', maxQty)">
                                                         <i class="bi-plus"></i>
                                                     </a>
                                                 </div>
@@ -402,233 +500,193 @@
                                             <!-- End Row -->
                                         </div>
                                         <!-- End Quantity -->
-                                    </div>
-                                    <div class="error-container">
-                                        <ng-container *ngFor="let validation of validations.walletDiscount">
-                                            <div class="error-message"
-                                                *ngIf="ticketCategories().at(i).get('walletDiscount')?.hasError(validation.type) 
-                                            && (ticketCategories().at(i).get('walletDiscount')?.dirty || ticketCategories().at(i).get('walletDiscount')?.touched)">
-                                                <small class="text-danger">{{ validation.message }}</small>
-                                            </div>
-                                        </ng-container>
-                                    </div>
-                                </th>
-                                <th class="table-column-ps-0">
-                                    <!-- Quantity -->
-                                    <div class="quantity-counter">
-                                        <div class="row align-items-center">
-                                            <div class="col">
-                                                <input class="form-control form-control-quantity-counter"
-                                                    type="number" formControlName="qty">
-                                                <div class="error-container">
-                                                    <ng-container *ngFor="let validation of validations.qty">
-                                                        <div class="error-message"
-                                                            *ngIf="ticketCategories().at(i).get('qty')?.hasError(validation.type) 
-                                                            && (ticketCategories().at(i).get('qty')?.dirty || ticketCategories().at(i).get('qty')?.touched)">
-                                                            <small class="text-danger">{{ validation.message
-                                                                }}</small>
-                                                        </div>
-                                                    </ng-container>
-                                                </div>
-                                            </div>
-                                            <!-- End Col -->
-
-                                            <div class="col-auto">
-                                                <a class="btn btn-white btn-xs btn-icon rounded-circle"
-                                                    type="button" (click)="handleMinus($event, i, 'qty', 1)">
-                                                    <i class="bi-dash"></i>
-                                                </a>
-                                                <a class=" btn btn-white btn-xs btn-icon rounded-circle"
-                                                    type="button" (click)="handlePlus($event, i, 'qty', maxQty)">
-                                                    <i class="bi-plus"></i>
-                                                </a>
-                                            </div>
-                                            <!-- End Col -->
+                                    </th>
+                                    <th class="table-column-ps-0">
+                                        <div class="btn-group" role="group" aria-label="Edit group">
+                                            <a type="button" class="btn btn-white" (click)="removeTicket(i)">
+                                                <i class="bi-trash"></i>
+                                            </a>
                                         </div>
-                                        <!-- End Row -->
-                                    </div>
-                                    <!-- End Quantity -->
-                                </th>
-                                <th class="table-column-ps-0">
-                                    <div class="btn-group" role="group" aria-label="Edit group">
-                                        <a type="button" class="btn btn-white" (click)="removeTicket(i)">
-                                            <i class="bi-trash"></i>
-                                        </a>
-                                    </div>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- End Table -->
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End Table -->
 
-                <!-- Footer -->
-                <div class="card-footer">
-                    <a class="js-create-field btn btn-sm btn-ghost-secondary" type="button"(click)="addTicket()">
-                        <i class="bi-plus"></i> Add Category
-                    </a>
+                    <!-- Footer -->
+                    <div class="card-footer">
+                        <a class="js-create-field btn btn-sm btn-ghost-secondary" type="button" (click)="addTicket()">
+                            <i class="bi-plus"></i> Add Category
+                        </a>
+                    </div>
+                    <!-- End Footer -->
+
                 </div>
-                <!-- End Footer -->
+                <!-- End Card -->
 
             </div>
-            <!-- End Card -->
+            <!-- End Col -->
 
-        </div>
-        <!-- End Col -->
-
-        <div class="col-lg-4">
-            <!-- Card -->
-            <div class="card mb-3 mb-lg-5">
-                <!-- Header -->
-                <div class="card-header">
-                    <h4 class="card-header-title">Paystack Information</h4>
-                </div>
-                <!-- End Header -->
-
-                <!-- Body -->
-                <div class="card-body">
-                    <!-- Form -->
-                    <div class="mb-4">
-                        <label for="acctIdLabel" class="form-label">Account ID</label>
-
-                        <div class="input-group">
-                            <input type="text" class="form-control" formControlName="paystackAcctId" id="acctIdLabel"
-                                placeholder="ACCT82993392" aria-label="Acct">                            
-                        </div>
-
-                        <small class="form-text">Kindly generate this account ID from Paystack dashboard</small>
+            <div class="col-lg-4">
+                <!-- Card -->
+                <div class="card mb-3 mb-lg-5">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h4 class="card-header-title">Paystack Information</h4>
                     </div>
-                    <!-- End Form -->
+                    <!-- End Header -->
 
-                    <div class="mb-4" *ngIf="data != undefined">
-                        <label for="bearerLabel" class="form-label">Charges Bearer <i class="bi-question-circle text-body ms-1"
-                            data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Who bears Paystack charges?"></i></label>
+                    <!-- Body -->
+                    <div class="card-body">
+                        <!-- Form -->
+                        <div class="mb-4">
+                            <label for="acctIdLabel" class="form-label">Account ID</label>
 
-                        <!-- Select -->
-                        <div class="tom-select-custom">
-                            <select class="js-select form-select" autocomplete="off" id="bearerLabel" formControlName="chargesBearer"
-                                data-hs-tom-select-options='{
+                            <div class="input-group">
+                                <input type="text" class="form-control" formControlName="paystackAcctId"
+                                    id="acctIdLabel" placeholder="ACCT82993392" aria-label="Acct">
+                            </div>
+
+                            <small class="form-text">Kindly generate this account ID from Paystack dashboard</small>
+                        </div>
+                        <!-- End Form -->
+
+                        <div class="mb-4" *ngIf="data != undefined">
+                            <label for="bearerLabel" class="form-label">Charges Bearer <i
+                                    class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Who bears Paystack charges?"></i></label>
+
+                            <!-- Select -->
+                            <div class="tom-select-custom">
+                                <select class="js-select form-select" autocomplete="off" id="bearerLabel"
+                                    formControlName="chargesBearer" data-hs-tom-select-options='{
                           "searchInDropdown": false,
                           "hideSearch": true,
                           "placeholder": "Select Bearer"
                         }'>
-                                <option *ngFor="let item of bearers" [ngValue]="item.value" [selected]="item.value === data.paystack_bearer">{{item.name}}</option>
-                            </select>
+                                    <option *ngFor="let item of bearers" [ngValue]="item.value"
+                                        [selected]="item.value === data.paystack_bearer">{{item.name}}</option>
+                                </select>
+                            </div>
+                            <!-- End Select -->
                         </div>
-                        <!-- End Select -->
+                        <!-- End Form -->
+
+
                     </div>
-                    <!-- End Form -->
-
-                    
+                    <!-- Body -->
                 </div>
-                <!-- Body -->
-            </div>
-            <!-- End Card -->
+                <!-- End Card -->
 
-            <!-- Card -->
-            <div class="card">
-                <!-- Header -->
-                <div class="card-header">
-                    <h4 class="card-header-title">Other Information</h4>
-                </div>
-                <!-- End Header -->
-
-                <!-- Body -->
-                <div class="card-body">
-                    <!-- Form -->
-
-                    <div class="mb-4">
-                        <label for="vendorLabel" class="form-label">Vendor</label>
-
-                        <input type="text" class="form-control" formControlName="vendor" id="vendorLabel" placeholder="eg. Flytime Ltd"
-                            aria-label="fly">
+                <!-- Card -->
+                <div class="card">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h4 class="card-header-title">Other Information</h4>
                     </div>
-                    <!-- End Form -->
-                    
+                    <!-- End Header -->
 
-                    <!-- Form -->
-                    <div class="mb-4" *ngIf="data != undefined ">
-                        <label for="categoryLabel" class="form-label">Event Type</label>
+                    <!-- Body -->
+                    <div class="card-body">
+                        <!-- Form -->
 
-                        <!-- Select -->
-                        <div class="tom-select-custom">
-                            <select class="js-select form-select" autocomplete="off" id="categoryLabel" formControlName="eventType"
-                                data-hs-tom-select-options='{
+                        <div class="mb-4">
+                            <label for="vendorLabel" class="form-label">Vendor</label>
+
+                            <input type="text" class="form-control" formControlName="vendor" id="vendorLabel"
+                                placeholder="eg. Flytime Ltd" aria-label="fly">
+                        </div>
+                        <!-- End Form -->
+
+
+                        <!-- Form -->
+                        <div class="mb-4" *ngIf="data != undefined ">
+                            <label for="categoryLabel" class="form-label">Event Type</label>
+
+                            <!-- Select -->
+                            <div class="tom-select-custom">
+                                <select class="js-select form-select" autocomplete="off" id="categoryLabel"
+                                    formControlName="eventType" data-hs-tom-select-options='{
                           "searchInDropdown": false,
                           "hideSearch": true,
                           "placeholder": "Select category"
                         }'>
-                                <option *ngFor="let e of eventTypes; let i = index;" [ngValue]="e" [selected]="e === data.event_cat">{{e}}</option>
-                            </select>
+                                    <option *ngFor="let e of eventTypes; let i = index;" [ngValue]="e"
+                                        [selected]="e === data.event_cat">{{e}}</option>
+                                </select>
+                            </div>
+                            <!-- End Select -->
                         </div>
-                        <!-- End Select -->
-                    </div>
-                    <!-- Form -->
-                    <div class="mb-4">
-                        <label for="tagsLabel" class="form-label">Tags (optional)</label>
+                        <!-- Form -->
+                        <div class="mb-4">
+                            <label for="tagsLabel" class="form-label">Tags (optional)</label>
 
-                    <input type="text" class="form-control" id="tagsLabel" placeholder="Enter tags here" formControlName="tags"
-                        aria-label="Enter tags here">
+                            <input type="text" class="form-control" id="tagsLabel" placeholder="Enter tags here"
+                                formControlName="tags" aria-label="Enter tags here">
 
-                        <small class="form-text">Tags should be separated by comma.</small>
+                            <small class="form-text">Tags should be separated by comma.</small>
 
-                    </div>                   
+                        </div>
 
-                
+
                         <hr class="my-4">
 
-                    <!-- Form Switch -->
-                    <div class="mb-4">
                         <!-- Form Switch -->
-                        <label class="row form-check form-switch" for="availabilitySwitch2">
-                            <span class="col-8 col-sm-9 ms-0">
-                                <span class="text-dark">Enable Event <i class="bi-question-circle text-body ms-1"
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Activate event for purchase."></i></span>
-                            </span>
-                            <span class="col-4 col-sm-3 text-end">
-                                <input type="checkbox" class="form-check-input" formControlName="enableEvent"
-                                    id="availabilitySwitch2">
-                            </span>
-                        </label>
-                        <!-- End Form Switch -->
+                        <div class="mb-4">
+                            <!-- Form Switch -->
+                            <label class="row form-check form-switch" for="availabilitySwitch2">
+                                <span class="col-8 col-sm-9 ms-0">
+                                    <span class="text-dark">Enable Event <i class="bi-question-circle text-body ms-1"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="Activate event for purchase."></i></span>
+                                </span>
+                                <span class="col-4 col-sm-3 text-end">
+                                    <input type="checkbox" class="form-check-input" formControlName="enableEvent"
+                                        id="availabilitySwitch2">
+                                </span>
+                            </label>
+                            <!-- End Form Switch -->
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="row form-check form-switch" for="availabilitySwitch1">
+                                <span class="col-8 col-sm-9 ms-0">
+                                    <span class="text-dark">Enable Seat Arrangement <i
+                                            class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Enable the option to generate a seat number for customers"></i></span>
+                                </span>
+                                <span class="col-4 col-sm-3 text-end">
+                                    <input type="checkbox" class="form-check-input" (change)="displaySeat()"
+                                        formControlName="enableSeat" id="availabilitySwitch1">
+                                </span>
+                            </label>
+                            <!-- End Form Switch -->
+                        </div>
+
+                        <div class="mb-4" *ngIf="showSeat">
+                            <label for="capacityLabel" class="form-label">Enter Seat Capacity</label>
+                            <input type="number" class="form-control" id="capacityLabel" placeholder="1000"
+                                formControlName="seatCapacity">
+                        </div>
+
                     </div>
-
-                    <div class="mb-4">
-                        <label class="row form-check form-switch" for="availabilitySwitch1">
-                            <span class="col-8 col-sm-9 ms-0">
-                                <span class="text-dark">Enable Seat Arrangement <i
-                                        class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="Enable the option to generate a seat number for customers"></i></span>
-                            </span>
-                            <span class="col-4 col-sm-3 text-end">
-                                <input type="checkbox" class="form-check-input" (change)="displaySeat()"
-                                    formControlName="enableSeat" id="availabilitySwitch1">
-                            </span>
-                        </label>
-                        <!-- End Form Switch -->
-                    </div>                        
-
-                    <div class="mb-4" *ngIf="showSeat">
-                        <label for="capacityLabel" class="form-label">Enter Seat Capacity</label>
-                        <input type="number" class="form-control" id="capacityLabel" placeholder="1000"
-                            formControlName="seatCapacity">
-                    </div>
-
+                    <!-- Body -->
                 </div>
-                <!-- Body -->
+                <!-- End Card -->
             </div>
-            <!-- End Card -->
+            <!-- End Col -->
         </div>
-        <!-- End Col -->
-    </div>
-    <!-- End Row -->
+        <!-- End Row -->
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">Update
+            <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </button>
 
-</form>
+    </form>
 
 
 </div>
@@ -636,32 +694,82 @@
 
 
 <!-- Add Image from URL Modal -->
-<div class="modal fade" id="addImageFromURLModal" tabindex="-1" aria-labelledby="addImageFromURLModalLabel" aria-hidden="true">
+<div class="modal fade" id="addImageFromURLModal" tabindex="-1" aria-labelledby="addImageFromURLModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="addImageFromURLModalLabel">Add image from URL</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="modal-body">
+                <label for="pasteImageURLNameLabel" class="form-label">Paste image URL</label>
+                <input type="text" class="form-control" name="projectName" id="pasteImageURLNameLabel"
+                    placeholder="https://" aria-label="https://">
+            </div>
+            <!-- End Body -->
+
+            <!-- Footer -->
+            <div class="modal-footer gap-3">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="button" class="btn btn-primary">Add media</button>
+            </div>
+            <!-- End Footer -->
+        </div>
+    </div>
+</div>
+<!-- End Add Image from URL Modal -->
+
+
+<ng-template #content let-modal>
+    <div class="modal-content">
         <!-- Header -->
         <div class="modal-header">
-          <h4 class="modal-title" id="addImageFromURLModalLabel">Add image from URL</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h4 class="modal-title" id="deleteImageModal">Delete Image</h4>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
         </div>
         <!-- End Header -->
 
         <!-- Body -->
-        <div class="modal-body">
-          <label for="pasteImageURLNameLabel" class="form-label">Paste image URL</label>
-          <input type="text" class="form-control" name="projectName" id="pasteImageURLNameLabel" placeholder="https://" aria-label="https://">
+        <div class="modal-body text-center">
+            <span>Are you sure you want to delete this image?</span>
         </div>
         <!-- End Body -->
 
         <!-- Footer -->
-        <div class="modal-footer gap-3">
-          <button type="button" class="btn btn-white" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-          <button type="button" class="btn btn-primary">Add media</button>
+        <div class="modal-footer">
+            <div class="row align-items-sm-center flex-grow-1 mx-n2">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <p class="modal-footer-text">What you need to know?
+                        <i class="bi-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Deleting this image means you wont be able to see it on the front end."></i>
+                    </p>
+                </div>
+                <!-- End Col -->
+
+                <div class="col-sm-auto">
+                    <div class="d-flex gap-3">
+                        <button type="button" class="btn btn-white" (click)="modal.dismiss('Cross click')"
+                            aria-label="Close">Cancel</button>
+                        <button type="button" class="btn btn-danger" (click)="deleteImage(modalContent)"
+                            [disabled]="loading">
+                            <i class="bi-trash"></i> Delete
+                            <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <!-- End Col -->
+            </div>
+            <!-- End Row -->
         </div>
         <!-- End Footer -->
-      </div>
     </div>
-  </div>
-  <!-- End Add Image from URL Modal -->
-
-
+    <!-- </div>
+    </div> -->
+</ng-template>

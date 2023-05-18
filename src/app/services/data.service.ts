@@ -32,7 +32,7 @@ export class DataService {
 
   //verify customer Bank Accounts
   public verifyBankAccount(options: string) {
-    return this.httpService.getPaystack('bank/resolve?'+ options);
+    return this.httpService.getPaystack('bank/resolve?' + options);
   }
 
   public getAllCountries() {
@@ -41,17 +41,17 @@ export class DataService {
 
   //get all Mosave Transfers on paystack
   public getAllTransfers(options: string) {
-    return this.httpService.getPaystack('transfer?'+options);
+    return this.httpService.getPaystack('transfer?' + options);
   }
 
   //fetch all Mosave Transfers on paystack by customer Id
   public getCustomerTransferRecord(value: string) {
-    return this.httpService.getPaystack('transfer/'+ value);
+    return this.httpService.getPaystack('transfer/' + value);
   }
 
   // fet all Transfer Recipients
   public getTransferRecipients(options: string) {
-    return this.httpService.getPaystack('transferrecipient?'+ options);
+    return this.httpService.getPaystack('transferrecipient?' + options);
   }
 
   // ALL GET REQUEST
@@ -118,7 +118,7 @@ export class DataService {
   // Get request to display all savings plan
   public getCustomerSavingsPlans(customerId: any): Observable<any> {
     return this.httpService.get('getcustomer_savingplans/' + customerId + '?' + this.time);
-  } 
+  }
 
   // Get request to display all savings plan
   public getAllSavingsPlans(customerId: any) {
@@ -148,20 +148,20 @@ export class DataService {
   public getAllMerchants() {
     return this.httpService.get('all/programmerchants');
   }
-  
+
   // Get all merchants  - view all tickets - GET
   public getAllTickets() {
     return this.httpService.get('all/eventickets');
   }
 
-  // Get all merchants
+  // Get all programs
   public getAllPrograms() {
     return this.httpService.get('all/programs');
   }
 
   //tickets/sold/:eventid', supply event id
   public getTicketsById(eventid: number) {
-    return this.httpService.get('tickets/sold/'+eventid);
+    return this.httpService.get('tickets/sold/' + eventid);
   }
 
   // ALL POST REQUEST
@@ -243,30 +243,34 @@ export class DataService {
 
   // create merchant
   createMerchant(data: any): Observable<any> {
-    return this.httpService.post('create/merchant', data);
+    return this.httpService.postWithImage('create/merchant', data);
   }
-// '$merchantid','$password','$merchantname','$email','$address','$city','$state','$country',
-// '$cperson','$phonno',
 
-// create program
-createProgram(data: any): Observable<any> {
-  return this.httpService.post('create/program', data);
-}
+  // create program
+  createProgram(data: any): Observable<any> {
+    return this.httpService.postWithImage('create/program', data);
+  }
 
-// - POST- supply eventid
-deleteEventticket(data: any): Observable<any> {
-  return this.httpService.post('delete/eventticket', data);
-}
-// - POST - supply eventid including all other params
-updateEventTicket(data: any): Observable<any> {
-  return this.httpService.postWithImage('update/eventticket', data);
-}
+  // - POST- supply eventid
+  deleteEventTicket(data: any): Observable<any> {
+    return this.httpService.post('delete/eventticket', data);
+  }
 
-//fetch all states by country
-fetchStatesByCountry(data: any) {
-  return this.httpService.postExternal('states', data);
-}
-  
+  // - POST - supply eventid including all other params
+  updateEventTicket(data: any): Observable<any> {
+    return this.httpService.postWithImage('update/eventticket', data);
+  }
+
+  // - POST - supply eventid including all other params
+  deleteEventTicketImg(data: any): Observable<any> {
+    return this.httpService.postWithImage('delete/eventticket_img', data);
+  }
+
+  //fetch all states by country
+  fetchStatesByCountry(data: any) {
+    return this.httpService.postExternal('states', data);
+  }
+
 
 
 }

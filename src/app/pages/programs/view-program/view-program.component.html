@@ -160,7 +160,7 @@
                 
                 <td>
                   <div class="">
-                    <button type="button" class="btn btn-white btn-sm" id="button"  aria-expanded="false" 
+                    <button type="button" class="btn btn-white btn-sm" id="button" [disabled]="true"  aria-expanded="false" 
                     (click)="viewRecord(programType === 'merchant' ? item?.merchantId : item?.programId);">
                       <i class="bi-eye ms-1"></i> View
                     </button>

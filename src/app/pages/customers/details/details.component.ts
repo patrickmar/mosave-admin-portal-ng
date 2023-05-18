@@ -109,7 +109,7 @@ export class DetailsComponent implements OnInit {
       firstname: new FormControl('', Validators.required),
       lastname: new FormControl('', Validators.required),
       account_num: new FormControl('', Validators.required),
-      customerId: new FormControl('', Validators.required),
+      customerId: new FormControl(this.customerId, Validators.required),
       accountTypeId: new FormControl('', Validators.required),
       agentId: new FormControl(this.user.sn, Validators.required),
       planId: new FormControl(parseInt(''), Validators.required),
@@ -196,7 +196,7 @@ export class DetailsComponent implements OnInit {
         this.withdrawalForm.get('bank')?.get('name')?.setValidators(Validators.required);
         this.withdrawalForm.get('bank')?.get('bank_code')?.setValidators(Validators.required);
       } else {
-        this.withdrawalForm.get('myEmailField')?.clearValidators();
+        this.withdrawalForm.get('bank')?.clearValidators();
       }
     }
 );
@@ -439,12 +439,14 @@ export class DetailsComponent implements OnInit {
   performTransaction(form: any, otp: string) {
     console.log(form);
     if (form.source == "Savings") {
+      this.getSelectedPlan(this.savingsForm);
       if (this.savingsForm.valid) {
         this.addSavings(otp);
       } else {
         this.toastService.showError('Savings form not valid', 'Error');
       }
     } else if (form.source == "Withdrawal") {
+      this.getSelectedPlan(this.withdrawalForm);
       if (this.withdrawalForm.valid) {
         this.Withdrawal(otp);
       } else {

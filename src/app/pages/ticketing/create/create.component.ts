@@ -116,6 +116,8 @@ export class CreateComponent implements OnInit {
       this.showEndDate = true;
     } else {
       this.showEndDate = false;
+      this.endDate().at(0).get('date')?.setValue("");
+      this.endDate().at(0).get('time')?.setValue("");
     }
   }
 
@@ -328,7 +330,6 @@ export class CreateComponent implements OnInit {
   }
 
   onRemove(item: any, e?: any) {
-    console.log(e);
     this.files.splice(this.files.indexOf(item), 1);
     this.setFiles.splice(this.setFiles.indexOf(item), 1);
     if(e != undefined){
@@ -384,11 +385,14 @@ async onSubmit() {
         this.dataService.createEventTicket(formData).subscribe((res: any) => {
           console.log(res);
           this.loading = false;
-          if (res.error == false) {
-            this.toastService.showSuccess(res?.message, 'Success');
+          if (res.error == false) {            
             this.ticketForm.reset();
-            this.removeAll(this.setFiles)
-            this.removeAll(this.files);            
+            this.ticketCategories().controls.length = 1;
+            // this.removeAll(this.setFiles)
+            // this.removeAll(this.files);  
+            this.setFiles.length = 0;
+            this.files.length = 0;  
+            this.toastService.showSuccess(res?.message, 'Success');        
           } else {
             this.toastService.showError(res?.message, 'Error');   
           }

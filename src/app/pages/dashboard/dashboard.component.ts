@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   public doughnutHalfChartData!: any; 
    
 
-  public barChartOptions: any = this.getChartConfig1(500000, '₦');
+  public barChartOptions: any = this.getChartConfig1(50000, '₦');
   public barChartType: ChartType = 'bar';
   public barChartLabels = ["Savings", "Withdrawal"];
   public barChartData!: any;
@@ -188,7 +188,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
              min: 0,
              //max: 100000,
             ticks: {
-              stepSize: stepSize,
+              //stepSize: stepSize,
               //padding: 10,
             },
           }

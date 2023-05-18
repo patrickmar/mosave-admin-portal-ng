@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { DataService } from 'src/app/services/data.service';
+import { StatService } from 'src/app/services/stat.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
@@ -32,18 +34,23 @@ export class UpdateComponent implements OnInit {
   allMerchants!: Array<any>;
   setFiles: Array<any> = [];
   files: File[] = [];
+  modalContent!: object | any;
   bearers = [{name:"MoLoyal", value: "account"}, {name:"Client", value: "subaccount"}]
   loading!: boolean;
   path = environment.app.baseUrl+ environment.app.path+ environment.app.allImagesPath;
+  banners: any;
+  maxFileSize: number = 1000000;
 
-  constructor(private fb: FormBuilder, private dataService: DataService, 
-    private route: ActivatedRoute, private toastService: ToastService) { 
+  constructor(private fb: FormBuilder, private dataService: DataService,
+    private route: ActivatedRoute, private toastService: ToastService, 
+    private modalService: NgbModal, private statService: StatService) { 
       this.getAllMerchants();
 
       this.ticketForm = this.fb.group({
         eventTitle: ['', [Validators.required, Validators.minLength(5)]],  
         venue: ['', [Validators.required, Validators.minLength(5)]],
         submerchantId: new FormControl('', Validators.required),
+        merchantId: new FormControl('', Validators.required),
         paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
         vendor: ['', [Validators.minLength(5)]],
         chargesBearer: ['', [Validators.required, Validators.minLength(5)]],
@@ -116,6 +123,8 @@ export class UpdateComponent implements OnInit {
       this.showEndDate = true;
     } else {
       this.showEndDate = false;
+      this.endDate().at(0).get('date')?.setValue("");
+      this.endDate().at(0).get('time')?.setValue("");
     }
   }
 
@@ -135,11 +144,13 @@ export class UpdateComponent implements OnInit {
       });
       this.data = filter[0];
       const data = this.data;
+      this.banners = this.data.imgs;     
 
       const ticketForm = {
         eventTitle: data?.title,  
         venue: data?.venue,
         submerchantId: data?.submerchantId,
+        merchantId: data?.merchantId,
         paystackAcctId: data?.Paystack_Acct,
         vendor: data?.vendor,
         chargesBearer: data?.paystack_bearer,
@@ -167,6 +178,8 @@ export class UpdateComponent implements OnInit {
 
     const start = [ {date: data?.from_date, time: data?.from_time}]
     const end = [ { date: data?.to_date, time: data?.to_time }  ]
+    console.log(start);
+    console.log(end);
 
       if(Array.isArray(start) && start?.length > 0 ){  
         start?.map((item: any) => {      
@@ -305,6 +318,13 @@ export class UpdateComponent implements OnInit {
     }
   }
 
+  updateMerchant(event: any){
+    const value = this.allMerchants.filter((obj)=>{
+       return obj.merchantId === event.target.value;
+     })
+     this.ticketForm.get('merchantId')?.setValue(value[0].programId);
+   }
+
   removeAll(array: Array<any>){
     for (let i = 0; i < array.length; i++) {
       const element = array[i]; 
@@ -313,8 +333,8 @@ export class UpdateComponent implements OnInit {
   }
      
   async onSubmit() {
-    var val = $("#quillArea .ql-editor").html();
-    this.ticketForm.get('description')?.setValue(val);  
+    const val = $("#quillArea .ql-editor").html();
+    val != undefined ? this.ticketForm.get('description')?.setValue(val) : "";  
     const form = this.ticketForm.value;
     console.log(form);
      
@@ -327,12 +347,14 @@ export class UpdateComponent implements OnInit {
       const formData = new FormData();
       const eventId = String(this.getTicketId());
       formData.append("eventid", eventId);
+      console.log(this.setFiles);
+      console.log(this.files);
       if (this.setFiles.length > 0) {
         for (var i = 0; i < this.setFiles.length; i++) {
           const fileName = new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
           const response = await fetch(this.setFiles[i].file.base64);
           const blob = await response.blob();
-          formData.append("banner[]", blob, fileName);
+          formData.append("banner[]", blob, fileName); 
         }
       }      
 
@@ -349,9 +371,15 @@ export class UpdateComponent implements OnInit {
           console.log(res);
           this.loading = false;
           if (res.error == false) {
-            this.toastService.showSuccess(res?.message, 'Success');
-            this.removeAll(this.setFiles)
-            this.removeAll(this.files);            
+            this.ticketCategories().controls.length = 0;
+            this.startDate().controls.length = 0;
+            this.endDate().controls.length = 0; 
+            this.setFiles.length = 0;
+            this.files.length = 0;
+            if(this.ticketCategories().controls?.length == 0){ 
+              this.getTicket();
+            }            
+            this.toastService.showSuccess(res?.message, 'Success');         
           } else {
             this.toastService.showError(res?.message, 'Error');   
           }
@@ -368,7 +396,118 @@ export class UpdateComponent implements OnInit {
     }
 
     
-  }  
+  }
+
+  deleteModal(content: any, tableRow: any) {
+    this.modalContent = tableRow;
+    this.modalService.open(content);
+  }
+
+  deleteImage(item: any){
+    console.log(item);
+    const value = {
+      sn: item?.sn,
+      eventid: item?.eventId
+    }
+    this.loading = true;
+    try {      
+      this.dataService.deleteEventTicketImg(value).subscribe((res:any)=>{
+        console.log(res);
+        this.loading = false;
+        this.toastService.showSuccess(res?.message, 'Success');
+        this.modalService.dismissAll('Delete completed');
+        const banners = this.data.imgs.filter((obj: any)=>{
+          return obj.sn !== item.sn;
+        });
+        console.log(banners);
+        this.banners = banners;
+      })    
+    } catch (error) {
+      this.loading = false;
+      this.toastService.showError('Could not delete banner. Please check your internet and try again.', 'Error');
+    }
+    
+  }
+
+  onRemove(item: any, e?: any) {
+    this.files.splice(this.files.indexOf(item), 1);
+    this.setFiles.splice(this.setFiles.indexOf(item), 1);
+    if(e != undefined){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+}
+
+getFilesize(size: number) {
+  return this.statService.getFilesize(size, true);
+ }
+
+ onSelect(e: any) {
+  if(e.addedFiles.length > 0){
+    this.files.push(...e.addedFiles);
+    var regex = /(\.jpg|\.jpeg|\.svg|\.pdf|\.gif|\.png)$/i;
+    let file2 = e.addedFiles;
+    const doe = [...this.setFiles];
+    for (let i = 0; i < file2.length; i++) {
+      const doc = file2[i];
+      if (!regex.exec(doc.name)) {
+        this.toastService.showError("Accepted file format is (.png, .jpg, .jpeg, .pdf)", 'Error');
+      } else if (doc.size > 1000000) {
+        this.toastService.showError("Maximum of 1MB file size is allowed", 'Error');
+      } else {
+        // if we want to compress the image. newX is width, newY is height
+        // this.compressImage(doc, 100, 100).then(compressed => {
+        //   this.resizedBase64 = compressed;
+        //   console.log(this.resizedBase64);
+        // })
+        this.getBase64(doc).then((result: any) => {
+          doc["base64"] = result;
+          doe.push({ file: doc, base64URL: result });
+          this.setFiles = doe;
+        }).catch((err: any) => {
+        });
+      }
+    }
+
+  }else if(e.rejectedFiles.length > 0) {
+    for (let i = 0; i < e.rejectedFiles.length; i++) {
+      if(e.rejectedFiles[i].reason === "type"){
+        this.toastService.showError('Accepted file format is (.png, .jpg, .jpeg, .pdf)', 'Error');
+      }else if( e.rejectedFiles[i].reason === "size") {
+        this.toastService.showError('Maximum of ' +  this.statService.getFilesize(this.maxFileSize, false) +' file size is allowed', 'Error');
+      } else {
+        this.toastService.showError('Unknown Error. Please try another file', 'Error')
+      }        
+    }
+  }
+  
+
+
+  // const formData = new FormData();
+
+  // for (var i = 0; i < this.files.length; i++) {
+  //   formData.append("file[]", this.files[i]);
+  // }
+  // console.log(formData);
+}
+
+getBase64 (file: any) {
+  return new Promise(resolve => {
+    //let baseURL = "";
+    // Make new FileReader
+    let reader = new FileReader();
+    // Convert the file to base64 text
+    reader.readAsDataURL(file);
+    // on reader load something...
+    reader.onload = () => {
+      // Make a fileInfo Object
+      const baseURL = reader.result;
+      resolve(baseURL);
+    };
+  });
+};
+
+  
 
   
 

@@ -466,8 +466,8 @@
                               <option [value]="changeNumber(plan.plan_id)"
                                 *ngFor="let plan of userPlans; let i = index;"
                                 attr.data-option-template='<span class="d-flex align-items-center">
-                              <span class="text-truncate">{{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦"))}}</span></span>'>
-                                {{plan.plan_name}} - {{plan.plan_amount | currency: '₦'}}
+                              <span class="text-truncate">{{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦")).concat(" (Bal: ").concat( plan.available_bal | currency: "₦" ).concat(")")}}</span></span>'>
+                              {{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦")).concat(" (Bal: ").concat( plan.available_bal | currency: "₦" ).concat(")")}}
                               </option>
                             </select>
                           </div>
@@ -592,8 +592,8 @@
                           }'>
                               <option value="{{plan.plan_id}}" *ngFor="let plan of userPlans; let i = index;"
                                 attr.data-option-template='<span class="d-flex align-items-center">
-                              <span class="text-truncate">{{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦"))}}</span></span>'>
-                                {{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦"))}}
+                              <span class="text-truncate">{{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦")).concat(" (Bal: ").concat( plan.available_bal | currency: "₦" ).concat(")")}}</span></span>'>
+                              {{plan.plan_name.concat(" - ").concat((plan.plan_amount | currency: "₦")).concat(" (Bal: ").concat( plan.available_bal | currency: "₦" ).concat(")")}}
                               </option>
                             </select>
                           </div>

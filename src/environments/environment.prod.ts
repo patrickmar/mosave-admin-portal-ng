@@ -4,7 +4,7 @@ export const environment = {
     baseUrl: "https://moloyal.com/",
     path: "test/mosave/adminscript/api/",
     imagePath: "test/mosave/script/api/",
-    allImagesPath: 'img_uploads/',
+    allImagesPath: 'ticket_images/',
   },
   logo: "../../../assets/img/logo/logo.png",
   logo2: "../../../assets/img/logo/logo2.png",

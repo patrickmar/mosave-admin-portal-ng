@@ -43,19 +43,11 @@
                                     <!-- Avatar -->
                                     <label class="avatar avatar-xl avatar-circle avatar-uploader me-5"
                                         for="avatarUploader">
-                                        <img id="avatarImg" class="avatar-img" src="./assets/img/160x160/img1.jpg"
+                                        <img id="avatarImg" class="avatar-img" [src]="setFiles.length > 0 ? setFiles[0].base64URL : './assets/img/160x160/img1.jpg' "
                                             alt="Image Description">
 
                                         <input type="file" class="js-file-attach avatar-uploader-input"
-                                            (change)="checkImg()" formControlName="img" id="avatarUploader"
-                                            data-hs-file-attach-options='{
-                                "textTarget": "#avatarImg",
-                                "mode": "image",
-                                "targetAttr": "src",
-                                "resetTarget": ".js-file-attach-reset-img",
-                                "resetImg": "./assets/img/160x160/img1.jpg",
-                                "allowTypes": [".png", ".jpeg", ".jpg"]
-                             }'>
+                                        (change)="onSelect($event)" id="avatarUploader">
 
                                         <span class="avatar-uploader-trigger">
                                             <i class="bi-pencil avatar-uploader-icon shadow-sm"></i>
@@ -63,7 +55,7 @@
                                     </label>
                                     <!-- End Avatar -->
 
-                                    <button type="button" class="js-file-attach-reset-img btn btn-white">Delete</button>
+                                    <button type="button" class="js-file-attach-reset-img btn btn-white" (click)="deleteImage()">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -72,14 +64,31 @@
                         <!-- Form -->
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="mb-4">
-                                    <label for="merchantIdLabel" class="form-label">{{programType | titlecase}} Id</label>
-                                    <input type="text" class="form-control" formControlName="merchantId"
-                                        id="merchantIdLabel" aria-label="merchantId">
+                                <div class="mb-4">                                    
+                                    <ng-container *ngIf="programType === 'program';else elseTemplate">
+                                        <label for="programIdLabel" class="form-label">{{programType | titlecase}} Id</label>
+                                        <input type="number" class="form-control" formControlName="programId"
+                                        id="programIdLabel" aria-label="programId">
+                                    </ng-container>                                                                       
+                                    <ng-template #elseTemplate>
+                                        <label for="programLabel" class="form-label">Program</label>
+                                        <!-- Select -->
+                                    <div class="tom-select-custom">
+                                        <select class=" form-select" autocomplete="off" id="ProgramLabel" formControlName="programId" data-hs-tom-select-options='{
+                                          "searchInDropdown": false,
+                                          "hideSearch": true,
+                                          "placeholder": "Select Program"
+                                        }'>
+                                            <option *ngFor="let item of allPrograms" [value]="item.programId">{{item.programName}}</option>                                           
+                                        </select>
+                                    </div>
+                                    <!-- End Select -->
+
+                                    </ng-template>
                                         <div class="error-container">
-                                            <ng-container *ngFor="let v of validations.merchantId">
+                                            <ng-container *ngFor="let v of validations.programId">
                                                 <div class="error-message"
-                                                    *ngIf="programForm.get('merchantId')?.hasError(v.type) && (programForm.get('merchantId')?.dirty || programForm.get('merchantId')?.touched)">
+                                                    *ngIf="programForm.get('programId')?.hasError(v.type) && (programForm.get('programId')?.dirty || programForm.get('programId')?.touched)">
                                                     <small class="text-danger">{{ v.message }}</small>
                                                 </div>
                                             </ng-container>
@@ -127,7 +136,7 @@
                                     <label for="phoneLabel" class="form-label">Phone</label>
                                     <div class="input-group input-group-sm-vertical">
                                         <input type="text" class="js-input-mask form-control" formControlName="phoneno"
-                                            id="phoneLabel" placeholder="{{ programForm.value.country_phone.country.sample_phone }}" aria-label="xxxx xxx xxxx"
+                                            id="phoneLabel" placeholder="{{ programForm.value?.country_phone?.country?.sample_phone }}" aria-label="xxxx xxx xxxx"
                                             data-hs-mask-options='{
                              "mask": "00000000000"
                            }'>
@@ -254,7 +263,7 @@
                                           "hideSearch": true,
                                           "placeholder": "Select State"
                                         }'>
-                                            <option *ngFor="let item of states" [value]="item.name">{{item.name}}</option>
+                                            <option *ngFor="let item of states" [ngValue]="item.name">{{item.name}}</option>
                                         </select>
                                     </div>
                                     <!-- End Select -->
@@ -340,7 +349,7 @@
 
                             <div class="input-group">
                                 <input type="text" class="form-control" formControlName="contactPhoneNumber"
-                                    id="phonenoLabel" placeholder="{{programForm.value.country_phone.country.sample_phone }}">
+                                    id="phonenoLabel" placeholder="{{programForm.value?.country_phone?.country?.sample_phone }}">
                             </div>
                             <div class="error-container">
                                 <ng-container *ngFor="let v of validations.contactPhoneNumber">
@@ -365,7 +374,7 @@
         </div>
 
         <!-- [disabled]="loading || !programForm.valid" -->
-        <button type="submit" class="btn btn-primary" [disabled]="loading || !programForm.valid" >Submit
+        <button type="submit" class="btn btn-primary" [disabled]="loading || !programForm.valid">Submit
             <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
                 <span class="visually-hidden">Loading...</span>
             </div>

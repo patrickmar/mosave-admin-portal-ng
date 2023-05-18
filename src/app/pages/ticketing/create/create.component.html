@@ -146,7 +146,7 @@
                 <div class="card mb-3 mb-lg-5">
                     <!-- Header -->
                     <div class="card-header card-header-content-between">
-                        <h4 class="card-header-title">Media</h4>
+                        <h4 class="card-header-title">Banner</h4>
 
                         <!-- Dropdown -->
                         <!-- <div class="dropdown">
@@ -174,7 +174,7 @@
                     <div class="card-body">
                         <!-- Dropzone -->
                         <!-- <ngx-dropzone (change)="onSelect($event)"> -->
-                            <div id="attachFilesNewProjectLabel" 
+                            <div id="attachBanner" 
                             (change)="onSelect($event)" 
                             accept="image/jpeg,image/jpg,image/png,image/gif" 
                             [multiple]="true" 
@@ -257,7 +257,7 @@
                                             <input type="text" formControlName="date" id="eventDateRangeLabel"
                                                 class="flatpickr-custom form-control mb-2" placeholder="Select date"
                                                 data-hs-flatpickr-options='{
-                                                         "dateFormat": "m/d/Y",
+                                                         "dateFormat": "m-d-Y",
                                                          "mode": "single",
                                                          "minDate": "today"
                                                        }'>
@@ -297,7 +297,7 @@
                                                 <input type="text" formControlName="date" id="eventDateRangeLabel3"
                                                     class="flatpickr-custom form-control mb-2" placeholder="Select date"
                                                     data-hs-flatpickr-options='{
-                                                                             "dateFormat": "m/d/Y",
+                                                                             "dateFormat": "m-d-Y",
                                                                              "mode": "single",
                                                                              "minDate": "today"
                                                                            }'>

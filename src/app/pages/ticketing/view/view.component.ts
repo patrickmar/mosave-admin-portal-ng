@@ -189,7 +189,7 @@ export class ViewComponent implements OnInit, OnDestroy, AfterViewInit {
       eventid: id
     }
     try {
-      this.dataService.deleteEventticket(value).subscribe((res: any) => {
+      this.dataService.deleteEventTicket(value).subscribe((res: any) => {
         console.log(res);
         this.loading = false;
         // if(res.error == false){

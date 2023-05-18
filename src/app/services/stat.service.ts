@@ -265,8 +265,8 @@ export class StatService {
     const result = elements.reduce((previous, current) => {
       const yearMonth = moment(current.transDate).format('MMM YYYY');
       let newRecord = previous.find((e: any) => e.month === yearMonth);
-      if (!newRecord) { newRecord = { month: yearMonth, savings: 0, female: 0 }; previous.push(newRecord); }
-      if (current.gender === "Male") newRecord.savings++;
+      if (!newRecord) { newRecord = { month: yearMonth, male: 0, female: 0 }; previous.push(newRecord); }
+      if (current.gender === "Male") newRecord.male++;
       if (current.gender === "Female") newRecord.female++;
       return previous;
     }, []);

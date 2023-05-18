@@ -140,7 +140,7 @@ export class ViewProgramComponent implements OnInit, OnDestroy {
       })
     } catch (error) {
       console.log(error);
-      this.toastService.showError('Could not fetch all Merchants', 'Error');
+      this.toastService.showError('Could not fetch all '+this.getProgramType(), 'Error');
     }
   }
 
