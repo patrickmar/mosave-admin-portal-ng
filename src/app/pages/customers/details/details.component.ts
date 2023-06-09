@@ -34,7 +34,7 @@ export class DetailsComponent implements OnInit {
   user: any;
   fullName!: string;
   response: any;
-  customerTrxs: any;
+  customerTrxs!: Array<any>;
   test!: Array<any>;
   modalContent!: object | any;
   transactionValues!: object | any;
@@ -58,6 +58,7 @@ export class DetailsComponent implements OnInit {
   verifiedAcctName!: string;
   error: boolean = false;
   bankWithdrawal: boolean = false;
+  maxCount = 20;
 
   @ViewChild('ngOtpInput', { static: false }) ngOtpInput: any;
   config = {

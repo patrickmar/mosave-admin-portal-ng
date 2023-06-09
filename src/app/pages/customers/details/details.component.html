@@ -689,7 +689,7 @@
               <div class="card">
                 <!-- Header -->
                 <div class="card-header d-flex gap-2">
-                  <h4 class="card-header-title">Last 20 Transactions</h4>
+                  <h4 class="card-header-title">Last {{maxCount}} Transactions</h4>
 
                   <div class="ms-auto">
                     <a [routerLink]="['/customer', customer?.sn, 'trans-history']" class="btn btn-light">View All
@@ -714,7 +714,7 @@
 
                     <tbody>
                       <ng-container *ngIf="customerTrxs != undefined && customerTrxs.length > 0 else elseTemplate">                      
-                      <tr *ngFor="let t of customerTrxs; let i = index;">
+                      <tr *ngFor="let t of customerTrxs | slice:0:maxCount; let i = index;">
                         <td><a type="button" (click)="open(content, t)">{{t?.transref}}</a></td>
                         <td>
                           <span class="badge bg-soft-success text-success"
