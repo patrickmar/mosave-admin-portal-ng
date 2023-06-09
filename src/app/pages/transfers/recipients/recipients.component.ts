@@ -22,8 +22,8 @@ export class RecipientsComponent implements OnInit, OnDestroy {
   emptyTable = environment.emptyTable;
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
-  imageBaseURL: string = environment.app.baseUrl+environment.app.imagePath;
-  avatar = environment.avatar;  
+  imageBaseURL: string = environment.app.baseUrl + environment.app.imagePath;
+  avatar = environment.avatar;
   successRecords!: Array<any>;
   failedRecords!: Array<any>;
   totalSum!: number;
@@ -36,13 +36,16 @@ export class RecipientsComponent implements OnInit, OnDestroy {
   thisMonthTransferSum!: number;
   page = 'recipients';
 
+  public loading = false;
+  public showComponent = false;
+
   constructor(private dataService: DataService, private toastService: ToastService,
     private route: Router) {
     //this.jsInit();
     //this.jsInit2(); 
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     const dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 20,
@@ -61,25 +64,25 @@ export class RecipientsComponent implements OnInit, OnDestroy {
           extend: 'copy',
           className: 'd-none',
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5 ]
+            columns: [0, 1, 2, 3, 4, 5]
           }
         },
         {
           extend: 'print',
           className: 'd-none',
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5 ]
+            columns: [0, 1, 2, 3, 4, 5]
           },
-          
+
         },
         {
           extend: 'excel',
           className: 'd-none',
-          filename: ()=> {
-            return 'MoSave_'+this.page+ '_report_' + new Date().getTime();
+          filename: () => {
+            return 'MoSave_' + this.page + '_report_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5 ]
+            columns: [0, 1, 2, 3, 4, 5]
           },
           // customize: function (pdf: any) { // or use customizeData
           //   this.addExtraColumn(pdf);
@@ -88,21 +91,21 @@ export class RecipientsComponent implements OnInit, OnDestroy {
         {
           extend: 'csv',
           className: 'd-none',
-          filename: ()=> {
-            return 'MoSave_'+this.page+ '_report_' + new Date().getTime();
+          filename: () => {
+            return 'MoSave_' + this.page + '_report_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5 ]
+            columns: [0, 1, 2, 3, 4, 5]
           }
         },
         {
           extend: 'pdf',
           className: 'd-none',
-          filename: ()=> {
-            return 'MoSave_'+this.page+ '_report_' + new Date().getTime();
+          filename: () => {
+            return 'MoSave_' + this.page + '_report_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5 ]
+            columns: [0, 1, 2, 3, 4, 5]
           }
         },
       ],
@@ -120,29 +123,33 @@ export class RecipientsComponent implements OnInit, OnDestroy {
 
   getAllTransfers() {
     const config = {
-      perPage: 1000+''
+      perPage: 1000 + ''
     }
     let params = decodeURIComponent(new URLSearchParams(config).toString());
     console.log(params);
     try {
+      this.loading = true;
       this.dataService.getTransferRecipients(params).subscribe((res: any) => {
         console.log(res);
-        if(res?.status == true){
+        this.loading = false;
+        this.showComponent = true;
+        if (res?.status == true) {
           this.recipientRecords = res.data;
           this.dtTrigger.next('');
-        }else {
-          this.toastService.showError(res?.message, 'Error');  
+        } else {
+          this.toastService.showError(res?.message, 'Error');
         }
-       });
+      });
     } catch (error: any) {
       console.log(error);
+      this.loading = false;
       this.toastService.showError(error?.message, 'Error');
     }
-     
+
   }
 
-  viewRecord(id: string){
-    if(id){
+  viewRecord(id: string) {
+    if (id) {
       this.route.navigate(['/transfers', btoa(id), 'details']);
     }
   }
@@ -150,21 +157,17 @@ export class RecipientsComponent implements OnInit, OnDestroy {
   download(name: string) {
     var table = '#datatable';
     console.log(name);
-    $(table).DataTable().button('.buttons-'+name).trigger();
+    $(table).DataTable().button('.buttons-' + name).trigger();
   }
 
   filter(event: any, tableid: number, tableName: string,) {
     var value = event.target.value;
-      if(value.length > 0){
-        $("#datatableSearch" + tableid).on("keyup", ()=> {
-          if (value === null) value = '';
-          $("#" + tableName).DataTable().search(value).draw();
-        });
-      }
+    if (value.length > 0) {
+      $("#datatableSearch" + tableid).on("keyup", () => {
+        if (value === null) value = '';
+        $("#" + tableName).DataTable().search(value).draw();
+      });
+    }
   }
-
-
-
-
 
 }

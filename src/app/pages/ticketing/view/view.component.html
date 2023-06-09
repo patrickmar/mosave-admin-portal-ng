@@ -1,5 +1,5 @@
 <!-- Content -->
-<div class="content container-fluid">
+<div class="content container-fluid" >
     <!-- Page Header -->
     <div class="page-header">
       <div class="row align-items-center mb-3">
@@ -196,7 +196,7 @@
               <td class="table-column-ps-0">
                 <a class="d-flex align-items-center" [routerLink]="['/ticket', t?.sn, 'update']">
                   <div class="flex-shrink-0">
-                    <img class="avatar avatar-lg" src="{{path + t?.image1}}" alt="{{t?.image1}}" onerror="this.src='https:/'+'/placehold.co/600x400?text=No+Banner'">
+                    <img class="avatar avatar-lg" src="{{path + t.imgs[0].img}}" alt="{{t?.image1}}" onerror="this.src='https:/'+'/placehold.co/600x400?text=No+Banner'">
                   </div>
                   <!-- <div class="flex-grow-1 ms-3">
                     <h5 class="text-inherit mb-0">{{t?.title}}</h5>
@@ -253,9 +253,10 @@
     <!-- End Card -->
   </div>
   <!-- End Content -->
+
+  <ngx-loading [show]="loading"></ngx-loading>
+
   <ng-template #content let-modal>
-  <!-- <div class="modal fade" id="createAKIKeyModal" tabindex="-1" aria-labelledby="deleteEventModal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document"> -->
       <div class="modal-content">
         <!-- Header -->
         <div class="modal-header">
@@ -276,7 +277,7 @@
             <div class="col-sm mb-2 mb-sm-0">
               <p class="modal-footer-text">What you need to know? 
                 <i class="bi-question-circle" data-bs-toggle="tooltip" data-bs-placement="top" 
-                title="Deleting this event means you wont be able to have access to the sales report and you want see it on the front end."></i></p>
+                ngbTooltip="Deleting this event means you wont be able to have access to the sales report and you want see it on the front end."></i></p>
             </div>
             <!-- End Col -->
 
@@ -297,6 +298,4 @@
         </div>
         <!-- End Footer -->
       </div>
-    <!-- </div>
-  </div> -->
   </ng-template>

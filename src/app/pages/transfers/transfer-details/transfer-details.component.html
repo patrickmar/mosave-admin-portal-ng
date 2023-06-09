@@ -1,5 +1,5 @@
 <!-- Content -->
-<div class="content container-fluid">
+<div class="content container-fluid" *ngIf="showComponent">
     <!-- Page Header -->
     <div class="page-header d-print-none">
         <div class="row align-items-center">
@@ -72,7 +72,7 @@
     <div class="row mb-2">
         <div class="col-sm-auto">
             <div class="d-flex gap-2">
-              <button type="button" (click)="goBack()" class="btn btn-ghost-dark btn-icon btn-sm rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Go back">
+              <button type="button" (click)="goBack()" class="btn btn-ghost-dark btn-icon btn-sm rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right" ngbTooltip="Go back">
                 <i class="bi-arrow-left display-4 font-bold"></i>
               </button>
             </div>
@@ -310,3 +310,5 @@
     <!-- End Row -->
 </div>
 <!-- End Content -->
+
+<ngx-loading [show]="loading"></ngx-loading>

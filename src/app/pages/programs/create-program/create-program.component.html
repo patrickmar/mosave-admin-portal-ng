@@ -6,7 +6,8 @@
             <div class="col-sm mb-2 mb-sm-0">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/programs/view/program">Programs</a>
+                        <li class="breadcrumb-item"><a class="breadcrumb-link"
+                                routerLink="/programs/view/program">Programs</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Create {{programType | titlecase}}</li>
                     </ol>
@@ -16,7 +17,8 @@
             </div>
             <!-- End Col -->
             <div class="col-sm-auto">
-                <a class="btn btn-primary" routerLink="/programs/view/{{programType}}">View All {{programType | titlecase}}s</a>
+                <a class="btn btn-primary" routerLink="/programs/view/{{programType}}">View All {{programType |
+                    titlecase}}s</a>
             </div>
             <!-- End Col -->
         </div>
@@ -43,11 +45,12 @@
                                     <!-- Avatar -->
                                     <label class="avatar avatar-xl avatar-circle avatar-uploader me-5"
                                         for="avatarUploader">
-                                        <img id="avatarImg" class="avatar-img" [src]="setFiles.length > 0 ? setFiles[0].base64URL : './assets/img/160x160/img1.jpg' "
+                                        <img id="avatarImg" class="avatar-img"
+                                            [src]="setFiles.length > 0 ? setFiles[0].base64URL : './assets/img/160x160/img1.jpg' "
                                             alt="Image Description">
 
                                         <input type="file" class="js-file-attach avatar-uploader-input"
-                                        (change)="onSelect($event)" id="avatarUploader">
+                                            (change)="onSelect($event)" id="avatarUploader">
 
                                         <span class="avatar-uploader-trigger">
                                             <i class="bi-pencil avatar-uploader-icon shadow-sm"></i>
@@ -55,7 +58,8 @@
                                     </label>
                                     <!-- End Avatar -->
 
-                                    <button type="button" class="js-file-attach-reset-img btn btn-white" (click)="deleteImage()">Delete</button>
+                                    <button type="button" class="js-file-attach-reset-img btn btn-white"
+                                        (click)="deleteImage()">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -64,45 +68,49 @@
                         <!-- Form -->
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="mb-4">                                    
+                                <div class="mb-4">
                                     <ng-container *ngIf="programType === 'program';else elseTemplate">
-                                        <label for="programIdLabel" class="form-label">{{programType | titlecase}} Id</label>
+                                        <label for="programIdLabel" class="form-label">{{programType | titlecase}}
+                                            Id</label>
                                         <input type="number" class="form-control" formControlName="programId"
-                                        id="programIdLabel" aria-label="programId">
-                                    </ng-container>                                                                       
+                                            id="programIdLabel" aria-label="programId">
+                                    </ng-container>
                                     <ng-template #elseTemplate>
                                         <label for="programLabel" class="form-label">Program</label>
                                         <!-- Select -->
-                                    <div class="tom-select-custom">
-                                        <select class=" form-select" autocomplete="off" id="ProgramLabel" formControlName="programId" data-hs-tom-select-options='{
+                                        <div class="tom-select-custom">
+                                            <select class=" form-select" autocomplete="off" id="ProgramLabel"
+                                                formControlName="programId" data-hs-tom-select-options='{
                                           "searchInDropdown": false,
                                           "hideSearch": true,
                                           "placeholder": "Select Program"
                                         }'>
-                                            <option *ngFor="let item of allPrograms" [value]="item.programId">{{item.programName}}</option>                                           
-                                        </select>
-                                    </div>
-                                    <!-- End Select -->
+                                                <option *ngFor="let item of allPrograms" [value]="item.programId">
+                                                    {{item.programName}}</option>
+                                            </select>
+                                        </div>
+                                        <!-- End Select -->
 
                                     </ng-template>
-                                        <div class="error-container">
-                                            <ng-container *ngFor="let v of validations.programId">
-                                                <div class="error-message"
-                                                    *ngIf="programForm.get('programId')?.hasError(v.type) && (programForm.get('programId')?.dirty || programForm.get('programId')?.touched)">
-                                                    <small class="text-danger">{{ v.message }}</small>
-                                                </div>
-                                            </ng-container>
-                                        </div>
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let v of validations.programId">
+                                            <div class="error-message"
+                                                *ngIf="programForm.get('programId')?.hasError(v.type) && (programForm.get('programId')?.dirty || programForm.get('programId')?.touched)">
+                                                <small class="text-danger">{{ v.message }}</small>
+                                            </div>
+                                        </ng-container>
+                                    </div>
                                 </div>
 
                             </div>
                             <div class="col-sm-6">
                                 <div class="mb-4">
-                                    <label for="merchantNameLabel" class="form-label">{{programType | titlecase}} Name <i
-                                            class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="The name of the merchant"></i>
+                                    <label for="merchantNameLabel" class="form-label">{{programType | titlecase}} Name
+                                        <i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" ngbTooltip="The name of the merchant"></i>
                                     </label>
-                                    <input type="text" class="form-control" formControlName="merchantName" id="merchantNameLabel">
+                                    <input type="text" class="form-control" formControlName="merchantName"
+                                        id="merchantNameLabel">
                                     <div class="error-container">
                                         <ng-container *ngFor="let v of validations.merchantName">
                                             <div class="error-message"
@@ -124,11 +132,12 @@
                                     <input type="email" class="form-control" formControlName="email" id="emailLabel">
                                     <div class="error-container">
                                         <ng-container *ngFor="let v of validations.email">
-                                          <div class="error-message" *ngIf="programForm.get('email')?.hasError(v.type) && (programForm.get('email')?.dirty || programForm.get('email')?.touched)">
-                                            <span class="text-danger">{{ v.message }}</span>
-                                          </div>
+                                            <div class="error-message"
+                                                *ngIf="programForm.get('email')?.hasError(v.type) && (programForm.get('email')?.dirty || programForm.get('email')?.touched)">
+                                                <span class="text-danger">{{ v.message }}</span>
+                                            </div>
                                         </ng-container>
-                                      </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -136,8 +145,9 @@
                                     <label for="phoneLabel" class="form-label">Phone</label>
                                     <div class="input-group input-group-sm-vertical">
                                         <input type="text" class="js-input-mask form-control" formControlName="phoneno"
-                                            id="phoneLabel" placeholder="{{ programForm.value?.country_phone?.country?.sample_phone }}" aria-label="xxxx xxx xxxx"
-                                            data-hs-mask-options='{
+                                            id="phoneLabel"
+                                            placeholder="{{ programForm.value?.country_phone?.country?.sample_phone }}"
+                                            aria-label="xxxx xxx xxxx" data-hs-mask-options='{
                              "mask": "00000000000"
                            }'>
 
@@ -160,9 +170,10 @@
                                     </div>
                                     <div class="error-container">
                                         <ng-container *ngFor="let v of validations.phoneno">
-                                          <div class="error-message" *ngIf="programForm.get('country_phone')?.get('phoneno')?.hasError(v.type) && (programForm.get('country_phone')?.get('phoneno')?.dirty || programForm.get('country_phone')?.get('phoneno')?.touched)">
-                                            <span class="text-danger">{{ v.message }}</span>
-                                          </div>
+                                            <div class="error-message"
+                                                *ngIf="programForm.get('country_phone')?.get('phoneno')?.hasError(v.type) && (programForm.get('country_phone')?.get('phoneno')?.dirty || programForm.get('country_phone')?.get('phoneno')?.touched)">
+                                                <span class="text-danger">{{ v.message }}</span>
+                                            </div>
                                         </ng-container>
                                     </div>
                                 </div>
@@ -176,15 +187,23 @@
                             <div class="col-sm-6">
                                 <div class="mb-4">
                                     <label for="passwordLabel" class="form-label">Password</label>
-                                    <!-- <app-show-hide-password> -->
-                                    <input type="password" #passwordInput class="form-control" formControlName="password" id="passwordLabel" aria-label="passwordLabel">
-                                    <!-- </app-show-hide-password> -->
-                                <div class="error-container">
+                                    <div class="input-group input-group-merge">
+                                        <input [type]="inputType" class="form-control"
+                                            formControlName="password" id="passwordLabel" aria-label="passwordLabel">
+                                        <a type="button" (click)="showPassword()" class="input-group-append input-group-text"
+                                            href="javascript:;">
+                                            <i [class]="passwordIcon"></i>
+                                        </a>
+                                    </div>
+
+
+                                    <div class="error-container">
                                         <ng-container *ngFor="let v of validations.password">
-                                          <div class="error-message" *ngIf="programForm.get('matching_passwords')?.get('password')?.hasError(v.type) && 
+                                            <div class="error-message"
+                                                *ngIf="programForm.get('matching_passwords')?.get('password')?.hasError(v.type) && 
                                           (programForm.get('matching_passwords')?.get('password')?.dirty || programForm.get('matching_passwords')?.get('password')?.touched)">
-                                            <span class="text-danger">{{ v.message }}</span>
-                                          </div>
+                                                <span class="text-danger">{{ v.message }}</span>
+                                            </div>
                                         </ng-container>
                                     </div>
                                 </div>
@@ -193,22 +212,32 @@
                             <div class="col-sm-6">
                                 <div class="mb-4">
                                     <label for="confirmPasswordLabel" class="form-label">Confirm Password </label>
-                                    <input type="password" class="form-control" formControlName="confirmPassword" id="confirmPasswordLabel">
+                                    <div class="input-group input-group-merge">
+                                    <input [type]="inputType2" class="form-control"
+                                        formControlName="confirmPassword" id="confirmPasswordLabel">
+                                        <a type="button" (click)="showPassword2()" class="input-group-append input-group-text"
+                                            href="javascript:;">
+                                            <i [class]="passwordIcon2"></i>
+                                        </a>
+
+                                    </div>
                                     <div class="error-container">
-                                        <ng-container *ngFor="let v of validations.confirmPassword" >
-                                          <div class="error-message" *ngIf="programForm.get('matching_passwords')?.get('confirmPassword')?.hasError(v.type) && 
+                                        <ng-container *ngFor="let v of validations.confirmPassword">
+                                            <div class="error-message"
+                                                *ngIf="programForm.get('matching_passwords')?.get('confirmPassword')?.hasError(v.type) && 
                                           (programForm.get('matching_passwords')?.get('confirmPassword')?.dirty || programForm.get('matching_passwords')?.get('confirmPassword')?.touched)">
-                                            <span class="text-danger">{{ v.message }}</span>
-                                          </div>
+                                                <span class="text-danger">{{ v.message }}</span>
+                                            </div>
                                         </ng-container>
                                     </div>
                                     <div class="error-container">
                                         <ng-container *ngFor="let v of validations.matching_passwords">
-                                          <div class="error-message" *ngIf="programForm.get('matching_passwords')?.hasError(v.type) && (programForm.get('matching_passwords')?.get('confirmPassword')?.dirty || programForm.get('matching_passwords')?.get('confirmPassword')?.touched)">
-                                            <span class="text-danger">{{ v.message }}</span>
-                                          </div>
+                                            <div class="error-message"
+                                                *ngIf="programForm.get('matching_passwords')?.hasError(v.type) && (programForm.get('matching_passwords')?.get('confirmPassword')?.dirty || programForm.get('matching_passwords')?.get('confirmPassword')?.touched)">
+                                                <span class="text-danger">{{ v.message }}</span>
+                                            </div>
                                         </ng-container>
-                                      </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -236,47 +265,51 @@
                                     <!-- Select -->
                                     <div class="tom-select-custom">
                                         <select class=" form-select" autocomplete="off" id="countryLabel"
-                                            (change)="fetchStates()" formControlName="country" data-hs-tom-select-options='{
+                                            (change)="fetchStates()" formControlName="country"
+                                            data-hs-tom-select-options='{
                                           "searchInDropdown": false,
                                           "hideSearch": true,
                                           "placeholder": "Select Country"
                                         }'>
-                                            <option *ngFor="let item of countries" [ngValue]="item">{{item.name}}</option>
+                                            <option *ngFor="let item of countries" [ngValue]="item">{{item.name}}
+                                            </option>
                                             <!-- <option [value]="item" *ngFor="let item of countries"  data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="./assets/vendor/flag-icon-css/flags/1x1/ng.svg" alt="Nigeria Flag" /><span class="text-truncate">Nigeria</span></span>'>Nigeria</option> -->
                                         </select>
                                     </div>
                                     <!-- End Select -->
                                 </div>
                             </div>
-                    
-                    
-                    
+
+
+
                             <div class="col-sm-6">
                                 <!-- Form -->
                                 <div class="mb-4">
                                     <label for="stateLabel" class="form-label">States</label>
                                     <!-- Select -->
                                     <div class="tom-select-custom">
-                                        <select class="js-select form-select" autocomplete="off" id="stateLabel" formControlName="state"
-                                            data-hs-tom-select-options='{
+                                        <select class="js-select form-select" autocomplete="off" id="stateLabel"
+                                            formControlName="state" data-hs-tom-select-options='{
                                           "searchInDropdown": false,
                                           "hideSearch": true,
                                           "placeholder": "Select State"
                                         }'>
-                                            <option *ngFor="let item of states" [ngValue]="item.name">{{item.name}}</option>
+                                            <option *ngFor="let item of states" [ngValue]="item.name">{{item.name}}
+                                            </option>
                                         </select>
                                     </div>
                                     <!-- End Select -->
                                 </div>
                             </div>
                         </div>
-                    
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <!-- Form -->
                                 <div class="mb-4">
                                     <label for="cityLabel" class="form-label">City</label>
-                                    <input type="text" class="form-control" id="cityLabel" placeholder="City" formControlName="city">
+                                    <input type="text" class="form-control" id="cityLabel" placeholder="City"
+                                        formControlName="city">
                                     <div class="error-container">
                                         <ng-container *ngFor="let v of validations.city">
                                             <div class="error-message" *ngIf="programForm.get('city')?.hasError(v.type) && (programForm.get('city')?.dirty 
@@ -305,9 +338,9 @@
                                 </div>
                                 <!-- End Form -->
                             </div>
-                            
-                        </div>                  
-                    
+
+                        </div>
+
                     </div>
                     <!-- Body -->
                 </div>
@@ -345,11 +378,13 @@
                         <div class="mb-4" formGroupName="country_phone">
                             <label for="phonenoLabel" class="form-label">Phone Number <i
                                     class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="The phone number of the contact person"></i></label>
+                                    data-bs-placement="top"
+                                    ngbTooltip="The phone number of the contact person"></i></label>
 
                             <div class="input-group">
                                 <input type="text" class="form-control" formControlName="contactPhoneNumber"
-                                    id="phonenoLabel" placeholder="{{programForm.value?.country_phone?.country?.sample_phone }}">
+                                    id="phonenoLabel"
+                                    placeholder="{{programForm.value?.country_phone?.country?.sample_phone }}">
                             </div>
                             <div class="error-container">
                                 <ng-container *ngFor="let v of validations.contactPhoneNumber">
@@ -368,7 +403,7 @@
                 </div>
                 <!-- End Card -->
 
-                
+
             </div>
             <!-- End Col -->
         </div>

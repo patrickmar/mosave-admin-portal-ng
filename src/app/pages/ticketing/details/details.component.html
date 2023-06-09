@@ -1,5 +1,5 @@
 <!-- Content -->
-<div class="content container-fluid">
+<div class="content container-fluid" >
     <!-- Page Header -->
     <div class="page-header">
       <div class="row align-items-center">
@@ -26,7 +26,7 @@
             <div class="input-group-append">
               <a class="js-clipboard btn btn-white" type="button" [ngxClipboard]="inputTarget" 
               (cbOnSuccess)="isCopied = true"
-              (cbOnError)="onCopyFailure()" data-bs-toggle="tooltip" data-bs-placement="right" title="Copy to clipboard" >
+              (cbOnError)="onCopyFailure()" data-bs-toggle="tooltip" data-bs-placement="right" ngbTooltip="Copy to clipboard" >
                 <i id="referralCodeIcon" class="bi-clipboard"></i>
               </a>
             </div>
@@ -150,7 +150,7 @@
         <div class="card h-100">
           <!-- Header -->
           <div class="card-header card-header-content-between">
-            <h4 class="card-header-title">Top 5 Customers <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="This report is based on 100% of sessions."></i></h4>
+            <h4 class="card-header-title">Top 5 Customers <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="This report is based on 100% of sessions."></i></h4>
             <!-- <a class="btn btn-ghost-secondary btn-sm" href="javascript:;">View all</a> -->
           </div>
           <!-- End Header -->
@@ -320,6 +320,7 @@
   </div>
   <!-- End Content -->
 
+  <ngx-loading [show]="loading"></ngx-loading>
 
   <ng-template #content let-modal>
   <div class="modal-content">

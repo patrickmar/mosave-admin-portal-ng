@@ -1,468 +1,462 @@
+<!-- Content -->
+<div class="content container-fluid">
+  <div >
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="row align-items-center mb-3">
+        <div class="col-sm">
+          <h1 class="page-header-title">Transactions <span
+              class="badge bg-soft-dark text-dark ms-2">{{allRecords?.length}}</span></h1>
 
-    <!-- Content -->
-    <div class="content container-fluid">
-      <!-- Page Header -->
-      <div class="page-header">
-        <div class="row align-items-center mb-3">
-          <div class="col-sm">
-            <h1 class="page-header-title">Transactions <span class="badge bg-soft-dark text-dark ms-2">{{allRecords?.length}}</span></h1>
-
-            <!-- <div class="d-flex mt-2">
+          <!-- <div class="d-flex mt-2">
               <a class="text-body me-3" href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportOrdersModal">
                 <i class="bi-download me-1"></i> Export
               </a>
             </div> -->
-          </div>
-          <!-- End Col -->
-
-        </div>
-        <!-- End Row -->
-      </div>
-      <!-- End Page Header -->
-
-       <!-- Stats -->
-       <div class="row col-lg-divider">
-        <div class="col-lg-4">
-          <!-- Card -->
-          <div class="text-center">
-            <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
-            <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
-            <span class="text-cap text-body">Total Amount Saved</span>
-            <span class="d-block display-4 text-dark mb-2">{{savingsSum | currency: '₦'}}</span>
-
-            <div class="row col-divider">
-              <div class="col text-end">
-                <span class="d-block fw-semi-bold text-info">{{savingsSumDaily | currency: '₦'}}
-                </span>
-                <span class="d-block">Today</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col text-center">
-                <span class="d-block fw-semi-bold text-info">{{savingsSumWeekly  | currency: '₦'}}</span>
-                <span class="d-block">This week</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col text-start">
-                <span class="d-block fw-semi-bold text-info">{{savingsSumMonthly | currency: '₦'}}</span>
-                <span class="d-block">This month</span>
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-          </div>
-          <!-- End Card -->
-        </div>
-
-        <div class="col-lg-4">
-          <!-- Card -->
-          <div class="text-center">
-            <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-money-profits.svg" alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
-            <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-money-profits.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
-            <span class="text-cap text-body">Total Amount earned</span>
-            <span class="d-block display-4 text-dark mb-2">{{commissionSum | currency: '₦'}}</span>
-
-            <div class="row col-divider">
-              <div class="col text-end">
-                <span class="d-block fw-semi-bold text-success">{{commissionSumDaily | currency: '₦'}}
-                </span>
-                <span class="d-block">Today</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col text-center">
-                <span class="d-block fw-semi-bold text-success">{{commissionSumWeekly | currency: '₦'}}</span>
-                <span class="d-block">This week</span>
-              </div>
-              <!-- End Col -->
-              <div class="col text-start">
-                <span class="d-block fw-semi-bold text-success">{{commissionSumMonthly | currency: '₦'}}</span>
-                <span class="d-block">This month</span>
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-          </div>
-          <!-- End Card -->
-        </div>
-
-        <div class="col-lg-4">
-          <!-- Card -->
-          <div class="text-center">
-            <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-collection.svg" alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
-            <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collection.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
-            <span class="text-cap text-body">Total Amount Withdrawn</span>
-            <span class="d-block display-4 text-dark mb-2">{{withdrawalSum | currency: '₦'}}</span>
-
-            <div class="row col-divider">
-              <div class="col text-end">
-                <span class="d-block fw-semi-bold text-danger">{{withdrawalSumDaily | currency: '₦'}}
-                </span>
-                <span class="d-block">Today</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col text-center">
-                <span class="d-block fw-semi-bold text-danger">{{withdrawalSumWeekly | currency: '₦'}}</span>
-                <span class="d-block">This week</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col text-start">
-                <span class="d-block fw-semi-bold text-danger">{{withdrawalSumMonthly | currency: '₦'}}</span>
-                <span class="d-block">This month</span>
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-          </div>
-          <!-- End Card -->
-        </div>
-      </div>
-      <!-- End Stats -->
-
-      <div class="my-5">
-        <!-- <p class="text-muted"><i class="bi-exclamation-octagon"></i> Last referral: August 25, 2020.</p> -->
-      </div>
-
-
-      <!-- Page Header -->
-      <div class="page-header">
-       
-        <!-- Nav Scroller -->
-        <div class="js-nav-scroller hs-nav-scroller-horizontal">
-          <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-              <i class="bi-chevron-left"></i>
-            </a>
-          </span>
-
-          <span class="hs-nav-scroller-arrow-next" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-              <i class="bi-chevron-right"></i>
-            </a>
-          </span>
-
-          <!-- Nav -->
-          <ul class="nav nav-tabs page-header-tabs">
-            <li class="nav-item">
-              <a [ngClass]="transactionType === '' || transactionType === 'all' ? 'nav-link active' : 'nav-link' " id="all-tab" data-bs-toggle="tab" href="#all" role="tab">All Transactions</a>
-            </li>
-            <li class="nav-item">
-              <a [ngClass]="transactionType === 'savings' ? 'nav-link active' : 'nav-link' " id="savings-tab" data-bs-toggle="tab" href="#savings" role="tab">Savings</a>
-            </li>
-            <li class="nav-item">
-              <a [ngClass]="transactionType === 'withdrawals' ? 'nav-link active' : 'nav-link' " id="withdrawals-tab" data-bs-toggle="tab" href="#withdrawals" role="tab">Withdrawals</a>
-            </li>
-            <li class="nav-item">
-              <a [ngClass]="transactionType === 'commissions' ? 'nav-link active' : 'nav-link' " id="commissions-tab" data-bs-toggle="tab" href="#commissions" role="tab">Commissions</a>
-            </li>
-          </ul>
-          <!-- End Nav -->
-        </div>
-        <!-- End Nav Scroller -->
-      </div>
-      <!-- End Page Header -->
-
-
-      <div class="row justify-content-end mb-3">
-        <div class="col-lg">
-          <!-- Datatable Info -->
-          <div id="datatableCounterInfo" style="display: none;">
-            <div class="d-sm-flex justify-content-lg-end align-items-sm-center">
-              <span class="d-block d-sm-inline-block fs-5 me-3 mb-2 mb-sm-0">
-                <span id="datatableCounter">0</span>
-                Selected
-              </span>
-              <a class="btn btn-outline-danger btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
-                <i class="bi-trash"></i> Delete
-              </a>
-              <a class="btn btn-white btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
-                <i class="bi-archive"></i> Archive
-              </a>
-              <a class="btn btn-white btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
-                <i class="bi-upload"></i> Publish
-              </a>
-              <a class="btn btn-white btn-sm mb-2 mb-sm-0" href="javascript:;">
-                <i class="bi-x-lg"></i> Unpublish
-              </a>
-            </div>
-          </div>
-          <!-- End Datatable Info -->
         </div>
         <!-- End Col -->
+
       </div>
       <!-- End Row -->
+    </div>
+    <!-- End Page Header -->
 
-      <!-- Card -->
-      <div class="card">
-        <!-- Tab Content -->
-        <div class="tab-content" id="transactionsTabContent">
-          <div [ngClass]="transactionType === '' || transactionType === 'all' ? 'tab-pane fade show active' : 'tab-pane fade' "
-            id="all" role="tabpanel" aria-labelledby="all-tab">
-        <!-- Header -->
-        <app-transactions-header 
-        [dateId]="1" 
-        [tableName]="table[0]" 
-        [header]="tableHead"
-        (onShowColumn)="showColumn($event, table[0])"
-        (onRender)="filter($event, 1, table[0])"        
-        (onDownloadCopy)="downloadAll(table[0], 'copy')"
-        (onDownloadPrint)="downloadAll(table[0], 'print')"
-        (onDownloadExcel)="downloadAll(table[0], 'excel')"
-        (onDownloadCsv)="downloadAll(table[0], 'csv')"
-        (onDownloadPdf)="downloadAll(table[0], 'pdf')">
-      </app-transactions-header>
-        <!-- End Header -->
+    <!-- Stats -->
+    <div class="row col-lg-divider">
+      <div class="col-lg-4">
+        <!-- Card -->
+        <div class="text-center">
+          <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-collaboration.svg"
+            alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
+          <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
+          <span class="text-cap text-body">Total Amount Saved</span>
+          <span class="d-block display-4 text-dark mb-2">{{savingsSum | currency: '₦'}}</span>
 
-        <!-- Table -->
-        <div class="table-responsive"> 
-          <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%">
-            <thead class="thead-light">
-              <tr>
-                <th class="table-column-pe-0">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                    <label class="form-check-label" for="datatableCheckAll"></label>
-                  </div>
-                </th>
-                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords"
-                [userId]="r?.userId"
-                [customerId]="r?.customerId"
-                [firstName]="r?.firstName"
-                [lastName]="r?.lastName" 
-                [fullName]="(r?.firstName?.concat(' ').concat(r?.lastName) | titlecase)"
-                [plan_name]="r?.plan_name"
-                [transAmount]="r?.transAmount"
-                [transref]="r?.transref"
-                [transType]="r?.transType"
-                [transDate]="r?.transDate"
-                [time]="r?.time"
-                [agentFullName]="(r?.agent_firstname?.concat(' ').concat(r?.agent_lastname) | titlecase)"
-                [transDateConcat]="(r?.transDate?.concat(' ').concat( r?.time ) | date: 'shortTime' )"
-                [content]="r?.content"                
-                (onOpen)="open(content, r)"
-                >
-              </tr>
-            </tbody>
-          </table>
+          <div class="row col-divider">
+            <div class="col text-end">
+              <span class="d-block fw-semi-bold text-info">{{savingsSumDaily | currency: '₦'}}
+              </span>
+              <span class="d-block">Today</span>
+            </div>
+            <!-- End Col -->
+
+            <div class="col text-center">
+              <span class="d-block fw-semi-bold text-info">{{savingsSumWeekly | currency: '₦'}}</span>
+              <span class="d-block">This week</span>
+            </div>
+            <!-- End Col -->
+
+            <div class="col text-start">
+              <span class="d-block fw-semi-bold text-info">{{savingsSumMonthly | currency: '₦'}}</span>
+              <span class="d-block">This month</span>
+            </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Row -->
         </div>
-        <!-- End Table -->
-        <!-- Footer -->
-        <!-- <app-transactions-footer [tableLength]="allRecords?.length"></app-transactions-footer> -->
-        <!-- End Footer -->
+        <!-- End Card -->
       </div>
 
-      <!-- Tab Panel -->
-      <div [ngClass]="transactionType === 'savings' ? 'tab-pane fade show active' : 'tab-pane fade' " id="savings" role="tabpanel" aria-labelledby="savings-tab">
-         <!-- Header -->
-         <app-transactions-header 
-         [dateId]="2" 
-         [tableName]="table[1]"
-         [header]="tableHead"
-         (onShowColumn)="showColumn($event, table[1])"
-         (onRender)="filter($event, 2, table[1])"
-         (onDownloadCopy)="downloadAll(table[1], 'copy')"
-         (onDownloadPrint)="downloadAll(table[1], 'print')"
-         (onDownloadExcel)="downloadAll(table[1], 'excel')"
-         (onDownloadCsv)="downloadAll(table[1], 'csv')"
-         (onDownloadPdf)="downloadAll(table[1], 'pdf')"
-         ></app-transactions-header>
-         <!-- End Header -->
+      <div class="col-lg-4">
+        <!-- Card -->
+        <div class="text-center">
+          <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-money-profits.svg"
+            alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
+          <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-money-profits.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
+          <span class="text-cap text-body">Total Amount earned</span>
+          <span class="d-block display-4 text-dark mb-2">{{commissionSum | currency: '₦'}}</span>
 
-        <!-- Table -->
-        <div class="table-responsive ">
-          <table datatable [dtOptions]="dtOptions[1]" [dtTrigger]="dtTrigger" id="savingsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%">
-            <thead class="thead-light">
-              <tr>
-                <th class="table-column-pe-0">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="savingsDatatableCheckAll">
-                    <label class="form-check-label" for="savingsDatatableCheckAll"></label>
-                  </div>
-                </th>
-                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
-              </tr>
-            </thead>
+          <div class="row col-divider">
+            <div class="col text-end">
+              <span class="d-block fw-semi-bold text-success">{{commissionSumDaily | currency: '₦'}}
+              </span>
+              <span class="d-block">Today</span>
+            </div>
+            <!-- End Col -->
 
-            <tbody>
-              <tr app-transactions-table [records]="savingsRecords" *ngFor="let s of savingsRecords; let i = index;" 
-              [userId]="s?.userId"
-              [customerId]="s?.customerId"
-              [firstName]="s?.firstName"
-              [lastName]="s?.lastName" 
-              [fullName]="(s?.firstName?.concat(' ').concat(s?.lastName) | titlecase)"
-              [plan_name]="s?.plan_name"
-              [transAmount]="s?.transAmount"
-              [transref]="s?.transref"
-              [transType]="s?.transType"
-              [transDate]="s?.transDate"
-              [time]="s?.time"
-              [agentFullName]="(s?.agent_firstname?.concat(' ').concat(s?.agent_lastname) | titlecase)"
-              [transDateConcat]="(s?.transDate?.concat(' ').concat( s?.time ) | date: 'shortTime' )"
-              [content]="s?.content"                
-              (onOpen)="open(content, s)"
-              ></tr>
-            </tbody>
-          </table>
+            <div class="col text-center">
+              <span class="d-block fw-semi-bold text-success">{{commissionSumWeekly | currency: '₦'}}</span>
+              <span class="d-block">This week</span>
+            </div>
+            <!-- End Col -->
+            <div class="col text-start">
+              <span class="d-block fw-semi-bold text-success">{{commissionSumMonthly | currency: '₦'}}</span>
+              <span class="d-block">This month</span>
+            </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Row -->
         </div>
-        <!-- End Table -->
-
-        <!-- Footer -->
-        <!-- <app-transactions-footer [tableLength]="savingsRecords?.length"></app-transactions-footer> -->
-        <!-- End Footer -->
-
+        <!-- End Card -->
       </div>
-      <!-- End Tab Panel -->
 
-      <!-- Tab Panel -->
-      <div [ngClass]="transactionType === 'withdrawals' ? 'tab-pane fade show active' : 'tab-pane fade' " id="withdrawals" role="tabpanel" aria-labelledby="withdrawals-tab">
-         <!-- Header -->
-         <app-transactions-header 
-         [dateId]="3"
-         [tableName]="table[2]" 
-         [header]="tableHead"
-         (onShowColumn)="showColumn($event, table[2])"
-         (onRender)="filter($event, 3, table[2])" 
-         (onDownloadCopy)="downloadAll(table[2], 'copy')"
-         (onDownloadPrint)="downloadAll(table[2], 'print')"
-         (onDownloadExcel)="downloadAll(table[2], 'excel')"
-         (onDownloadCsv)="downloadAll(table[2], 'csv')"
-         (onDownloadPdf)="downloadAll(table[2], 'pdf')"
-         ></app-transactions-header>
-         <!-- End Header -->
-        <!-- Table -->
-        <div class="table-responsive ">
-          <table datatable [dtOptions]="dtOptions[2]" [dtTrigger]="dtTrigger" id="withdrawalsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%">
-            <thead class="thead-light">
-              <tr>
-                <th class="table-column-pe-0">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="withdrawalsDatatableCheckAll">
-                    <label class="form-check-label" for="withdrawalsDatatableCheckAll"></label>
-                  </div>
-                </th>
-                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
-              </tr>
-            </thead>
+      <div class="col-lg-4">
+        <!-- Card -->
+        <div class="text-center">
+          <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations/oc-collection.svg"
+            alt="Image Description" data-hs-theme-appearance="default" style="min-height: 6rem;">
+          <!-- <img class="avatar avatar-xl avatar-4x3 mb-4" src="./assets/svg/illustrations-light/oc-collection.svg" alt="Image Description" data-hs-theme-appearance="dark" style="min-height: 6rem;"> -->
+          <span class="text-cap text-body">Total Amount Withdrawn</span>
+          <span class="d-block display-4 text-dark mb-2">{{withdrawalSum | currency: '₦'}}</span>
 
-            <tbody>
-              <tr app-transactions-table [records]="withdrawalRecords" *ngFor="let w of withdrawalRecords; let i = index;" 
-              [userId]="w?.userId"
-              [customerId]="w?.customerId"
-              [firstName]="w?.firstName"
-              [lastName]="w?.lastName" 
-              [fullName]="(w?.firstName?.concat(' ').concat(w?.lastName) | titlecase)"
-              [plan_name]="w?.plan_name"
-              [transAmount]="w?.transAmount"
-              [transref]="w?.transref"
-              [transType]="w?.transType"
-              [transDate]="w?.transDate"
-              [time]="w?.time"
-              [agentFullName]="(w?.agent_firstname?.concat(' ').concat(w?.agent_lastname) | titlecase)"
-              [transDateConcat]="(w?.transDate?.concat(' ').concat( w?.time ) | date: 'shortTime')"
-              [content]="w?.content"                
-              (onOpen)="open(content, w)"
-              ></tr>
-            </tbody>
-          </table>
+          <div class="row col-divider">
+            <div class="col text-end">
+              <span class="d-block fw-semi-bold text-danger">{{withdrawalSumDaily | currency: '₦'}}
+              </span>
+              <span class="d-block">Today</span>
+            </div>
+            <!-- End Col -->
+
+            <div class="col text-center">
+              <span class="d-block fw-semi-bold text-danger">{{withdrawalSumWeekly | currency: '₦'}}</span>
+              <span class="d-block">This week</span>
+            </div>
+            <!-- End Col -->
+
+            <div class="col text-start">
+              <span class="d-block fw-semi-bold text-danger">{{withdrawalSumMonthly | currency: '₦'}}</span>
+              <span class="d-block">This month</span>
+            </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Row -->
         </div>
-        <!-- End Table -->
-
-        <!-- Footer -->
-        <!-- <app-transactions-footer [tableLength]="withdrawalRecords?.length"></app-transactions-footer> -->
-        <!-- End Footer -->
+        <!-- End Card -->
       </div>
-      <!-- End Tab Panel -->
+    </div>
+    <!-- End Stats -->
 
-      <!-- Tab Panel -->
-      <div [ngClass]="transactionType === 'commissions' ? 'tab-pane fade show active' : 'tab-pane fade' " id="commissions" role="tabpanel" aria-labelledby="commissions-tab">
-         <!-- Header -->
-         <app-transactions-header 
-         [dateId]="4"
-         [tableName]="table[3]" 
-         [header]="tableHead"
-         (onShowColumn)="showColumn($event, table[3])"
-         (onRender)="filter($event, 4, table[3])" 
-         (onDownloadCopy)="downloadAll(table[3], 'copy')"
-         (onDownloadPrint)="downloadAll(table[3], 'print')"
-         (onDownloadExcel)="downloadAll(table[3], 'excel')"
-         (onDownloadCsv)="downloadAll(table[3], 'csv')"
-         (onDownloadPdf)="downloadAll(table[3], 'pdf')">
-        </app-transactions-header>
-         <!-- End Header -->
-        <!-- Table -->
-        <div class="table-responsive">
-          <table datatable [dtOptions]="dtOptions[3]" [dtTrigger]="dtTrigger" id="commissionsDatatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="width: 100%" >
-            <thead class="thead-light">
-              <tr>
-                <th class="table-column-pe-0">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="commissionsDatatableCheckAll">
-                    <label class="form-check-label" for="commissionsDatatableCheckAll"></label>
-                  </div>
-                </th>
-                <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' " *ngFor="let item of tableHead; let i = index;">{{item?.name}}</th>
-              </tr>
-            </thead>
+    <div class="my-5">
+      <!-- <p class="text-muted"><i class="bi-exclamation-octagon"></i> Last referral: August 25, 2020.</p> -->
+    </div>
+    <!-- Page Header -->
+    <div class="page-header">
 
-            <tbody>
-              <tr app-transactions-table [records]="commissionRecords" *ngFor="let c of commissionRecords; let i = index;" 
-              [userId]="c?.userId"
-              [customerId]="c?.customerId"
-              [firstName]="c?.firstName"
-              [lastName]="c?.lastName" 
-              [fullName]="(c?.firstName?.concat(' ').concat(c?.lastName) | titlecase)"
-              [plan_name]="c?.plan_name"
-              [transAmount]="c?.transAmount"
-              [transref]="c?.transref"
-              [transType]="c?.transType"
-              [transDate]="c?.transDate"
-              [time]="c?.time"
-              [agentFullName]="(c?.agent_firstname?.concat(' ').concat(c?.agent_lastname) | titlecase)"
-              [transDateConcat]="(c?.transDate?.concat(' ').concat( c?.time ) | date: 'shortTime')"
-              [content]="c?.content"                
-              (onOpen)="open(content, c)"
-              ></tr>
-            </tbody>
-          </table>
+      <!-- Nav Scroller -->
+      <div class="js-nav-scroller hs-nav-scroller-horizontal">
+        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+          <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+            <i class="bi-chevron-left"></i>
+          </a>
+        </span>
+
+        <span class="hs-nav-scroller-arrow-next" style="display: none;">
+          <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+            <i class="bi-chevron-right"></i>
+          </a>
+        </span>
+
+        <!-- Nav -->
+        <ul class="nav nav-tabs page-header-tabs">
+          <li class="nav-item">
+            <a [ngClass]="transactionType === '' || transactionType === 'all' ? 'nav-link active' : 'nav-link' "
+              id="all-tab" data-bs-toggle="tab" href="#all" role="tab">All Transactions</a>
+          </li>
+          <li class="nav-item">
+            <a [ngClass]="transactionType === 'savings' ? 'nav-link active' : 'nav-link' " id="savings-tab"
+              data-bs-toggle="tab" href="#savings" role="tab">Savings</a>
+          </li>
+          <li class="nav-item">
+            <a [ngClass]="transactionType === 'withdrawals' ? 'nav-link active' : 'nav-link' " id="withdrawals-tab"
+              data-bs-toggle="tab" href="#withdrawals" role="tab">Withdrawals</a>
+          </li>
+          <li class="nav-item">
+            <a [ngClass]="transactionType === 'commissions' ? 'nav-link active' : 'nav-link' " id="commissions-tab"
+              data-bs-toggle="tab" href="#commissions" role="tab">Commissions</a>
+          </li>
+        </ul>
+        <!-- End Nav -->
+      </div>
+      <!-- End Nav Scroller -->
+    </div>
+    <!-- End Page Header -->
+
+    <div class="row justify-content-end mb-3">
+      <div class="col-lg">
+        <!-- Datatable Info -->
+        <div id="datatableCounterInfo" style="display: none;">
+          <div class="d-sm-flex justify-content-lg-end align-items-sm-center">
+            <span class="d-block d-sm-inline-block fs-5 me-3 mb-2 mb-sm-0">
+              <span id="datatableCounter">0</span>
+              Selected
+            </span>
+            <a class="btn btn-outline-danger btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
+              <i class="bi-trash"></i> Delete
+            </a>
+            <a class="btn btn-white btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
+              <i class="bi-archive"></i> Archive
+            </a>
+            <a class="btn btn-white btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
+              <i class="bi-upload"></i> Publish
+            </a>
+            <a class="btn btn-white btn-sm mb-2 mb-sm-0" href="javascript:;">
+              <i class="bi-x-lg"></i> Unpublish
+            </a>
+          </div>
         </div>
-        <!-- End Table -->
-
-        <!-- Footer -->
-        <!-- <app-transactions-footer [tableLength]="commissionRecords?.length"></app-transactions-footer> -->
-        <!-- End Footer -->
+        <!-- End Datatable Info -->
       </div>
-      <!-- End Tab Panel -->
+      <!-- End Col -->
+    </div>
+    <!-- End Row -->
+
+    <!-- Card -->
+    <div class="card">
+      <!-- Tab Content -->
+      <div class="tab-content" id="transactionsTabContent">
+        <div
+          [ngClass]="transactionType === '' || transactionType === 'all' ? 'tab-pane fade show active' : 'tab-pane fade' "
+          id="all" role="tabpanel" aria-labelledby="all-tab">
+          <!-- Header -->
+          <app-transactions-header [id]="1" [tableName]="table[0]" [header]="tableHead" [ranges]="ranges"
+            [dateRanges]="dateRanges" (onFilterDate)="filterDataByDate($event, content2)"
+            (onShowColumn)="showColumn($event, table[0])" (onRender)="filter($event, 1, table[0])"
+            (onDownloadCopy)="downloadAll(table[0], 'copy')" (onDownloadPrint)="downloadAll(table[0], 'print')"
+            (onDownloadExcel)="downloadAll(table[0], 'excel')" (onDownloadCsv)="downloadAll(table[0], 'csv')"
+            (onDownloadPdf)="downloadAll(table[0], 'pdf')">
+          </app-transactions-header>
+          <!-- End Header -->
+
+          <!-- Table -->
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable"
+              class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+              style="width: 100%">
+              <thead class="thead-light">
+                <tr>
+                  <th class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
+                      <label class="form-check-label" for="datatableCheckAll"></label>
+                    </div>
+                  </th>
+                  <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' "
+                    *ngFor="let item of tableHead; let i = index;">
+                    {{item?.name}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords" [userId]="r?.userId"
+                  [customerId]="r?.customerId" [firstName]="r?.firstName" [lastName]="r?.lastName"
+                  [fullName]="(r?.firstName?.concat(' ').concat(r?.lastName) | titlecase)" [plan_name]="r?.plan_name"
+                  [transAmount]="r?.transAmount" [transref]="r?.transref" [transType]="r?.transType"
+                  [transDate]="r?.transDate" [time]="r?.time"
+                  [agentFullName]="(r?.agent_firstname?.concat(' ').concat(r?.agent_lastname) | titlecase)"
+                  [transDateConcat]="(r?.transDate?.concat(' ').concat( r?.time ) | date: 'shortTime' )"
+                  [content]="r?.content" (onOpen)="open(content, r)">
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- End Table -->
+          <!-- Footer -->
+          <!-- <app-transactions-footer [tableLength]="allRecords?.length"></app-transactions-footer> -->
+          <!-- End Footer -->
+        </div>
+
+        <!-- Tab Panel -->
+        <div [ngClass]="transactionType === 'savings' ? 'tab-pane fade show active' : 'tab-pane fade' " id="savings"
+          role="tabpanel" aria-labelledby="savings-tab">
+          <!-- Header -->
+          <app-transactions-header [id]="2" [tableName]="table[1]" [header]="tableHead" [ranges]="ranges"
+            [dateRanges]="dateRanges" (onFilterDate)="filterDataByDate($event, content2)"
+            (onShowColumn)="showColumn($event, table[1])" (onRender)="filter($event, 2, table[1])"
+            (onDownloadCopy)="downloadAll(table[1], 'copy')" (onDownloadPrint)="downloadAll(table[1], 'print')"
+            (onDownloadExcel)="downloadAll(table[1], 'excel')" (onDownloadCsv)="downloadAll(table[1], 'csv')"
+            (onDownloadPdf)="downloadAll(table[1], 'pdf')"></app-transactions-header>
+          <!-- End Header -->
+
+          <!-- Table -->
+          <div class="table-responsive ">
+            <table datatable [dtOptions]="dtOptions[1]" [dtTrigger]="dtTrigger" id="savingsDatatable"
+              class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+              style="width: 100%">
+              <thead class="thead-light">
+                <tr>
+                  <th class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="savingsDatatableCheckAll">
+                      <label class="form-check-label" for="savingsDatatableCheckAll"></label>
+                    </div>
+                  </th>
+                  <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' "
+                    *ngFor="let item of tableHead; let i = index;">
+                    {{item?.name}}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr app-transactions-table [records]="savingsRecords" *ngFor="let s of savingsRecords; let i = index;"
+                  [userId]="s?.userId" [customerId]="s?.customerId" [firstName]="s?.firstName" [lastName]="s?.lastName"
+                  [fullName]="(s?.firstName?.concat(' ').concat(s?.lastName) | titlecase)" [plan_name]="s?.plan_name"
+                  [transAmount]="s?.transAmount" [transref]="s?.transref" [transType]="s?.transType"
+                  [transDate]="s?.transDate" [time]="s?.time"
+                  [agentFullName]="(s?.agent_firstname?.concat(' ').concat(s?.agent_lastname) | titlecase)"
+                  [transDateConcat]="(s?.transDate?.concat(' ').concat( s?.time ) | date: 'shortTime' )"
+                  [content]="s?.content" (onOpen)="open(content, s)"></tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- End Table -->
+
+          <!-- Footer -->
+          <!-- <app-transactions-footer [tableLength]="savingsRecords?.length"></app-transactions-footer> -->
+          <!-- End Footer -->
+
+        </div>
+        <!-- End Tab Panel -->
+
+        <!-- Tab Panel -->
+        <div [ngClass]="transactionType === 'withdrawals' ? 'tab-pane fade show active' : 'tab-pane fade' "
+          id="withdrawals" role="tabpanel" aria-labelledby="withdrawals-tab">
+          <!-- Header -->
+          <app-transactions-header [id]="3" [tableName]="table[2]" [header]="tableHead" [ranges]="ranges"
+            [dateRanges]="dateRanges" (onFilterDate)="filterDataByDate($event, content2)"
+            (onShowColumn)="showColumn($event, table[2])" (onRender)="filter($event, 3, table[2])"
+            (onDownloadCopy)="downloadAll(table[2], 'copy')" (onDownloadPrint)="downloadAll(table[2], 'print')"
+            (onDownloadExcel)="downloadAll(table[2], 'excel')" (onDownloadCsv)="downloadAll(table[2], 'csv')"
+            (onDownloadPdf)="downloadAll(table[2], 'pdf')"></app-transactions-header>
+          <!-- End Header -->
+          <!-- Table -->
+          <div class="table-responsive ">
+            <table datatable [dtOptions]="dtOptions[2]" [dtTrigger]="dtTrigger" id="withdrawalsDatatable"
+              class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+              style="width: 100%">
+              <thead class="thead-light">
+                <tr>
+                  <th class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="withdrawalsDatatableCheckAll">
+                      <label class="form-check-label" for="withdrawalsDatatableCheckAll"></label>
+                    </div>
+                  </th>
+                  <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' "
+                    *ngFor="let item of tableHead; let i = index;">
+                    {{item?.name}}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr app-transactions-table [records]="withdrawalRecords"
+                  *ngFor="let w of withdrawalRecords; let i = index;" [userId]="w?.userId" [customerId]="w?.customerId"
+                  [firstName]="w?.firstName" [lastName]="w?.lastName"
+                  [fullName]="(w?.firstName?.concat(' ').concat(w?.lastName) | titlecase)" [plan_name]="w?.plan_name"
+                  [transAmount]="w?.transAmount" [transref]="w?.transref" [transType]="w?.transType"
+                  [transDate]="w?.transDate" [time]="w?.time"
+                  [agentFullName]="(w?.agent_firstname?.concat(' ').concat(w?.agent_lastname) | titlecase)"
+                  [transDateConcat]="(w?.transDate?.concat(' ').concat( w?.time ) | date: 'shortTime')"
+                  [content]="w?.content" (onOpen)="open(content, w)"></tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- End Table -->
+
+          <!-- Footer -->
+          <!-- <app-transactions-footer [tableLength]="withdrawalRecords?.length"></app-transactions-footer> -->
+          <!-- End Footer -->
+        </div>
+        <!-- End Tab Panel -->
+
+        <!-- Tab Panel -->
+        <div [ngClass]="transactionType === 'commissions' ? 'tab-pane fade show active' : 'tab-pane fade' "
+          id="commissions" role="tabpanel" aria-labelledby="commissions-tab">
+          <!-- Header -->
+          <app-transactions-header [id]="4" [tableName]="table[3]" [header]="tableHead" [ranges]="ranges"
+            [dateRanges]="dateRanges" (onFilterDate)="filterDataByDate($event, content2)"
+            (onShowColumn)="showColumn($event, table[3])" (onRender)="filter($event, 4, table[3])"
+            (onDownloadCopy)="downloadAll(table[3], 'copy')" (onDownloadPrint)="downloadAll(table[3], 'print')"
+            (onDownloadExcel)="downloadAll(table[3], 'excel')" (onDownloadCsv)="downloadAll(table[3], 'csv')"
+            (onDownloadPdf)="downloadAll(table[3], 'pdf')">
+          </app-transactions-header>
+          <!-- End Header -->
+          <!-- Table -->
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions[3]" [dtTrigger]="dtTrigger" id="commissionsDatatable"
+              class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+              style="width: 100%">
+              <thead class="thead-light">
+                <tr>
+                  <th class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="commissionsDatatableCheckAll">
+                      <label class="form-check-label" for="commissionsDatatableCheckAll"></label>
+                    </div>
+                  </th>
+                  <th [ngClass]="item.id == 1 ? 'table-column-ps-0' : '' "
+                    *ngFor="let item of tableHead; let i = index;">
+                    {{item?.name}}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr app-transactions-table [records]="commissionRecords"
+                  *ngFor="let c of commissionRecords; let i = index;" [userId]="c?.userId" [customerId]="c?.customerId"
+                  [firstName]="c?.firstName" [lastName]="c?.lastName"
+                  [fullName]="(c?.firstName?.concat(' ').concat(c?.lastName) | titlecase)" [plan_name]="c?.plan_name"
+                  [transAmount]="c?.transAmount" [transref]="c?.transref" [transType]="c?.transType"
+                  [transDate]="c?.transDate" [time]="c?.time"
+                  [agentFullName]="(c?.agent_firstname?.concat(' ').concat(c?.agent_lastname) | titlecase)"
+                  [transDateConcat]="(c?.transDate?.concat(' ').concat( c?.time ) | date: 'shortTime')"
+                  [content]="c?.content" (onOpen)="open(content, c)"></tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- End Table -->
+
+          <!-- Footer -->
+          <!-- <app-transactions-footer [tableLength]="commissionRecords?.length"></app-transactions-footer> -->
+          <!-- End Footer -->
+        </div>
+        <!-- End Tab Panel -->
 
       </div>
       <!-- End Tab Content -->
 
-      </div>
-      <!-- End Card -->
     </div>
-    <!-- End Content -->
+    <!-- End Card -->
+  </div>
 
-    <ng-template #content let-modal>
-      <app-receipt 
-      [customerId] = "modalContent?.customerId"
-      [fullName] = "(modalContent.firstName?.concat(' ').concat(modalContent?.lastName))"
-      [firstName] = "modalContent?.firstName"
-      [lastName] = "modalContent?.lastName"
-      [transDate] = "(modalContent.transDate?.concat(' ').concat(modalContent?.time))"
-      [transType] = "modalContent?.transType"
-      [transref] = "modalContent?.transref"
-      [transAmount] = "modalContent?.transAmount"
-      [accountNo] = "modalContent?.accountNo"
-      [userId] = "modalContent?.userId" 
-      [planName] = "modalContent?.plan_name" 
-      (onOpenPdfContent) = "openReceipt(modalContent)" 
-      (onPrintPdfContent) = "printReceipt(modalContent)" 
-      (onModalClose) = "modal.dismiss('Cross click')" 
-      ></app-receipt>
-      </ng-template>
+  <ngx-loading [show]="loading" ></ngx-loading>
+</div>
+<!-- End Content -->
+
+<ng-template #content let-modal>
+  <app-receipt [customerId]="modalContent?.customerId"
+    [fullName]="(modalContent.firstName?.concat(' ').concat(modalContent?.lastName))"
+    [firstName]="modalContent?.firstName" [lastName]="modalContent?.lastName"
+    [transDate]="(modalContent.transDate?.concat(' ').concat(modalContent?.time))" [transType]="modalContent?.transType"
+    [transref]="modalContent?.transref" [transAmount]="modalContent?.transAmount" [accountNo]="modalContent?.accountNo"
+    [userId]="modalContent?.userId" [planName]="modalContent?.plan_name" (onOpenPdfContent)="openReceipt(modalContent)"
+    (onPrintPdfContent)="printReceipt(modalContent)" (onModalClose)="modal.dismiss('Cross click')"></app-receipt>
+</ng-template>
+
+<ng-template #content2 let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Set Date Range</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+        (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <!-- Flatpickr -->
+        <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+          outsideDays="hidden">
+        </ngb-datepicker>
+
+        <ng-template #t let-date let-focused="focused">
+          <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+            [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+            (mouseleave)="hoveredDate = null">
+            {{ date.day }}
+          </span>
+        </ng-template>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+        (click)="modal.dismiss('Cross click')">Close</button>
+      <button type="button" class="btn btn-primary" (click)="onSave()">Save changes</button>
+    </div>
+  </div>
+</ng-template>

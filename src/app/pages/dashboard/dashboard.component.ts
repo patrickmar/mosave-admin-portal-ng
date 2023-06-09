@@ -55,6 +55,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   switch!: boolean;
   emptyTable = environment.emptyTable;
   maxCount = 5;
+  public loading = false;
+  public showComponent = false;
 
 
   @ViewChild(DataTableDirective, {static: false})
@@ -113,6 +115,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   last12Months!: string[];
   avgSavings!: number;
   avgWithdrawals!: number;
+  dateRanges!: Array<any>;
   
   
 
@@ -202,6 +205,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.getUserDetails();
     this.getAllCustomers();
     this.getAllTrxs();
+    this.dateRanges = this.statService.getDateRanges();
     //$('#datatable').DataTable();
     //this.jsOnLoad();
     this.dtOptions = {
@@ -290,43 +294,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   //     }      
   // });
   }
-  ranges = {
-    'TodayWithFormat': [moment().format('MMM D'), moment().format('MMM D, YYYY')],
-  }
-  ranges2 = {
-    'TodayWithFormat': [moment().format('MMM YYYY'), moment().format('MMM YYYY')],
-  }
+  //ranges = [moment().format('MMM D'), moment().format('MMM D, YYYY')]
+  //ranges2 = [moment().format('MMM YYYY'), moment().format('MMM YYYY')]
 
-  dateRanges = [
-    {
-      timeline: 'All',
-      date: [moment('04-07-2022'), moment()]
-    },
-    {
-      timeline: 'Today',
-      date: [moment(), moment()]
-    },
-    {
-      timeline: 'Yesterday',
-      date: [moment().subtract(1, 'days'), moment().subtract(1, 'days')]
-    },
-    {
-      timeline: 'Last 7 Days',
-      date: [moment().subtract(6, 'days'), moment()]
-    },
-    {
-      timeline: 'Last 30 Days',
-      date: [moment().subtract(29, 'days'), moment()],
-    },
-    {
-      timeline: 'This Month',
-      date: [moment().startOf('month'), moment().endOf('month')],
-    },
-    {
-      timeline: 'Last Month',
-      date: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-    }
-  ]
+  ranges = [moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
+  ranges2 = [moment(this.statService.lanchDate).startOf('day').format('MMM YYYY'), moment().endOf('day').format('MMM YYYY')]
 
   getLast12Months(){
     this.last12Months = new Array(12).fill(null).map((x, i) => moment().subtract(i, 'months').format('MMMM YYYY')); //this.statService.getMonthDate();
@@ -367,7 +339,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getAllCustomers(){ 
+  getAllCustomers(){
+    try {    
     this.dataService.getAllcustomers().subscribe((data: any) =>{
       console.log(data);
       this.customer = data;
@@ -387,16 +360,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }),((error: any)=>{
       console.log(error);
     })
+  } catch (error) {
+      
+    }
   }
 
   getAllTrxs() {
     try {
+      this.loading = true;
       forkJoin([
         this.dataService.getMosaveTransactions(),
         this.dataService.getMosaveSavingTransactions()
       ]).subscribe((result: any) => {
         console.log(result[0]);
         console.log(result[1]);
+        this.loading = false;
+      this.showComponent = true;
         const newRecords = result[0].map((res: any) => {
           const type2 = res.transType == "S" ? res.transType + "avings" : 
           res.transType == "W" ? res.transType + "ithdrawal" : res.transType + "";
@@ -502,10 +481,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
       
     } catch (error) {
-      this.toastService.showError('Please check your internet and refresh', 'Error');
-      
-    }
-    
+      this.loading = false;
+      this.toastService.showError('Please check your internet and refresh', 'Error');      
+    }    
 
   }
 

@@ -42,6 +42,8 @@ export class DetailsComponent implements OnInit {
   imagePath = environment.app.baseUrl + environment.app.imagePath;
   emptyTable = environment.emptyTable;
   loading: boolean = false;
+  public loading2 = false;
+  public showComponent = false;
   userPlans!: Array<any>;
   addInfo!: Array<any>;
   plansInfo!: Array<any> | any;
@@ -98,12 +100,9 @@ export class DetailsComponent implements OnInit {
     this.getCustomerPlans();
     this.getSavingPlans();
     this.getAllBanks();
-    console.log(this.user);
-    console.log(this.customer);
   }
 
   ngOnInit(): void {
-
     this.savingsForm = new FormGroup({
       accountName: new FormControl('', Validators.required),
       firstname: new FormControl('', Validators.required),
@@ -152,7 +151,7 @@ export class DetailsComponent implements OnInit {
         type: new FormControl('nuban'),
       }),
 
-      
+
     });
 
     this.PlanForm = new FormGroup({
@@ -186,20 +185,20 @@ export class DetailsComponent implements OnInit {
     //this.getCustomerPlans(this.customerId);
   }
 
-  switchWithdrawType(){
-    if(this.bankWithdrawal == false){
+  switchWithdrawType() {
+    if (this.bankWithdrawal == false) {
       this.bankWithdrawal = true;
-      this.withdrawalForm?.get('myCheckbox')?.valueChanges.subscribe((value:any) => {
-      if(value) {
-        this.withdrawalForm.get('bank')?.get('bankName')?.setValidators(Validators.required);
-        this.withdrawalForm.get('bank')?.get('account_number')?.setValidators(Validators.required);
-        this.withdrawalForm.get('bank')?.get('name')?.setValidators(Validators.required);
-        this.withdrawalForm.get('bank')?.get('bank_code')?.setValidators(Validators.required);
-      } else {
-        this.withdrawalForm.get('bank')?.clearValidators();
+      this.withdrawalForm?.get('myCheckbox')?.valueChanges.subscribe((value: any) => {
+        if (value) {
+          this.withdrawalForm.get('bank')?.get('bankName')?.setValidators(Validators.required);
+          this.withdrawalForm.get('bank')?.get('account_number')?.setValidators(Validators.required);
+          this.withdrawalForm.get('bank')?.get('name')?.setValidators(Validators.required);
+          this.withdrawalForm.get('bank')?.get('bank_code')?.setValidators(Validators.required);
+        } else {
+          this.withdrawalForm.get('bank')?.clearValidators();
+        }
       }
-    }
-);
+      );
     } else {
       this.bankWithdrawal = false;
     }
@@ -228,28 +227,35 @@ export class DetailsComponent implements OnInit {
   }
 
   getCustomerDetails() {
-    forkJoin([
-      this.dataService.getCustomerProfile(this.customerId)
-    ]).subscribe((res: any) => {
-      console.log(res[0]);
-      this.customer = res[0][0];
-      console.log(this.customer);
-      this.fullName = this.customer.firstName + ' ' + this.customer.lastName;
-      console.log(this.fullName);
-      var titlecase = new TitleCasePipe;
-      let form = {
-        firstname: titlecase.transform(this.customer?.firstName),
-        lastname: titlecase.transform(this.customer?.lastName),
-        accountName: titlecase.transform(this.fullName),
-        accountTypeId: this.customer?.accountTypeId,
-        account_num: this.customer?.account_num,
-      };
-      this.savingsForm.patchValue(form);
-      this.withdrawalForm.patchValue(form);
+    try {
+      this.loading2 = true;
+      forkJoin([
+        this.dataService.getCustomerProfile(this.customerId)
+      ]).subscribe((res: any) => {
+        console.log(res[0]);
+        this.customer = res[0][0];
+        console.log(this.customer);
+        this.fullName = this.customer.firstName + ' ' + this.customer.lastName;
+        console.log(this.fullName);
+        this.loading2 = false;
+        this.showComponent = true;
+        var titlecase = new TitleCasePipe;
+        let form = {
+          firstname: titlecase.transform(this.customer?.firstName),
+          lastname: titlecase.transform(this.customer?.lastName),
+          accountName: titlecase.transform(this.fullName),
+          accountTypeId: this.customer?.accountTypeId,
+          account_num: this.customer?.account_num,
+        };
+        this.savingsForm.patchValue(form);
+        this.withdrawalForm.patchValue(form);
 
-      this.getDetailsForProfileUpdate(this.customer);
-    });
-
+        this.getDetailsForProfileUpdate(this.customer);
+      });
+    } catch (error) {
+      this.loading2 = false;
+      this.toastService.showError('Could not fetch data', 'Error');
+    }
   }
 
   getDetailsForProfileUpdate(customer: any) {
@@ -287,9 +293,9 @@ export class DetailsComponent implements OnInit {
   getBankCode() {
     let bankCode = this.withdrawalForm.get("bank")?.get("bank_code")?.value;
     console.log(bankCode);
-    if(bankCode == ''){
+    if (bankCode == '') {
       this.toastService.showError('Please select Bank', 'Error');
-    }else {
+    } else {
       var match = this.allBanks.filter(function (obj: any) {
         return obj.code == bankCode;
       });
@@ -297,7 +303,7 @@ export class DetailsComponent implements OnInit {
       this.withdrawalForm.get("bank")?.get("bankName")?.setValue(match[0].name);
       return match[0];
     }
-    
+
   }
 
   verifyAccount(event: any) {
@@ -431,7 +437,7 @@ export class DetailsComponent implements OnInit {
     console.log(this.otpLength);
   }
 
-  Withdrawal2(){
+  Withdrawal2() {
     this.getSelectedPlan(this.withdrawalForm);
     console.log(this.withdrawalForm);
   }

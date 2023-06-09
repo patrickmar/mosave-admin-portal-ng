@@ -7,22 +7,23 @@
           <div class="input-group-prepend input-group-text">
             <i class="bi-search"></i>
           </div>
-          <input id="datatableSearch{{dateId}}" type="search" class="form-control" (input)="rerender($event)" placeholder="Search users" aria-label="Search users">
+          <input id="datatableSearch{{id}}" type="search" class="form-control" (input)="rerender($event)" placeholder="Search users" aria-label="Search users">
         </div>
         <!-- End Search -->
       </form>
     </div>
 
-
-
     <div class="d-grid d-sm-flex gap-2">
-      <div class="">
+      <div class="btn-group" *ngIf="ranges != undefined">
         <!-- Daterangepicker -->
-        <button id="js-daterangepicker-predefined{{dateId}}" class="btn btn-white btn-sm dropdown-toggle">
+        <button id="js-daterangepicker-predefined{{id}}" class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi-calendar-week"></i>
-          <span class="js-daterangepicker-predefined{{dateId}}-preview ms-1"></span>
+          <span class="js-daterangepicker-preview-{{id}} ms-1" >{{ranges[0] +' - '+ ranges[1] }}</span>
         </button>
-        <!-- End Daterangepicker -->
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
+          <a class="dropdown-item pickerDates" id="picker{{ix+1}}" [attr.data-range-key]="item.timeline" type="button" *ngFor="let item of dateRanges; let ix = index;" (click)="filterDate(item.date[0], item.date[1], item.timeline, id, tableName)">{{item?.timeline}}</a>
+        </div>
+        <!-- End Daterangepicker item.date[0], item.date[1], item.timeline -->
       </div>
       <!-- End Col -->
 
@@ -34,25 +35,25 @@
 
         <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
           <span class="dropdown-header">Options</span>
-          <a id="export-copy{{dateId}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadCopy(tableName)">
+          <a id="export-copy{{id}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadCopy(tableName)">
             <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg" alt="Image Description">
             Copy
           </a>
-          <a id="export-print{{dateId}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadPrint(tableName)">
+          <a id="export-print{{id}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadPrint(tableName)">
             <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg" alt="Image Description">
             Print
           </a>
           <div class="dropdown-divider"></div>
           <span class="dropdown-header">Download options</span>
-          <a id="export-excel{{dateId}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadExcel(tableName)">
+          <a id="export-excel{{id}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadExcel(tableName)">
             <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg" alt="Image Description">
             Excel
           </a>
-          <a id="export-csv{{dateId}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadCsv(tableName)">
+          <a id="export-csv{{id}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadCsv(tableName)">
             <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
             .CSV
           </a>
-          <a id="export-pdf{{dateId}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadPdf(tableName)">
+          <a id="export-pdf{{id}}" class="dropdown-item" href="javascript:;" type="button" (click)="downloadPdf(tableName)">
             <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg" alt="Image Description">
             PDF
           </a>
@@ -63,7 +64,7 @@
       <!-- Dropdown -->
       <div class="dropdown">
         <button type="button" class="btn btn-white btn-sm w-100" id="showHideDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-          <i class="bi-table me-1"></i> Columns <span class="badge bg-soft-dark text-dark rounded-circle ms-1">7</span>
+          <i class="bi-table me-1"></i> Columns <span class="badge bg-soft-dark text-dark rounded-circle ms-1">{{header.length}}</span>
         </button>
 
         <div class="dropdown-menu dropdown-menu-end dropdown-card" aria-labelledby="showHideDropdown" style="width: 15rem;">
@@ -89,3 +90,7 @@
     </div>
   </div>
   <!-- End Header -->
+
+  
+
+

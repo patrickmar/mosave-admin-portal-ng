@@ -6,11 +6,13 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./transactions-header.component.css']
 })
 export class TransactionsHeaderComponent implements OnInit {
-  @Input() dateId?: number;
-  @Input() tableId?: number;
-  @Input() tableName?: string;
-  @Input() header!: Array<any>
+  //@Input() dateId!: number;
+  @Input() id!: number;
+  @Input() tableName!: string;
+  @Input() header!: Array<any>;
   @Input() event!: any;
+  @Input() ranges!: Array<string>;
+  @Input() dateRanges!: Array<any>;
   @Output() onRender: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadCopy: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadPrint: EventEmitter<any> = new EventEmitter();
@@ -18,6 +20,7 @@ export class TransactionsHeaderComponent implements OnInit {
   @Output() onDownloadCsv: EventEmitter<any> = new EventEmitter();
   @Output() onDownloadPdf: EventEmitter<any> = new EventEmitter();
   @Output() onShowColumn: EventEmitter<any> = new EventEmitter();
+  @Output() onFilterDate: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -34,7 +37,7 @@ export class TransactionsHeaderComponent implements OnInit {
     this.onDownloadPrint?.emit(value);
   }
   downloadExcel(value:any){
-    this.onDownloadExcel?.emit(value);
+    this.onDownloadExcel?.emit(value); 
   }
   downloadCsv(value:any){
     this.onDownloadCsv?.emit(value);
@@ -44,6 +47,10 @@ export class TransactionsHeaderComponent implements OnInit {
   }
   showColumn(value:any, number: number){
     this.onShowColumn?.emit({value: value, id: number});
+  }
+  filterDate(start:any, end:any, timeline: string, id: number, tableName: string){
+    const value = {start, end, timeline, id, tableName}
+    this.onFilterDate?.emit(value);
   }
 
 }

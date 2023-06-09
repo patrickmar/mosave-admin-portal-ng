@@ -42,7 +42,7 @@
                             <label for="eventTitleLabel" class="form-label">Title <i
                                     class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
                                     data-bs-placement="top"
-                                    title="The title of the event ticket you intend to sell"></i></label>
+                                    ngbTooltip="The title of the event ticket you intend to sell"></i></label>
 
                             <input type="text" class="form-control mb-1" formControlName="eventTitle"
                                 id="eventTitleLabel" placeholder="Flytime Festival" aria-label="Title" value="">
@@ -568,7 +568,7 @@
                         <div class="mb-4">
                             <label for="bearerLabel" class="form-label">Charges Bearer <i
                                     class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Who bears Paystack charges?"></i></label>
+                                    data-bs-placement="top" ngbTooltip="Who bears Paystack charges?"></i></label>
 
                             <!-- Select -->
                             <div class="tom-select-custom">
@@ -650,7 +650,7 @@
                                 <span class="col-8 col-sm-9 ms-0">
                                     <span class="text-dark">Enable Event <i class="bi-question-circle text-body ms-1"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="Activate event for purchase."></i></span>
+                                            ngbTooltip="Activate event for purchase."></i></span>
                                 </span>
                                 <span class="col-4 col-sm-3 text-end">
                                     <input type="checkbox" class="form-check-input" formControlName="enableEvent"
@@ -666,7 +666,7 @@
                                     <span class="text-dark">Enable Seat Arrangement <i
                                             class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
                                             data-bs-placement="top"
-                                            title="Enable the option to generate a seat number for customers"></i></span>
+                                            ngbTooltip="Enable the option to generate a seat number for customers"></i></span>
                                 </span>
                                 <span class="col-4 col-sm-3 text-end">
                                     <input type="checkbox" class="form-check-input" (change)="displaySeat()"

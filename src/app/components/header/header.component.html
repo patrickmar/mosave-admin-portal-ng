@@ -13,8 +13,8 @@
       <div class="navbar-nav-wrap-content-start">
         <!-- Navbar Vertical Toggle -->
         <button type="button" class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler">
-          <i class="bi-arrow-bar-left navbar-toggler-short-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" title="Collapse"></i>
-          <i class="bi-arrow-bar-right navbar-toggler-full-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" title="Expand"></i>
+          <i class="bi-arrow-bar-left navbar-toggler-short-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" ngbTooltip="Collapse"></i>
+          <i class="bi-arrow-bar-right navbar-toggler-full-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" ngbTooltip="Expand"></i>
         </button>
 
         <!-- End Navbar Vertical Toggle -->
@@ -103,7 +103,7 @@
                       <img class="avatar avatar-xs avatar-circle" [src]="avatar" alt="Image Description" onerror="this.src=avatar">
                     </div>
                     <div class="flex-grow-1 text-truncate ms-2">
-                      <span>{{user.firstName.concat(' ').concat(user.lastName) }} <i class="tio-verified text-primary" data-toggle="tooltip" data-placement="top" title="Top endorsed"></i></span>
+                      <span>{{user.firstName.concat(' ').concat(user.lastName) }} <i class="tio-verified text-primary" data-toggle="tooltip" data-placement="top" ngbTooltip="Top endorsed"></i></span>
                     </div>
                   </div>
                 </a>

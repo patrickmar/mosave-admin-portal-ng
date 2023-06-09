@@ -10,7 +10,6 @@ import { ToastService } from 'src/app/services/toast.service';
 import { PasswordValidator } from 'src/app/validators/password.validator';
 import { PhoneValidator } from 'src/app/validators/phone.validator';
 declare var HSCore: any;
-declare var HSFileAttach: any;
 
 @Component({
   selector: 'app-create-program',
@@ -33,6 +32,12 @@ export class CreateProgramComponent implements OnInit {
   files: File[] = [];
   maxFileSize: number = 1000000;
   allPrograms!: Array<any>;
+  show: boolean = false;
+  inputType: string = 'password';
+  passwordIcon: string = 'bi-eye-slash';
+  show2: boolean = false;
+  inputType2: string = 'password';
+  passwordIcon2: string = 'bi-eye-slash';
 
   constructor(private toastService: ToastService, private dataService: DataService,
     private route: ActivatedRoute, private titleCasePipe: TitleCasePipe, private router: Router,
@@ -145,7 +150,30 @@ export class CreateProgramComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    HSCore.components.HSTomSelect.init('.js-select')
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
+
+  showPassword(){
+    this.show = !this.show;
+      if (this.show) {
+        this.inputType = 'text';
+        this.passwordIcon = 'bi-eye'
+      } else {
+        this.inputType = 'password';
+        this.passwordIcon = 'bi-eye-slash'
+      }
+  }
+
+  showPassword2(){
+    this.show2 = !this.show2;
+      if (this.show2) {
+        this.inputType2 = 'text';
+        this.passwordIcon2 = 'bi-eye'
+      } else {
+        this.inputType2 = 'password';
+        this.passwordIcon2 = 'bi-eye-slash'
+      }
   }
 
   getProgramType() {
@@ -349,13 +377,6 @@ export class CreateProgramComponent implements OnInit {
     } else {
       this.toastService.showError('Please upload ' + this.titleCasePipe.transform(this.getProgramType()) + ' logo', 'Error');
     }
-
-  }
-
-  jsInit() {
-    // INITIALIZATION OF SELECT
-    // =======================================================
-    HSCore.components.HSTomSelect.init('.js-select')
   }
 
 }

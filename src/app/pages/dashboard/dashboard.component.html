@@ -1,5 +1,5 @@
     <!-- Content -->
-    <div class="content container-fluid">
+    <div class="content container-fluid" *ngIf="showComponent">
       <!-- Page Header -->
       <div class="page-header">
         <div class="row align-items-center">
@@ -115,9 +115,7 @@
           <!-- End Card -->
         </div>
       </div>
-      <!-- End Stats -->
-
-      
+      <!-- End Stats -->     
 
       <div class="row">
         <div class="col-lg-6 mb-3 mb-lg-5">
@@ -131,7 +129,7 @@
               <div class="btn-group">
               <button id="js-daterangepicker-predefined" class="btn btn-ghost-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi-calendar-week"></i>
-                <span class="js-daterangepicker-predefined-preview ms-1" >{{ranges.TodayWithFormat[0] +' - '+ ranges.TodayWithFormat[1] }}</span>
+                <span class="js-daterangepicker-predefined-preview ms-1" >{{ranges[0] +' - '+ ranges[1] }}</span>
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" type="button" *ngFor="let item of dateRanges" (click)="filterDataByDate(item.date[0], item.date[1], item.timeline)">{{item?.timeline}}</a>
@@ -252,7 +250,6 @@
         </div>
       </div>
 
-
       <div class="row">
         <div class="col-lg-4 mb-3 mb-lg-5">
           <!-- Card -->
@@ -303,7 +300,7 @@
               <!-- End Badge -->
 
               <!-- Checkbox Switch -->
-              <div class="form-check form-switch form-switch-between" title="switch to see Bank Account">
+              <div class="form-check form-switch form-switch-between" ngbTooltip="switch to see Bank Account">
                 <input id="updatingBarChartControl" class="form-check-input" type="checkbox" (change)="switch = !switch;">
               </div>
               <!-- End Checkbox Switch -->
@@ -446,7 +443,7 @@
               <div class="btn-group">
                 <button id="js-daterangepicker" class="btn btn-ghost-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi-calendar-week"></i>
-                  <span class="js-daterangepicker-preview ms-1" >{{ranges2.TodayWithFormat[0] +' - '+ ranges2.TodayWithFormat[1] }}</span>
+                  <span class="js-daterangepicker-preview ms-1" >{{ranges2[0] +' - '+ ranges2[1] }}</span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" type="button" *ngFor="let item of last12Months" (click)="filterDataByMonth(item, 'All')">{{item}}</a>
@@ -534,7 +531,7 @@
                         <!-- End Col -->
 
                         <div class="col-auto">
-                          <a class="btn btn-primary btn-sm" href="{{item.url}}" title="Go to website" target="_blank">
+                          <a class="btn btn-primary btn-sm" href="{{item.url}}" ngbTooltip="Go to website" target="_blank">
                             Launch <span class="d-none d-sm-inline-block"></span>
                             <i class="bi-box-arrow-up-right ms-1"></i>
                           </a>
@@ -603,9 +600,9 @@
               <div class="row mb-4">
                 <div class="col-sm mb-2 mb-sm-0">
                   <div class="d-flex align-items-center">
-                    <span class="h1 text-success mb-0" title="Savings Collected during this period">{{savingsGraphSum > 0 ? (savingsGraphSum | shortNumber) : 0}}</span>
+                    <span class="h1 text-success mb-0" ngbTooltip="Savings Collected during this period">{{savingsGraphSum > 0 ? (savingsGraphSum | shortNumber) : 0}}</span>
                     <span class="h1 ms-2 mb-0">|</span>
-                    <span class="h1 text-danger me-2 ms-2 mb-0" title="Withdrawals completed during this period">{{withdrawalGraphSum > 0 ? (withdrawalGraphSum | shortNumber) : 0}}</span>
+                    <span class="h1 text-danger me-2 ms-2 mb-0" ngbTooltip="Withdrawals completed during this period">{{withdrawalGraphSum > 0 ? (withdrawalGraphSum | shortNumber) : 0}}</span>
                   </div>
                 </div>
                 <!-- End Col -->
@@ -646,7 +643,6 @@
         <!-- End Col -->
       </div>
       <!-- End Row -->
-
 
       <!-- Card -->
       <div class="card mb-3 mb-lg-5">
@@ -823,8 +819,9 @@
       </div>
       <!-- End Card -->
 
-      
     </div>
     <!-- End Content -->
+
+    <ngx-loading [show]="loading"></ngx-loading>
 
 <app-edit-customer></app-edit-customer>

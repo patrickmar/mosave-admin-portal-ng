@@ -40,7 +40,7 @@
     </div>
 </div>
 <!-- End Content -->
-<div class="content container-fluid" style="margin-top: -22rem;">
+<div class="content container-fluid" style="margin-top: -22rem;" *ngIf="showComponent">
 
     <!-- <ng-container *ngIf="lineChartData != undefined"> -->
         <!-- <app-chart #chart
@@ -149,3 +149,5 @@
     <!-- End Card -->
       
 </div>
+
+<ngx-loading [show]="loading"></ngx-loading>

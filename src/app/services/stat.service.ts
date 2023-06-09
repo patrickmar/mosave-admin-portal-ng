@@ -14,12 +14,11 @@ export interface data {
 export class StatService {
   dictFileSizeUnits: any = { tb: "TB", gb: "GB", mb: "MB", kb: "KB", b: "b" }
   filesizeBase: number = 1000;
+  lanchDate: string = '04-07-2022'
 
   constructor(private datePipe: DatePipe) { 
     
   }
-
-  
 
   getBestStat(array: Array<any>, total: number){
     console.log(total);
@@ -361,6 +360,45 @@ getTicketTrnxByDays(elements: Array<any>) {
   console.log(data);
   return data;
 };
+
+getDateRanges(){
+  // get an array of all the date ranges
+  const data = [
+    {
+      timeline: 'All',
+      date: [moment(this.lanchDate).startOf('day'), moment().endOf('day')]
+    },
+    {
+      timeline: 'Today',
+      date: [moment().startOf('day'), moment().endOf('day')]
+    },
+    {
+      timeline: 'Yesterday',
+      date: [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')]
+    },
+    {
+      timeline: 'Last 7 Days',
+      date: [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')]
+    },
+    {
+      timeline: 'Last 30 Days',
+      date: [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+    },
+    {
+      timeline: 'This Month',
+      date: [moment().startOf('month').startOf('day'), moment().endOf('month').endOf('day')],
+    },
+    {
+      timeline: 'Last Month',
+      date: [moment().subtract(1, 'month').startOf('month').startOf('day'), moment().subtract(1, 'month').endOf('month').endOf('day')]
+    },
+    {
+      timeline: 'Custom Range',
+      date: []
+    }
+  ]
+  return data;
+}
   
   
 }

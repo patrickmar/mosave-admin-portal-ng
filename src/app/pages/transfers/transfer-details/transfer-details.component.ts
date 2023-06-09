@@ -12,6 +12,7 @@ import { Location } from '@angular/common'
 export class TransferDetailsComponent implements OnInit {
   transferRecord!: object | any;
   loading!: boolean;
+  public showComponent = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private location: Location,
     private dataService: DataService, private toastService: ToastService, private injector: Injector) { }
@@ -33,6 +34,7 @@ export class TransferDetailsComponent implements OnInit {
         console.log(res);
         if(res?.status == true){
           this.loading = false;
+          this.showComponent = true;
           this.transferRecord = res.data;
         }else {
           this.toastService.showError(res?.message, 'Error');
@@ -40,6 +42,7 @@ export class TransferDetailsComponent implements OnInit {
        });
     } catch (error: any) {
       console.log(error);
+      this.loading = false;  
       this.toastService.showError(error?.message, 'Error');      
     }
      

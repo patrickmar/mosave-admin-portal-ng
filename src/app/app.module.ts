@@ -8,8 +8,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataTablesModule } from 'angular-datatables';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { ClipboardModule } from 'ngx-clipboard';
+import { NgbModalModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxLoadingModule, ngxLoadingAnimationTypes } from "ngx-loading";
 
-import { DatePipe, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { DatePipe, DecimalPipe, JsonPipe, TitleCasePipe } from '@angular/common';
 import { UserDataResolver } from './resolvers/userData.resolvers';
 
 import { AppComponent } from './app.component';
@@ -28,7 +30,6 @@ import { RegisterCustomerComponent } from './pages/register-customer/register-cu
 import { ProfileComponent } from './pages/profile/profile.component';
 import { DetailsComponent } from './pages/customers/details/details.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
-import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { ReceiptComponent } from './modals/receipt/receipt.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -61,6 +62,8 @@ import { ShortNumberPipe } from './pipes/short-number.pipe';
 // import { Chart } from 'chart.js';
 // let myChart = new Chart(new CanvasRenderingContext2D());
 
+
+
 const appRoutes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: "login", component: LoginComponent, canActivate:[NonAuthGuard]},
@@ -86,6 +89,20 @@ const appRoutes: Routes = [
   {path: "page-not-found", component: PageNotFoundComponent},
   { path: '**', redirectTo: 'page-not-found'},
 ]
+
+const Primary = '#dd0031';
+const Secondary = '#1976d2';
+const tertiary = '#ffffff';
+
+const appLoader = {
+  animationType: ngxLoadingAnimationTypes.circle, //threeBounce, circle, cubeGrid, pulse, rectangleBounce, rotatingPlane, wanderingCubes, doubleBounce, chasingDots, circleSwish,
+  backdropBackgroundColour: 'rgba(0, 0, 0, 0.3)',
+  backdropBorderRadius: '3px',
+  primaryColour: Primary,
+  secondaryColour: Secondary,
+  tertiaryColour: tertiary,
+  fullScreenBackdrop: false,
+}
 
 @NgModule({
   declarations: [
@@ -134,15 +151,18 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule, 
     HttpClientModule,
+    NgbModule,
     NgbModalModule,
+    NgbDatepickerModule,
     NgxDropzoneModule,
     BrowserAnimationsModule,
     NgChartsModule,
     ClipboardModule,
     ToastrModule.forRoot(),
-    RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'})
+    RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'}),
+    NgxLoadingModule.forRoot(appLoader),
   ],
-  providers: [DatePipe, DateAgoPipe, DecimalPipe, TitleCasePipe, FormCheckService],
+  providers: [DatePipe, DateAgoPipe, DecimalPipe, TitleCasePipe, JsonPipe, FormCheckService],
   bootstrap: [AppComponent],
   exports: [RouterModule, ShowHidePasswordComponent,]
 })

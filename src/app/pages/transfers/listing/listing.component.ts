@@ -37,7 +37,16 @@ export class ListingComponent implements OnInit, OnDestroy {
   lastWeekTransferSum!: number;
   thisWeekTransferSum!: number;
   thisMonthTransferSum!: number;
-  
+
+  public loading = false;
+  public showComponent = false;
+  totalFailedSum: any;
+  lastWeekFailedTransfer!: any;
+  thisWeekFailedTransfer!: any;
+  thisMonthFailedTransfer!: any;
+  thisWeekFailedTransferSum!: number;
+  lastWeekFailedTransferSum!: number;
+  thisMonthFailedTransferSum!: number;
 
   constructor(private dataService: DataService, private toastService: ToastService,
     private route: Router) {
@@ -143,15 +152,19 @@ export class ListingComponent implements OnInit, OnDestroy {
     let params = decodeURIComponent(new URLSearchParams(config).toString());
     console.log(params);
     try {
+      this.loading = true;
       this.dataService.getAllTransfers(params).subscribe((res: any) => {
         console.log(res);
+        this.loading = false;
+      this.showComponent = true;
         if(res?.status == true){
           this.transferRecords = res.data;
           this.successRecords = res.data.filter((item: any) => item.status === 'success');
-          console.log(this.successRecords);
           this.failedRecords = res.data.filter((item: any) => item.status === 'error' || item.status === 'fail');
             //calculate the total successful transfers
             this.totalSum = this.successRecords.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
+            //calculate the total failed transfers
+            this.totalFailedSum = this.failedRecords.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
             this.getAllTimeTransfers();
             console.log(this.totalSum);
           this.dtTrigger.next('');
@@ -161,7 +174,8 @@ export class ListingComponent implements OnInit, OnDestroy {
        });
     } catch (error: any) {
       console.log(error);
-      this.toastService.showError(error?.message, 'Error');      
+      this.loading = false;
+      this.toastService.showError(error?.message, 'Error');
     }
      
   }
@@ -176,7 +190,12 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.lastWeekTransfer = this.successRecords.filter((m: any) => new Date(m.transferred_at) >= new Date(startOfLastWeek) && new Date(m.transferred_at) <= new Date(endOfLastWeek));
     this.thisWeekTransfer = this.successRecords.filter((m: any) => new Date(m.transferred_at) >= new Date(startOfWeek) && new Date(m.transferred_at) <= new Date(endOfWeek));
     this.thisMonthTransfer = this.successRecords.filter((m: any) => new Date(m.transferred_at) >= new Date(startOfMonth) && new Date(m.transferred_at) <= new Date(endOfMonth));
+
+    this.lastWeekFailedTransfer = this.failedRecords.filter((m: any) => new Date(m.transferred_at) >= new Date(startOfLastWeek) && new Date(m.transferred_at) <= new Date(endOfLastWeek));
+    this.thisWeekFailedTransfer = this.failedRecords.filter((m: any) => new Date(m.transferred_at) >= new Date(startOfWeek) && new Date(m.transferred_at) <= new Date(endOfWeek));
+    this.thisMonthFailedTransfer = this.failedRecords.filter((m: any) => new Date(m.transferred_at) >= new Date(startOfMonth) && new Date(m.transferred_at) <= new Date(endOfMonth));
     this.getSumOfTransfers();
+    this.getSumOfFailedTransfers();
   }
 
   getSumOfTransfers() {
@@ -184,6 +203,13 @@ export class ListingComponent implements OnInit, OnDestroy {
       this.lastWeekTransferSum = this.lastWeekTransfer.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
       this.thisWeekTransferSum = this.thisWeekTransfer.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
       this.thisMonthTransferSum = this.thisMonthTransfer.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
+    }
+
+    getSumOfFailedTransfers() {
+      //calculate the sum of transfer per time.
+      this.lastWeekFailedTransferSum = this.lastWeekFailedTransfer.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
+      this.thisWeekFailedTransferSum = this.thisWeekFailedTransfer.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
+      this.thisMonthFailedTransferSum = this.thisMonthFailedTransfer.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
     }
 
     viewRecord(id: string){

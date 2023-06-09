@@ -1,16 +1,15 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, QueryList, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, ElementRef, Input, NgZone, OnDestroy, OnInit, Output, QueryList, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbActiveModal, NgbCalendar, NgbDate, NgbModal, NgbDatepickerModule, NgbDateStruct, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { forkJoin, Subject } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { ReceiptService } from 'src/app/services/receipt.service';
 import { StatService } from 'src/app/services/stat.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 //import { moment} from 'moment';
-//import * as moment from 'moment';
-//import moment = require('moment');
 declare var $: any;
 declare var moment: any;
 declare var HSCore: any;
@@ -36,6 +35,9 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
 
+  public loading = false;
+  public showComponent = false;
+
   transactionType!: any;
   records!: Array<any>;
   recordsExist: boolean = false;
@@ -47,6 +49,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   commissionRecords: any;
   customerId!: number;
   modalContent!: object | any;
+  modalContent2!: object | any;
 
   totalSum!: number;
   savingsSum!: number;
@@ -96,57 +99,31 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   bestSavers!: Array<any>;
   emptyTable = environment.emptyTable;
   table = ['datatable', 'savingsDatatable', 'withdrawalsDatatable', 'commissionsDatatable']
-
-  ranges = {
-    'TodayWithFormat': [moment().format('MMM D'), moment().format('MMM D, YYYY')],
-  }
-  ranges2 = {
-    'TodayWithFormat': [moment().format('MMM YYYY'), moment().format('MMM YYYY')],
-  }
-
-  dateRanges = [
-    {
-      timeline: 'All',
-      date: [moment('04-07-2022'), moment()]
-    },
-    {
-      timeline: 'Today',
-      date: [moment(), moment()]
-    },
-    {
-      timeline: 'Yesterday',
-      date: [moment().subtract(1, 'days'), moment().subtract(1, 'days')]
-    },
-    {
-      timeline: 'Last 7 Days',
-      date: [moment().subtract(6, 'days'), moment()]
-    },
-    {
-      timeline: 'Last 30 Days',
-      date: [moment().subtract(29, 'days'), moment()],
-    },
-    {
-      timeline: 'This Month',
-      date: [moment().startOf('month'), moment().endOf('month')],
-    },
-    {
-      timeline: 'Last Month',
-      date: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-    }
-  ]
+  //ranges = [moment().format('MMM D'), moment().format('MMM D, YYYY')]
+  ranges = [moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
+  dateRanges!: Array<any>;
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate;
+  toDate: NgbDate | null = null;
 
   constructor(private dataService: DataService, private datePipe: DatePipe,
     private receiptService: ReceiptService, private modalService: NgbModal,
     private cdr: ChangeDetectorRef, private ngZone: NgZone, private route: ActivatedRoute,
-    private statService: StatService) { }
+    private statService: StatService, calendar: NgbCalendar, private toastService: ToastService, private router: Router) {
+    this.fromDate = calendar.getToday();
+    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+  }
 
   ngOnInit(): void {
     // this.jsInit();
     // this.jsOnLoad();
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.getTableHead();
     this.getTransactionType();
     //this.dtOptions
     var time = new Date().getTime();
+
+    this.dateRanges = this.statService.getDateRanges();
 
     const dtOptions = {
       pagingType: 'full_numbers',
@@ -213,12 +190,8 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     //this.cdr.detectChanges();
   }
 
-
-
   ngAfterViewInit(): void {
     //this.dtTrigger.next('');
-
-    this.jsInit();
     this.jsOnLoad();
   }
 
@@ -309,12 +282,16 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getAllTrxs() {
+    try {
+      this.loading = true;
     forkJoin([
       this.dataService.getMosaveTransactions(),
       this.dataService.getMosaveSavingTransactions()
     ]).subscribe((result: any) => {
       console.log(result[0]);
       console.log(result[1]);
+      this.loading = false;
+      this.showComponent = true;
       const newRecords = result[0].map((res: any) => {
         if (res.transType == "S") {
           var type = res.transType + "avings";
@@ -345,19 +322,17 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");
       this.commTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'commission');
       this.dtTrigger.next('');
-
-
-      let date = new Date();
+      //let date = new Date();
       // let today = date.setDate(date.getDate() - 0);
       // let yesterday = date.setDate(date.getDate() - 1);
       // let lastweek = date.setDate(date.getDate() - 7);
 
-      const endDate4 = this.datePipe.transform(new Date().setDate(new Date().getDate()), 'YYYY-MM-dd');
-      console.log(endDate4);
-      console.log(date.getDate());
-      let d = new Date();
-      const today5 = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-      console.log(today5);
+      //const endDate4 = this.datePipe.transform(new Date().setDate(new Date().getDate()), 'YYYY-MM-dd');
+      //console.log(endDate4);
+      //console.log(date.getDate());
+      //let d = new Date();
+      //const today5 = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+      //console.log(today5);
 
       this.getDailyTransactions();
       this.getMonthlyTransactions();
@@ -367,12 +342,15 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.calculateDailyTransactions();
       this.calculateMonthlyTransactions();
       this.calculateWeeklyTransactions();
-
       this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
 
     }), (error: any) => {
       console.log(error);
     }
+  } catch (error) {
+    this.loading = false;
+    this.toastService.showError('Error fetching data. Please refresh this page', 'Error');     
+  }
 
   }
 
@@ -534,9 +512,9 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(content);
   }
 
-  showColumn(ev: any, tableName: string){
-    if(typeof (ev.value.target.checked) === 'boolean'){
-        $("#" + tableName).DataTable().columns(ev.id).visible(ev.value.target.checked)
+  showColumn(ev: any, tableName: string) {
+    if (typeof (ev.value.target.checked) === 'boolean') {
+      $("#" + tableName).DataTable().columns(ev.id).visible(ev.value.target.checked)
     }
   }
 
@@ -552,72 +530,11 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
       if (elVal === 'null') elVal = '';
       $("#datatable").DataTable().column(targetColumnIndex).search(elVal, true, false, false).draw(false);
     });
-
-    // const datatable = $("#datatable").DataTable();
-
-    // $('.js-datatable-filter').on('change', function (this: any) {
-    //   var $this = $(this),
-    //     elVal = $this.val(),
-    //     targetColumnIndex = $this.data('target-column-index');
-
-    //   datatable.column(targetColumnIndex).search(elVal).draw();
-    // });
-
-    // $('#datatableSearch').on('mouseup', function (this: any) {
-    //   var $input = $(this),
-    //     oldValue = $input.val();
-
-    //   if (oldValue == "") return;
-
-    //   setTimeout(()=> {
-    //     var newValue = $input.val();
-
-    //     if (newValue == "") {
-    //       // Gotcha
-    //       datatable.search('').draw();
-    //     }
-    //   }, 1);
-    // });
-
-    // $('#toggleColumn_ref').change(function (e: any) { 
-    //   datatable.columns(1).visible(e.target.checked)
-    // })
-
-    // $('#toggleColumn_customer').change(function (e: any) {
-    //   datatable.columns(2).visible(e.target.checked)
-    // })
-
-    // $('#toggleColumn_amount').change(function (e: any) {
-    //   datatable.columns(3).visible(e.target.checked)
-    // })
-
-    // $('#toggleColumn_plan').change(function (e: any) {
-    //   datatable.columns(4).visible(e.target.checked)
-    // })
-
-    // $('#toggleColumn_transaction_type').change(function (e: any) {
-    //   datatable.columns(5).visible(e.target.checked)
-    // })
-
-    // $('#toggleColumn_date').change(function (e: any) {
-    //   datatable.columns(6).visible(e.target.checked)
-    // })
-
-    // datatable.columns(7).visible(false)
-
-    // $('#toggleColumn_phone_no').change(function (e: any) {
-    //   datatable.columns(7).visible(e.target.checked)
-    // })
-
-    // $('#toggleColumn_actions').change(function (e: any) {
-    //   datatable.columns(8).visible(e.target.checked)
-    // })
   }
 
   getTableHead() {
     this.tableHead = [
       {
-
         id: 1,
         name: "Reference"
       },
@@ -653,298 +570,106 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  jsInit() {
-    var self = this;
-    $(document).on('ready', function () {
-      // INITIALIZATION OF DATATABLES
-      // =======================================================
-      // HSCore.components.HSDatatables.init($('#datatable'), {
-      //   dom: 'Bfrtip',
-      //   buttons: [
-      //     {
-      //       extend: 'copy',
-      //       className: 'd-none'
-      //     },
-      //     {
-      //       extend: 'excel',
-      //       className: 'd-none'
-      //     },
-      //     {
-      //       extend: 'csv',
-      //       className: 'd-none'
-      //     },
-      //     {
-      //       extend: 'pdf',
-      //       className: 'd-none'
-      //     },
-      //     {
-      //       extend: 'print',
-      //       className: 'd-none'
-      //     },
-      //   ],
-      //   select: {
-      //     style: 'multi',
-      //     selector: 'td:first-child input[type="checkbox"]',
-      //     classMap: {
-      //       checkAll: '#datatableCheckAll',
-      //       counter: '#datatableCounter',
-      //       counterInfo: '#datatableCounterInfo'
-      //     }
-      //   },
-      //   language: {
-      //     zeroRecords: `<div class="text-center p-4">
-      //         <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-      //         <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
-      //       <p class="mb-0">No data to show</p>
-      //       </div>`
-      //   }
-      // });
 
-      //const datatable = HSCore.components.HSDatatables.getItem('datatable');
-      // const datatable = $("#datatable").DataTable();
-
-      // $('.js-datatable-filter').on('change', function (this: any) {
-      //   var $this = $(this),
-      //     elVal = $this.val(),
-      //     targetColumnIndex = $this.data('target-column-index');
-
-      //   datatable.column(targetColumnIndex).search(elVal).draw();
-      // });
-
-      // $('#datatableSearch').on('mouseup', function (this: any) {
-      //   var $input = $(this),
-      //     oldValue = $input.val();
-
-      //   if (oldValue == "") return;
-
-      //   setTimeout(function () {
-      //     var newValue = $input.val();
-
-      //     if (newValue == "") {
-      //       // Gotcha
-      //       datatable.search('').draw();
-      //     }
-      //   }, 1);
-      // });
-
-      // $('#toggleColumn_ref').change(function (e: any) { 
-      //   datatable.columns(1).visible(e.target.checked)
-      // })
-
-      // $('#toggleColumn_customer').change(function (e: any) {
-      //   datatable.columns(2).visible(e.target.checked)
-      // })
-
-      // $('#toggleColumn_amount').change(function (e: any) {
-      //   datatable.columns(3).visible(e.target.checked)
-      // })
-
-      // $('#toggleColumn_plan').change(function (e: any) {
-      //   datatable.columns(4).visible(e.target.checked)
-      // })
-
-      // $('#toggleColumn_transaction_type').change(function (e: any) {
-      //   datatable.columns(5).visible(e.target.checked)
-      // })
-
-      // $('#toggleColumn_date').change(function (e: any) {
-      //   datatable.columns(6).visible(e.target.checked)
-      // })
-
-      // datatable.columns(7).visible(false)
-
-      // $('#toggleColumn_phone_no').change(function (e: any) {
-      //   datatable.columns(7).visible(e.target.checked)
-      // })
-
-      // $('#toggleColumn_actions').change(function (e: any) {
-      //   datatable.columns(8).visible(e.target.checked)
-      // })
-
-
-
-
-
-
-      // INITIALIZATION OF DATERANGEPICKER
-      // =======================================================
-      // $('.js-daterangepicker').daterangepicker();
-
-      $('.js-daterangepicker-times').daterangepicker({
-        timePicker: true,
-        startDate: moment().startOf('hour'),
-        endDate: moment().startOf('hour').add(32, 'hour'),
-        locale: {
-          format: 'M/DD hh:mm A'
-        }
-      });
-
-      var start = moment();
-      var end = moment();
-
-      // function to filter the all transactions per date
-      function cb(start: any, end: any) {
-        $('#js-daterangepicker-predefined1 .js-daterangepicker-predefined1-preview').html(start.format('MMM D') + ' - ' + end.format('MMM D, YYYY'));
-        const startDate = start.format('YYYY-MM-DD');
-        const endDate = end.format('YYYY-MM-DD');
-        console.log(startDate);
-        console.log(endDate);
-        //self.onChange(startDate, endDate);
-        self.applyfilter(1, "datatable");
-      }
-
-      $('#js-daterangepicker-predefined1').daterangepicker({
-        startDate: start,
-        endDate: end,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'This week': [moment().startOf('week'), moment().endOf('week')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
-      }, cb);
-
-      cb(start, end);
-
-      // function to filter the savings transactions per date
-      function cb2(start: any, end: any) {
-        $('#js-daterangepicker-predefined2 .js-daterangepicker-predefined2-preview').html(start.format('MMM D') + ' - ' + end.format('MMM D, YYYY'));
-        const startDate = start.format('YYYY-MM-DD');
-        const endDate = end.format('YYYY-MM-DD');
-        //self.onChangeSav(startDate, endDate);
-        self.applyfilter(2, "savingsDatatable");
-
-      }
-
-      $('#js-daterangepicker-predefined2').daterangepicker({
-        startDate: start,
-        endDate: end,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'This week': [moment().startOf('week'), moment().endOf('week')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
-      }, cb2);
-
-      cb2(start, end);
-
-
-      //this is the place
-
-      // function to filter the withdrawal transactions per date
-      function cb3(start: any, end: any) {
-        $('#js-daterangepicker-predefined3 .js-daterangepicker-predefined3-preview').html(start.format('MMM D') + ' - ' + end.format('MMM D, YYYY'));
-        const startDate = start.format('YYYY-MM-DD');
-        const endDate = end.format('YYYY-MM-DD');
-        //self.onChangeWith(startDate, endDate);
-        self.applyfilter(3, "withdrawalsDatatable");
-      }
-
-      $('#js-daterangepicker-predefined3').daterangepicker({
-        startDate: start,
-        endDate: end,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'This week': [moment().startOf('week'), moment().endOf('week')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
-      }, cb3);
-
-      cb3(start, end);
-
-      // function to filter the commission transactions per date
-      function cb4(start: any, end: any) {
-        $('#js-daterangepicker-predefined4 .js-daterangepicker-predefined4-preview').html(start.format('MMM D') + ' - ' + end.format('MMM D, YYYY'));
-        const startDate = start.format('YYYY-MM-DD');
-        const endDate = end.format('YYYY-MM-DD');
-        //self.onChangeComm(startDate, endDate);
-        self.applyfilter(4, "commissionsDatatable");
-      }
-
-      $('#js-daterangepicker-predefined4').daterangepicker({
-        startDate: start,
-        endDate: end,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'This week': [moment().startOf('week'), moment().endOf('week')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
-      }, cb4);
-
-      cb4(start, end);
-
-
-      //HSCore.components.HSFlatpickr.init('.js-flatpickr');
-
-      HSCore.components.HSDaterangepicker.init('.js-daterangepicker-clear');
-
-      $('.js-daterangepicker-clear').on('apply.daterangepicker', function (this: HTMLSelectElement, ev: any, picker: any) {
-        var da = $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-        console.log(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-      })
-
-      $('.js-daterangepicker-clear').on('cancel.daterangepicker', function (this: HTMLSelectElement, ev: any, picker: any) {
-        $(this).val('')
-      })
-    });
-
-
+  filterDataByDate(ev: any, content: any) {
+    if (ev.timeline === 'Custom Range') {
+      this.modalContent2 = ev;
+      this.modalService.open(content);
+    } else {
+      const format = ev.timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
+      $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
+      this.applyfilter(ev);
+    }
   }
 
-  applyfilter(id: number, tableName: string) {
-    $('#js-daterangepicker-predefined' + id).on('apply.daterangepicker', function (ev: any, picker: any) {
-      var start = picker.startDate;
-      var end = picker.endDate;
-      $.fn.dataTable.ext.search.push(
-        function (settings: any, data: any, dataIndex: any) {
-          var min = start;
-          var max = end;
-          var startDate = new Date(data[6]);
-
-          if (min == null && max == null) {
-            return true;
-          }
-          if (min == null && startDate <= max) {
-            return true;
-          }
-          if (max == null && startDate >= min) {
-            return true;
-          }
-          if (startDate <= max && startDate >= min) {
-            return true;
-          }
-          return false;
-        }
-      );
-      //var tableName= "savingsDatatable";
-      $("#" + tableName).DataTable().draw();
-      $.fn.dataTable.ext.search.pop();
+  applyfilter(event: any) {
+    $.fn.dataTable.ext.search.push((settings: any, data: any, dataIndex: any) => {
+      const min = event.start;
+      const max = event.end;
+      const startDate = new Date(data[6]);
+      if (min == null && max == null) {
+        return true;
+      }
+      if (min == null && startDate <= max) {
+        return true;
+      }
+      if (max == null && startDate >= min) {
+        return true;
+      }
+      if (startDate <= max && startDate >= min) {
+        return true;
+      }
+      return false;
     });
+    $("#" + event.tableName).DataTable().draw();
+    $.fn.dataTable.ext.search.pop();
   }
+
+  // openModal(event:any) {
+  //   const modalRef = this.modalService.open(NgbdModalContent);
+  // 	modalRef.componentInstance.id = event.id;
+  //   modalRef.componentInstance.onClick.subscribe(($e: any) => {
+  //     console.log($e);
+  //     //this.onSave();
+  //   })
+  // }
+
+  onSave() {
+    const from = this.fromDate;
+    const to = this.toDate;
+    const fromDate = from.year + '-' + from.month + '-' + from.day;
+    const toDate = to?.year + '-' + to?.month + '-' + to?.day;
+    const format = from.year === to?.year ? 'MMM D' : 'MMM D, YYYY';
+    const ev = {
+      "start": moment(fromDate).startOf('day'),
+      "end": moment(toDate).endOf('day'),
+      "timeline": this.modalContent2.timeline,
+      "id": this.modalContent2.id,
+      "tableName": this.modalContent2.tableName
+    }
+    $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
+    this.applyfilter(ev);
+    this.modalService.dismissAll('save changes');
+  }
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return (
+      this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
+    );
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return (
+      date.equals(this.fromDate) ||
+      (this.toDate && date.equals(this.toDate)) ||
+      this.isInside(date) || this.isHovered(date)
+    );
+  }
+
 
   jsOnLoad() {
     (function () {
       window.onload = function () {
-
-
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
         new HSSideNav('.js-navbar-vertical-aside').init()
+
+        HSCore.components.HSDaterangepicker.init('.js-daterangepicker')
 
 
         // INITIALIZATION OF FORM SEARCH

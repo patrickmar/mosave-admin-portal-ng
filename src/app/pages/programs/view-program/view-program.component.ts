@@ -22,6 +22,8 @@ export class ViewProgramComponent implements OnInit, OnDestroy {
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
   tableHead!: { value: string; class: string; }[];
+  public loading = false;
+  public showComponent = false;
 
   constructor(private router: Router, private route: ActivatedRoute,
     private dataService: DataService, private toastService: ToastService,) { }
@@ -131,15 +133,19 @@ export class ViewProgramComponent implements OnInit, OnDestroy {
     ]
     this.tableHead = this.getProgramType() === 'merchant' ? header1 : header2;
     try {
+      this.loading = true;
       api.subscribe((res: any) => {
         console.log(res)
         this.records = res;
+        this.loading = false;
+        this.showComponent = true;
         this.dtTrigger.next('');
       }, (error: any) => {
         this.toastService.showError(error?.message, 'Error');
       })
     } catch (error) {
       console.log(error);
+      this.loading = false; 
       this.toastService.showError('Could not fetch all '+this.getProgramType(), 'Error');
     }
   }

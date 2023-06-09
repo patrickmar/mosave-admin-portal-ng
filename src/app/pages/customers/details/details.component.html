@@ -1,5 +1,5 @@
 <!-- Content -->
-<div class="content container-fluid">
+<div class="content container-fluid" >
   <div class="row justify-content-lg-center">
     <div class="col-lg-10">
       <!-- Profile Cover -->
@@ -24,7 +24,7 @@
         <!-- {{(customer.firstName?.concat(' ').concat(customer.lastName) | titlecase) }} -->
         <h1 class="page-header-title">{{(customer?.firstName?.concat(' ').concat(customer?.lastName) | titlecase) }}<i
             class="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Active User"></i></h1>
+            ngbTooltip="Active User"></i></h1>
 
         <!-- List -->
         <ul class="list-inline list-px-2">
@@ -533,7 +533,7 @@
                       <span class="col-8 col-sm-9 ms-0">
                           <span class="text-dark">Withdraw to bank <i class="bi-question-circle text-body ms-1"
                                   data-bs-toggle="tooltip" data-bs-placement="top"
-                                  title="Transfer money from Moloyal account to customer bank account"></i></span>
+                                  ngbTooltip="Transfer money from Moloyal account to customer bank account"></i></span>
                       </span>
                       <span class="col-4 col-sm-3 text-end">
                           <input type="checkbox" class="form-check-input" (change)="switchWithdrawType()" formControlName="bankWithdrawal" id="switch2">
@@ -611,7 +611,7 @@
                         <div class="mb-4">
                           <label for="bankLabel" class="form-label">Bank <i class="bi-question-circle text-body ms-1"
                               data-bs-toggle="tooltip" data-bs-placement="top"
-                              title="Select the bank to transfer to?"></i></label>
+                              ngbTooltip="Select the bank to transfer to?"></i></label>
   
                           <!-- Select -->
                           <div class="tom-select-custom">
@@ -1030,6 +1030,8 @@
 </div>
 <!-- End Content -->
 
+<ngx-loading [show]="loading2"></ngx-loading>
+
 <!-- ng-template receipt -->
 <ng-template #content let-modal>
   <app-receipt [customerId]="modalContent?.customerId"
@@ -1045,5 +1047,4 @@
   <app-pin [loading]="loading" [config]="config" (onSubmit)="performTransaction(transactionValues, otp)"
     (onModalClose)="modal.dismiss('Cross click')" (onPinChange)="onOtpChange($event)" [otp]="otp" [data]="data"
     [showOtpComponent]="showOtpComponent" [otpLength]="otpLength"></app-pin>
-
 </ng-template>

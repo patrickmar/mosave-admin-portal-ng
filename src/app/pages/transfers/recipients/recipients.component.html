@@ -1,120 +1,128 @@
 <!-- Content -->
-<div class="content container-fluid">
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="row align-items-end">
-        <div class="col-sm mb-2 mb-sm-0">
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb breadcrumb-no-gutter">
-              <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Transfers</a></li>
-              <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/transfers/listing">Transfer</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Recipients</li>
-            </ol>
-          </nav>
+<div class="content container-fluid" >
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="row align-items-end">
+      <div class="col-sm mb-2 mb-sm-0">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-no-gutter">
+            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Transfers</a></li>
+            <li class="breadcrumb-item"><a class="breadcrumb-link" routerLink="/transfers/listing">Transfer</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Recipients</li>
+          </ol>
+        </nav>
 
-          <h1 class="page-header-title">Paystack Recipients</h1>
-        </div>
-        <!-- End Col -->
+        <h1 class="page-header-title">Paystack Recipients</h1>
       </div>
-      <!-- End Row -->
+      <!-- End Col -->
     </div>
-    <!-- End Page Header -->
+    <!-- End Row -->
+  </div>
+  <!-- End Page Header -->
 
 
-    <!-- Card -->
-    <div class="card">
-        <!-- Header -->
-        <div class="card-header card-header-content-sm-between" *ngIf="recipientRecords != undefined">
-          <!-- <div class="mb-2 mb-sm-0">
+  <!-- Card -->
+  <div class="card">
+    <!-- Header -->
+    <div class="card-header card-header-content-sm-between" *ngIf="recipientRecords != undefined">
+      <!-- <div class="mb-2 mb-sm-0">
             <h4 class="card-header-title">API Keys</h4>
             <p class="card-text fs-5">Keys you have generated to connect with third-party clients or access the <a class="link" href="javascript:;">Front API.</a></p>
           </div> -->
-  
-          <div class="mb-2 mb-md-0">
-              <form>
-                <!-- Search -->
-                <div class="input-group input-group-merge input-group-flush">
-                  <div class="input-group-prepend input-group-text">
-                    <i class="bi-search"></i>
-                  </div>
-                  <input id="datatableSearch1" type="search" class="form-control" (input)="filter($event, 1, 'datatable')" placeholder="Search customers" aria-label="Search users">
-                </div>
-                <!-- End Search -->
-              </form>
+
+      <div class="mb-2 mb-md-0">
+        <form>
+          <!-- Search -->
+          <div class="input-group input-group-merge input-group-flush">
+            <div class="input-group-prepend input-group-text">
+              <i class="bi-search"></i>
             </div>
-  
-          <div class="d-grid d-sm-flex justify-content-sm-between align-items-sm-center gap-2">
-            <!-- Datatable Info -->
-            <div id="datatableCounterInfo" style="display: none;">
-              <div class="d-flex align-items-center">
-                <span class="fs-6 me-3">
-                  <span id="datatableCounter">0</span>
-                  Selected
-                </span>
-                <a class="btn btn-outline-danger btn-sm" href="javascript:;"><i class="bi-trash"></i> Delete</a>
-              </div>
-            </div>
-            <!-- End Datatable Info -->
-  
-            <!-- Dropdown -->
-            <div class="dropdown">
-              <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi-download me-2"></i> Export
-              </button>
-  
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="usersExportDropdown">
-                <span class="dropdown-header">Select option:</span>
-                <a id="export-copy" class="dropdown-item" type="button" (click)="download('copy')">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg" alt="Image Description">
-                  Copy
-                </a>
-                <a id="export-print" class="dropdown-item" type="button" (click)="download('print')">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg" alt="Image Description">
-                  Print
-                </a>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-header">Download options</span>
-                <a id="export-excel" class="dropdown-item" type="button" (click)="download('excel')">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg" alt="Image Description">
-                  Excel
-                </a>
-                <a id="export-csv" class="dropdown-item" type="button" (click)="download('csv')">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
-                  CSV
-                </a>
-                <a id="export-pdf" class="dropdown-item" type="button" (click)="download('pdf')">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg" alt="Image Description">
-                  PDF
-                </a>
-              </div>
-            </div>
-            <!-- End Dropdown -->
+            <input id="datatableSearch1" type="search" class="form-control" (input)="filter($event, 1, 'datatable')"
+              placeholder="Search customers" aria-label="Search users">
+          </div>
+          <!-- End Search -->
+        </form>
+      </div>
+
+      <div class="d-grid d-sm-flex justify-content-sm-between align-items-sm-center gap-2">
+        <!-- Datatable Info -->
+        <div id="datatableCounterInfo" style="display: none;">
+          <div class="d-flex align-items-center">
+            <span class="fs-6 me-3">
+              <span id="datatableCounter">0</span>
+              Selected
+            </span>
+            <a class="btn btn-outline-danger btn-sm" href="javascript:;"><i class="bi-trash"></i> Delete</a>
           </div>
         </div>
-        <!-- End Header -->
-  
-        <!-- Table -->
-        <div class="table-responsive position-relative">
-          <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-            <thead class="thead-light">			
-              <tr>
-                <th class="table-column-pe-2">S/N</th>
-                <th class="table-column-ps-0">Customer Name</th>
-                <th>Recipient code</th>
-                <th>Account	Type</th>
-                <th>Active</th>
-                <th>Added on</th>
-                <!-- <th>Action</th> -->
-              </tr>
-            </thead>
-  
-            <tbody>
-              <ng-container *ngIf="recipientRecords != undefined && recipientRecords.length > 0 else elseTemplate">
-              <tr *ngFor="let item of recipientRecords; let i = index;">
-                <td class="table-column-pe-0">
-                  <div class="text-inherit">{{i+1 +'.'}}</div>
-                </td>
-                <!-- <td class="table-column-ps-0">
+        <!-- End Datatable Info -->
+
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi-download me-2"></i> Export
+          </button>
+
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="usersExportDropdown">
+            <span class="dropdown-header">Select option:</span>
+            <a id="export-copy" class="dropdown-item" type="button" (click)="download('copy')">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg"
+                alt="Image Description">
+              Copy
+            </a>
+            <a id="export-print" class="dropdown-item" type="button" (click)="download('print')">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg"
+                alt="Image Description">
+              Print
+            </a>
+            <div class="dropdown-divider"></div>
+            <span class="dropdown-header">Download options</span>
+            <a id="export-excel" class="dropdown-item" type="button" (click)="download('excel')">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg"
+                alt="Image Description">
+              Excel
+            </a>
+            <a id="export-csv" class="dropdown-item" type="button" (click)="download('csv')">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg"
+                alt="Image Description">
+              CSV
+            </a>
+            <a id="export-pdf" class="dropdown-item" type="button" (click)="download('pdf')">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg"
+                alt="Image Description">
+              PDF
+            </a>
+          </div>
+        </div>
+        <!-- End Dropdown -->
+      </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Table -->
+    <div class="table-responsive position-relative">
+      <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable"
+        class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+        <thead class="thead-light">
+          <tr>
+            <th class="table-column-pe-2">S/N</th>
+            <th class="table-column-ps-0">Customer Name</th>
+            <th>Recipient code</th>
+            <th>Account Type</th>
+            <th>Active</th>
+            <th>Added on</th>
+            <!-- <th>Action</th> -->
+          </tr>
+        </thead>
+
+        <tbody>
+          <ng-container *ngIf="recipientRecords != undefined && recipientRecords.length > 0 else elseTemplate">
+            <tr *ngFor="let item of recipientRecords; let i = index;">
+              <td class="table-column-pe-0">
+                <div class="text-inherit">{{i+1 +'.'}}</div>
+              </td>
+              <!-- <td class="table-column-ps-0">
                   <div class="d-flex align-items-center text-dark" >
                     <div class="flex-shrink-0">
                         <ng-container *ngIf="item?.image else elseTemplate2">
@@ -132,57 +140,60 @@
                     </div>
   
                 </td> -->
-                <td class="table-column-ps-0">
-                  <div class="d-flex align-items-center text-dark">
-                    <div class="flex-grow-1 ms-3">
-                      <span class="text-inherit">{{item?.name}}</span>
-                    </div>
-                  </div>
-                </td>
-                <td>
+              <td class="table-column-ps-0">
+                <div class="d-flex align-items-center text-dark">
                   <div class="flex-grow-1 ms-3">
-                      <span class="text-inherit">{{item?.recipient_code}}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="flex-grow-1 ms-3">
-                        <strong class="text-body">{{item?.details.account_number.concat(' ')}}</strong>
-                        <span class="text-body">{{item?.details.bank_name}}</span>
-                      </div>
-                  </td>
-                <td><span [ngClass]=" item?.active == true ? 'legend-indicator bg-success' : 'legend-indicator bg-danger'"></span>
-                  {{item?.active+'' | titlecase}}
+                    <span class="text-inherit">{{item?.name}}</span>
+                  </div>
+                </div>
               </td>
-                <td>{{item?.createdAt | date:'medium'}}</td>
-                <!-- <td>
+              <td>
+                <div class="flex-grow-1 ms-3">
+                  <span class="text-inherit">{{item?.recipient_code}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex-grow-1 ms-3">
+                  <strong class="text-body">{{item?.details.account_number.concat(' ')}}</strong>
+                  <span class="text-body">{{item?.details.bank_name}}</span>
+                </div>
+              </td>
+              <td><span
+                  [ngClass]=" item?.active == true ? 'legend-indicator bg-success' : 'legend-indicator bg-danger'"></span>
+                {{item?.active+'' | titlecase}}
+              </td>
+              <td>{{item?.createdAt | date:'medium'}}</td>
+              <!-- <td>
                   <div class="">
                     <button type="button" class="btn btn-white btn-sm" id="apiKeyDropdown1"  aria-expanded="false" (click)="viewRecord(item?.id);">
                       <i class="bi-eye ms-1"></i> View
                     </button>
                   </div>
                 </td> -->
-              </tr>
+            </tr>
           </ng-container>
-  
+
           <ng-template #elseTemplate>
-              <tr>
-                  <td valign="top" colspan="8" class="dataTables_empty">
-                    <div class="text-center p-4">
-                      <img class="mb-3" src="{{emptyTable}}" alt="Image Description" style="width: 10rem;"
-                        data-hs-theme-appearance="default">
-                      <p class="mb-0">No tranfer record found</p>
-                    </div>
-                  </td>
-                </tr>
-  
-          </ng-template>            
-            </tbody>
-          </table>
-        </div>
-        <!-- End Table -->
-  
-        
-      </div>
-      <!-- End Card -->
+            <tr>
+              <td valign="top" colspan="8" class="dataTables_empty">
+                <div class="text-center p-4">
+                  <img class="mb-3" src="{{emptyTable}}" alt="Image Description" style="width: 10rem;"
+                    data-hs-theme-appearance="default">
+                  <p class="mb-0">No tranfer record found</p>
+                </div>
+              </td>
+            </tr>
+
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+    <!-- End Table -->
+
+
   </div>
-  <!-- End Content -->
+  <!-- End Card -->
+</div>
+<!-- End Content -->
+
+<ngx-loading [show]="loading"></ngx-loading>

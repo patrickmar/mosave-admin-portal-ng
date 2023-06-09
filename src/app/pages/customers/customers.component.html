@@ -1,363 +1,388 @@
-     <!-- Content -->
-     <div class="content container-fluid">
-        <!-- Page Header -->
-        <div class="page-header">
-          <div class="row align-items-end">
-            <div class="col-sm mb-2 mb-sm-0">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb breadcrumb-no-gutter">
-                  <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Pages</a></li>
-                  <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Customers</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Overview</li>
-                </ol>
-              </nav>
-  
-              <h1 class="page-header-title">All Customers</h1>
+<!-- Content -->
+<div class="content container-fluid">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="row align-items-end">
+      <div class="col-sm mb-2 mb-sm-0">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-no-gutter">
+            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Customers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Overview</li>
+          </ol>
+        </nav>
+
+        <h1 class="page-header-title">All Customers</h1>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-sm-auto">
+        <a class="btn btn-primary" routerLink="/customer/register">
+          <i class="bi-person-plus-fill me-1"></i> Add Customer
+        </a>
+      </div>
+      <!-- End Col -->
+    </div>
+    <!-- End Row -->
+  </div>
+  <!-- End Page Header -->
+
+  <!-- Stats -->
+  <div class="row">
+    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+      <!-- Card -->
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2">Total customers</h6>
+
+          <div class="row align-items-center gx-2">
+            <div class="col">
+              <span class="js-counter display-4 text-dark">{{customer?.length}}</span>
+              <!-- <span class="text-body fs-5 ms-1">from 22</span> -->
             </div>
             <!-- End Col -->
-  
-            <div class="col-sm-auto">
-              <a class="btn btn-primary" routerLink="/customer/register">
-                <i class="bi-person-plus-fill me-1"></i> Add Customer
-              </a>
+
+            <div class="col-auto">
+              <span class="badge bg-soft-success text-success p-1">
+                <i class="bi-graph-up"></i> 100%
+              </span>
             </div>
             <!-- End Col -->
           </div>
           <!-- End Row -->
         </div>
-        <!-- End Page Header -->
-  
-        <!-- Stats -->
-        <div class="row">
-          <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-            <!-- Card -->
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">Total customers</h6>
-  
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                    <span class="js-counter display-4 text-dark">{{customer?.length}}</span>
-                    <!-- <span class="text-body fs-5 ms-1">from 22</span> -->
-                  </div>
-                  <!-- End Col -->
-  
-                  <div class="col-auto">
-                    <span class="badge bg-soft-success text-success p-1">
-                      <i class="bi-graph-up"></i> 100%
-                    </span>
-                  </div>
-                  <!-- End Col -->
-                </div>
-                <!-- End Row -->
-              </div>
+      </div>
+      <!-- End Card -->
+    </div>
+
+    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+      <!-- Card -->
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2">Active Customers</h6>
+
+          <div class="row align-items-center gx-2">
+            <div class="col">
+              <span class="js-counter display-4 text-dark">{{activeCustomers}}</span>
             </div>
-            <!-- End Card -->
+
+            <div class="col-auto">
+              <span class="badge bg-soft-success text-success p-1">
+                <i class="bi-graph-up"></i> {{((convertNum(activeCustomers) / customer?.length) * 100).toFixed(2) }}%
+              </span>
+            </div>
           </div>
-  
-          <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-            <!-- Card -->
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">Active Customers</h6>
-  
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                    <span class="js-counter display-4 text-dark">{{activeCustomers}}</span>
-                  </div>
-  
-                  <div class="col-auto">
-                    <span class="badge bg-soft-success text-success p-1">
-                      <i class="bi-graph-up"></i> {{((convertNum(activeCustomers) / customer?.length) * 100).toFixed(2) }}%
-                    </span>
-                  </div>
-                </div>
-                <!-- End Row -->
-              </div>
+          <!-- End Row -->
+        </div>
+      </div>
+      <!-- End Card -->
+    </div>
+
+    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+      <!-- Card -->
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2">New Customers</h6>
+
+          <div class="row align-items-center gx-2">
+            <div class="col">
+              <span class="js-counter display-4 text-dark">{{newCustomers}}</span>
+              <span class="text-body fs-5 ms-1">in this week</span>
             </div>
-            <!-- End Card -->
+
+            <div class="col-auto">
+              <span class="badge bg-soft-danger text-danger p-1">
+                <i class="bi-graph-down"></i> {{((convertNum(newCustomers) / customer?.length) * 100).toFixed(2) }}%
+              </span>
+            </div>
           </div>
-  
-          <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-            <!-- Card -->
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">New Customers</h6>
-  
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                    <span class="js-counter display-4 text-dark">{{newCustomers}}</span>
-                    <span class="text-body fs-5 ms-1">in this week</span>
-                  </div>
-  
-                  <div class="col-auto">
-                    <span class="badge bg-soft-danger text-danger p-1">
-                      <i class="bi-graph-down"></i> {{((convertNum(newCustomers) / customer?.length) * 100).toFixed(2) }}%
-                    </span>
-                  </div>
-                </div>
-                <!-- End Row -->
-              </div>
+          <!-- End Row -->
+        </div>
+      </div>
+      <!-- End Card -->
+    </div>
+
+    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+      <!-- Card -->
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2">Inactive customers</h6>
+
+          <div class="row align-items-center gx-2">
+            <div class="col">
+              <span class="js-counter display-4 text-dark">{{inactiveCustomers}}</span>
             </div>
-            <!-- End Card -->
+
+            <div class="col-auto">
+              <span class="badge bg-soft-danger text-danger p-1">{{((convertNum(inactiveCustomers) / customer?.length) *
+                100).toFixed(2) }}%</span>
+            </div>
           </div>
-  
-          <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-            <!-- Card -->
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">Inactive customers</h6>
-  
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                    <span class="js-counter display-4 text-dark">{{inactiveCustomers}}</span>
-                  </div>
-  
-                  <div class="col-auto">
-                    <span class="badge bg-soft-danger text-danger p-1">{{((convertNum(inactiveCustomers) / customer?.length) * 100).toFixed(2) }}%</span>
-                  </div>
-                </div>
-                <!-- End Row -->
-              </div>
+          <!-- End Row -->
+        </div>
+      </div>
+      <!-- End Card -->
+    </div>
+  </div>
+  <!-- End Stats -->
+
+  <!-- Card -->
+  <div class="card">
+    <!-- Header -->
+    <div class="card-header card-header-content-md-between" *ngIf="customer != undefined">
+      <div class="mb-2 mb-md-0">
+        <form>
+          <!-- Search -->
+          <div class="input-group input-group-merge input-group-flush">
+            <div class="input-group-prepend input-group-text">
+              <i class="bi-search"></i>
             </div>
-            <!-- End Card -->
+            <input id="datatableSearch" type="text" class="form-control input" (input)="rerender($event)"
+              placeholder="Search users" aria-label="Search users">
+          </div>
+          <!-- End Search -->
+        </form>
+      </div>
+
+      <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
+        <!-- Datatable Info -->
+        <div id="datatableCounterInfo" style="display: none;">
+          <div class="d-flex align-items-center">
+            <span class="fs-5 me-3">
+              <span id="datatableCounter">0</span>
+              Selected
+            </span>
+            <a class="btn btn-outline-danger btn-sm" href="javascript:;">
+              <i class="bi-trash"></i> Delete
+            </a>
           </div>
         </div>
-        <!-- End Stats -->
-  
-        <!-- Card -->
-        <div class="card">
-          <!-- Header -->
-          <div class="card-header card-header-content-md-between" *ngIf="customer != undefined">
-            <div class="mb-2 mb-md-0">
-              <form>
-                <!-- Search -->
-                <div class="input-group input-group-merge input-group-flush">
-                  <div class="input-group-prepend input-group-text">
-                    <i class="bi-search"></i>
-                  </div>
-                  <input id="datatableSearch" type="text" class="form-control input" (input)="rerender($event)" placeholder="Search users" aria-label="Search users">
-                </div>
-                <!-- End Search -->
-              </form>
-            </div>
-  
-            <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-              <!-- Datatable Info -->
-              <div id="datatableCounterInfo" style="display: none;">
-                <div class="d-flex align-items-center">
-                  <span class="fs-5 me-3">
-                    <span id="datatableCounter">0</span>
-                    Selected
-                  </span>
-                  <a class="btn btn-outline-danger btn-sm" href="javascript:;">
-                    <i class="bi-trash"></i> Delete
-                  </a>
-                </div>
-              </div>
-              <!-- End Datatable Info -->
+        <!-- End Datatable Info -->
 
-              <div class="">
-                <!-- Daterangepicker -->
-                <button id="js-daterangepicker-predefined" class="btn btn-white btn-sm dropdown-toggle">
-                  <i class="bi-calendar-week"></i>
-                  <span class="js-daterangepicker-predefined-preview ms-1"></span>
+        <div class="">
+          <!-- Daterangepicker -->
+          <button id="js-daterangepicker-predefined" class="btn btn-white btn-sm dropdown-toggle">
+            <i class="bi-calendar-week"></i>
+            <span class="js-daterangepicker-predefined-preview ms-1"></span>
+          </button>
+          <!-- End Daterangepicker -->
+        </div>
+        <!-- End Col -->
+
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi-download me-2"></i> Export
+          </button>
+
+          <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
+            <span class="dropdown-header">Options</span>
+            <a id="export-copy" class="dropdown-item" href="javascript:;">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg"
+                alt="Image Description">
+              Copy
+            </a>
+            <a id="export-print" class="dropdown-item" href="javascript:;">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg"
+                alt="Image Description">
+              Print
+            </a>
+            <div class="dropdown-divider"></div>
+            <span class="dropdown-header">Download options</span>
+            <a id="export-excel" class="dropdown-item" href="javascript:;">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg"
+                alt="Image Description">
+              Excel
+            </a>
+            <a id="export-csv" class="dropdown-item" href="javascript:;">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg"
+                alt="Image Description">
+              .CSV
+            </a>
+            <a id="export-pdf" class="dropdown-item" href="javascript:;">
+              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg"
+                alt="Image Description">
+              PDF
+            </a>
+          </div>
+        </div>
+        <!-- End Dropdown -->
+
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <button type="button" class="btn btn-white btn-sm w-100" id="usersFilterDropdown" data-bs-toggle="dropdown"
+            data-bs-auto-close="outside" aria-expanded="false">
+            <i class="bi-filter me-1"></i> Filter <span
+              class="badge bg-soft-dark text-dark rounded-circle ms-1">2</span>
+          </button>
+
+          <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered"
+            aria-labelledby="usersFilterDropdown" style="min-width: 22rem;">
+            <!-- Card -->
+            <div class="card">
+              <div class="card-header card-header-content-between">
+                <h5 class="card-header-title">Filter users</h5>
+
+                <!-- Toggle Button -->
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm ms-2">
+                  <i class="bi-x-lg"></i>
                 </button>
-                <!-- End Daterangepicker -->
+                <!-- End Toggle Button -->
               </div>
-              <!-- End Col -->
-  
-              <!-- Dropdown -->
-              <div class="dropdown">
-                <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bi-download me-2"></i> Export
-                </button>
-  
-                <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
-                  <span class="dropdown-header">Options</span>
-                  <a id="export-copy" class="dropdown-item" href="javascript:;">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg" alt="Image Description">
-                    Copy
-                  </a>
-                  <a id="export-print" class="dropdown-item" href="javascript:;">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg" alt="Image Description">
-                    Print
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <span class="dropdown-header">Download options</span>
-                  <a id="export-excel" class="dropdown-item" href="javascript:;">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg" alt="Image Description">
-                    Excel
-                  </a>
-                  <a id="export-csv" class="dropdown-item" href="javascript:;">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
-                    .CSV
-                  </a>
-                  <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg" alt="Image Description">
-                    PDF
-                  </a>
-                </div>
-              </div>
-              <!-- End Dropdown -->
-  
-              <!-- Dropdown -->
-              <div class="dropdown">
-                <button type="button" class="btn btn-white btn-sm w-100" id="usersFilterDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                  <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1">2</span>
-                </button>
-  
-                <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="usersFilterDropdown" style="min-width: 22rem;">
-                  <!-- Card -->
-                  <div class="card">
-                    <div class="card-header card-header-content-between">
-                      <h5 class="card-header-title">Filter users</h5>
-  
-                      <!-- Toggle Button -->
-                      <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm ms-2">
-                        <i class="bi-x-lg"></i>
-                      </button>
-                      <!-- End Toggle Button -->
-                    </div>
-  
-                    <div class="card-body">
-                      <form>
-  
-                        <div class="row">
-                          <div class="col-sm mb-4">
-                            <small class="text-cap text-body">Account Type</small>
-  
-                            <!-- Select -->
-                            <div class="tom-select-custom">
-                              <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3" data-hs-tom-select-options='{
+
+              <div class="card-body">
+                <form>
+
+                  <div class="row">
+                    <div class="col-sm mb-4">
+                      <small class="text-cap text-body">Account Type</small>
+
+                      <!-- Select -->
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select form-select-sm"
+                          data-target-column-index="3" data-hs-tom-select-options='{
                                         "placeholder": "Any",
                                         "searchInDropdown": false,
                                         "hideSearch": true,
                                         "dropdownWidth": "10rem"
                                       }'>
-                                <option value="">Any</option>
-                                <option value="Savings">Savings</option>
-                                <option value="Current">Current</option>
-                              </select>
-                              <!-- End Select -->
-                            </div>
-                          </div>
-                          <!-- End Col -->
-  
-                          <div class="col-sm mb-4">
-                            <small class="text-cap text-body">Gender</small>
-  
-                            <!-- Select -->
-                            <div class="tom-select-custom">
-                              <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="5" data-hs-tom-select-options='{
+                          <option value="">Any</option>
+                          <option value="Savings">Savings</option>
+                          <option value="Current">Current</option>
+                        </select>
+                        <!-- End Select -->
+                      </div>
+                    </div>
+                    <!-- End Col -->
+
+                    <div class="col-sm mb-4">
+                      <small class="text-cap text-body">Gender</small>
+
+                      <!-- Select -->
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select form-select-sm"
+                          data-target-column-index="5" data-hs-tom-select-options='{
                                         "placeholder": "All",
                                         "searchInDropdown": false,
                                         "hideSearch": true,
                                         "dropdownWidth": "10rem"
                                       }'>
-                                <option value="" data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>All</span>'>All</option>
-                                <option value="">All Gender</option>
-                                <option value="Male" data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Male</span>'>Male</option>
-                                <option value="Female" data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-warning"></span>Female</span>'>Female</option>
-                                <option value="Others" data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Others</span>'>Others</option>
-                              </select>
-                            </div>
-                            <!-- End Select -->
-                          </div>
-                          <!-- End Col -->
-                        </div>
-                        <!-- End Row -->
-  
-                        <div class="d-grid">
-                          <a type="button" class="btn btn-primary">Apply</a>
-                        </div>
-                      </form>
+                          <option value=""
+                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>All</span>'>
+                            All</option>
+                          <option value="">All Gender</option>
+                          <option value="Male"
+                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Male</span>'>
+                            Male</option>
+                          <option value="Female"
+                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-warning"></span>Female</span>'>
+                            Female</option>
+                          <option value="Others"
+                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Others</span>'>
+                            Others</option>
+                        </select>
+                      </div>
+                      <!-- End Select -->
                     </div>
+                    <!-- End Col -->
                   </div>
-                  <!-- End Card -->
-                </div>
-              </div>
-              <!-- End Dropdown -->
-            </div>
-          </div>
-          <!-- End Header -->
-  
-          <!-- Table -->
-          <div class="table-responsive position-relative">
-            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-              <thead class="thead-light">
-                <tr>
-                  <th class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                      <label class="form-check-label" for="datatableCheckAll"></label>
-                    </div>
-                  </th>
-                  <th class="table-column-ps-0">Name</th>
-                  <th>Account No</th>
-                  <th>Account Type</th>                  
-                  <th>Date Registered</th>
-                  <th>Registered By</th>
-                  <th>Gender</th>
-                  <th>Phone No</th>
-                  <th>Action</th> 
-                </tr>
-              </thead>
-              <tbody *ngIf="customer != undefined">
-                <tr *ngFor="let data of customer.slice().reverse(); let i = index;">
-                  <td class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="datatableCheck{{data?.sn}}">
-                      <label class="form-check-label" for="datatableCheck{{data?.sn}}"></label>
-                    </div>
-                  </td>
-                  <td class="table-column-ps-0">
-                    <a class="d-flex align-items-center" [routerLink]="['/customer', data?.sn, 'details']">
-                      <ng-container>
-                      <div class="avatar avatar-circle" *ngIf="data.image">
-                        <img class="avatar-img" [src]="imageBaseURL+data?.image" alt="{{data?.firstName}}" onerror="this.src=avatar">
-                      </div>
-                      </ng-container>
-                      <div class="avatar avatar-soft-primary avatar-circle" *ngIf="!data.image">
-                        <span class="avatar-initials">{{data?.firstName | slice:0:1}}{{data?.lastName | slice:0:1}}</span>
-                      </div>
-                      <div class="ms-3">
-                        <span class="d-block h5 text-inherit mb-0">{{ (data.firstName?.concat(' ').concat(data.lastName) | titlecase) }} 
-                            <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Active"></i></span>
-                        <span class="d-block fs-5 text-body">{{data?.email}}</span>
-                      </div>
-                    </a>
-                  </td>
-                  <td>
-                    <a class="" [routerLink]="['/customer', data.sn, 'trans-history']">
-                        <span class="d-block h5 mb-0">{{data?.account_num}}</span>
-                    </a>                    
-                    <span class="d-block fs-5">{{data?.BVN_num ? data?.BVN_num : ' No BVN'}}</span>
-                  </td>
-                  <td>
-                    <span *ngIf="data?.account_typeId === '1' ">Savings</span>
-                    <span *ngIf="data?.account_typeId === '2' ">Current</span>
-                </td>
-                  <td>
-                    <span class=""></span>{{data?.date_registered}}
-                  </td>
-                  <td>
-                    {{ (data?.agent_firstname?.concat(' ').concat(data?.agent_lastname) | titlecase) }}
-                  </td>
-                  <td>
-                    {{data?.gender}}
-                  </td>
-                  <td>{{data?.userId}}</td>
-                  <td>
-                    <a class="btn btn-white btn-sm" [routerLink]="['/customer', data?.sn, 'details']">
-                      <i class="bi-eye me-1"></i> View
-                    </a>
-                  </td>
-                </tr> 
-              </tbody>
-            </table>
+                  <!-- End Row -->
 
-            <!-- <table  id="datatableer" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                  <div class="d-grid">
+                    <a type="button" class="btn btn-primary">Apply</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- End Card -->
+          </div>
+        </div>
+        <!-- End Dropdown -->
+      </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Table -->
+    <div class="table-responsive position-relative">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable"
+        class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+        <thead class="thead-light">
+          <tr>
+            <th class="table-column-pe-0">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
+                <label class="form-check-label" for="datatableCheckAll"></label>
+              </div>
+            </th>
+            <th class="table-column-ps-0">Name</th>
+            <th>Account No</th>
+            <th>Account Type</th>
+            <th>Date Registered</th>
+            <th>Registered By</th>
+            <th>Gender</th>
+            <th>Phone No</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="customer != undefined">
+          <tr *ngFor="let data of customer.slice().reverse(); let i = index;">
+            <td class="table-column-pe-0">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="datatableCheck{{data?.sn}}">
+                <label class="form-check-label" for="datatableCheck{{data?.sn}}"></label>
+              </div>
+            </td>
+            <td class="table-column-ps-0">
+              <a class="d-flex align-items-center" [routerLink]="['/customer', data?.sn, 'details']">
+                <ng-container>
+                  <div class="avatar avatar-circle" *ngIf="data.image">
+                    <img class="avatar-img" [src]="imageBaseURL+data?.image" alt="{{data?.firstName}}"
+                      onerror="this.src=avatar">
+                  </div>
+                </ng-container>
+                <div class="avatar avatar-soft-primary avatar-circle" *ngIf="!data.image">
+                  <span class="avatar-initials">{{data?.firstName | slice:0:1}}{{data?.lastName | slice:0:1}}</span>
+                </div>
+                <div class="ms-3">
+                  <span class="d-block h5 text-inherit mb-0">{{ (data.firstName?.concat(' ').concat(data.lastName) |
+                    titlecase) }}
+                    <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+                      ngbTooltip="Active"></i></span>
+                  <span class="d-block fs-5 text-body">{{data?.email}}</span>
+                </div>
+              </a>
+            </td>
+            <td>
+              <a class="" [routerLink]="['/customer', data.sn, 'trans-history']">
+                <span class="d-block h5 mb-0">{{data?.account_num}}</span>
+              </a>
+              <span class="d-block fs-5">{{data?.BVN_num ? data?.BVN_num : ' No BVN'}}</span>
+            </td>
+            <td>
+              <span *ngIf="data?.account_typeId === '1' ">Savings</span>
+              <span *ngIf="data?.account_typeId === '2' ">Current</span>
+            </td>
+            <td>
+              <span class=""></span>{{data?.date_registered}}
+            </td>
+            <td>
+              {{ (data?.agent_firstname?.concat(' ').concat(data?.agent_lastname) | titlecase) }}
+            </td>
+            <td>
+              {{data?.gender}}
+            </td>
+            <td>{{data?.userId}}</td>
+            <td>
+              <a class="btn btn-white btn-sm" [routerLink]="['/customer', data?.sn, 'details']">
+                <i class="bi-eye me-1"></i> View
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <table  id="datatableer" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
               <thead class="thead-light">
                 <tr>
                   <th class="table-column-pe-0">
@@ -395,7 +420,7 @@
                       </div>
                       <div class="ms-3">
                         <span class="d-block h5 text-inherit mb-0">{{ (data.firstName?.concat(' ').concat(data.lastName) | titlecase) }} 
-                            <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Active"></i></span>
+                            <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Active"></i></span>
                         <span class="d-block fs-5 text-body">{{data?.email}}</span>
                       </div>
                     </a>
@@ -423,13 +448,15 @@
 
               </tbody>
             </table> -->
-          </div>
-          <!-- End Table -->
-  
-          <!-- Footer -->
-          
-          <!-- End Footer -->
-        </div>
-        <!-- End Card -->
-      </div>
-      <!-- End Content -->
+    </div>
+    <!-- End Table -->
+
+    <!-- Footer -->
+
+    <!-- End Footer -->
+  </div>
+  <!-- End Card -->
+</div>
+<!-- End Content -->
+
+<ngx-loading [show]="loading"></ngx-loading>

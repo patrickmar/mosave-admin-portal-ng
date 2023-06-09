@@ -29,23 +29,23 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   dayDiff: number = 12;
   userRecord!: Array<any>;
   labels: any = [];
-  dataSets2!: any; 
-  bgMap: any = {'0': 'bg-primary', '1': 'bg-info', '2': ''};
+  dataSets2!: any;
+  bgMap: any = { '0': 'bg-primary', '1': 'bg-info', '2': '' };
   gradients = [
-    ["rgba(55,125,255, .5)", "rgba(255, 255, 255, .2)"], 
-    ["rgba(0, 201, 219, .5)", "rgba(255, 255, 255, .2)"], 
+    ["rgba(55,125,255, .5)", "rgba(255, 255, 255, .2)"],
+    ["rgba(0, 201, 219, .5)", "rgba(255, 255, 255, .2)"],
     ["rgba(100, 0, 214, 0.8)", "rgba(255, 255, 255, .2)"]
   ]
-  
-  
+  public loading = false;
+  public showComponent = false;
 
-  public lineChartOptions: Array<object> = 
-  [ 
-    this.getChartConfig(500000, '₦'), 
-    this.getChartConfig(200, ''), 
-    this.getChartConfig(20, ''),
-    this.getChartConfig(100, '')
-  ]; //ChartConfiguration['options'] or //ChartOptions[] // default data model
+  public lineChartOptions: Array<object> =
+    [
+      this.getChartConfig(500000, '₦'),
+      this.getChartConfig(200, ''),
+      this.getChartConfig(20, ''),
+      this.getChartConfig(100, '')
+    ]; //ChartConfiguration['options'] or //ChartOptions[] // default data model
   public lineChartType: ChartType[] = ['line', 'line', 'line', 'line']; //'line';
   public lineChartLabels: Array<any> = [
     ["Savings", "Withdrawal", "Commissions"],
@@ -53,13 +53,13 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     ["Volume"],
     ["Male", "Female"]
   ];
-  chartTitle: string[] = ['Transaction Values', 'Transaction Volume', 'User Registration', 'Savings Volume By Gender' ]
+  chartTitle: string[] = ['Transaction Values', 'Transaction Volume', 'User Registration', 'Savings Volume By Gender']
   userVolume!: number;
   genderVolume!: number;
   totalValue!: Array<any>;
   public lineChartData: Array<any> = [];
-  color: Array<string> =  ["#377dff", "#00c9db", "#7000f2"]
-  
+  color: Array<string> = ["#377dff", "#00c9db", "#7000f2"]
+
   @ViewChildren(BaseChartDirective) charts!: QueryList<BaseChartDirective>;
   //@ViewChild('aChart') htmlChart!: ElementRef;
   canvas!: any;
@@ -82,12 +82,12 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   tnxVolumeSum!: number;
 
 
-  constructor(private dataService: DataService, 
-    private statService: StatService, 
+  constructor(private dataService: DataService,
+    private statService: StatService,
     private toastService: ToastService,
     private el: ElementRef, private changeDetectorRef: ChangeDetectorRef) { }
 
-  
+
   ngAfterViewInit(): void {
     this.getAllTrxs();
     //this.getAllUsers();
@@ -95,14 +95,14 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {
     //this.getAllTrxs();
-     //this.getAllUsers();
+    //this.getAllUsers();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     console.log(changes);
   }
 
-  getChartConfig(stepSize: number, postfix: string){
+  getChartConfig(stepSize: number, postfix: string) {
     return {
       responsive: true,
       aspectRatio: 3.5,
@@ -122,8 +122,8 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
           intersect: false,
           usePointStyle: true,
           callbacks: {
-            title:(tooltipItems: any)=> {
-                return tooltipItems[0].label;
+            title: (tooltipItems: any) => {
+              return tooltipItems[0].label;
             },
             footer: (tooltipItems: any) => {
               let value = 0
@@ -131,9 +131,9 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
               value = tooltipItems.length > 1 ? tooltipItems[0]?.parsed?.y - tooltipItems[1]?.parsed?.y : tooltipItems[0]?.parsed?.y;
               return 'Floating Value: ' + value;
             },
-            label: (tooltipItems: any)=> {              
+            label: (tooltipItems: any) => {
               return tooltipItems.dataset.label + ': ' + postfix + tooltipItems.formattedValue;
-          },
+            },
           }
         },
       },
@@ -166,11 +166,12 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
         }
       },
     }
-    ;
+      ;
   }
 
   getAllTrxs() {
     try {
+      this.loading = true;
       forkJoin([
         this.dataService.getMosaveTransactions(),
         this.dataService.getMosaveSavingTransactions(),
@@ -178,6 +179,8 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
       ]).subscribe((result: any) => {
         console.log(result[0]);
         console.log(result[2]);
+        this.loading = false;
+        this.showComponent = true;
         const newRecords = result[0].map((res: any) => {
           const type2 = res.transType == "S" ? res.transType + "avings" :
             res.transType == "W" ? res.transType + "ithdrawal" : res.transType + "";
@@ -203,20 +206,20 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
         const savings: Array<number> = [];
         const withdrawals: Array<number> = [];
         const commissions: Array<number> = [];
-        new Array(trnxValuesByMonth.length).fill(null).map((x, i) => {          
+        new Array(trnxValuesByMonth.length).fill(null).map((x, i) => {
           const element = trnxValuesByMonth[i];
           labels.push(element?.month);
           savings.push(element?.savings);
           withdrawals.push(element?.withdrawal);
           commissions.push(element?.commission);
         })
-        
+
         const labelVolume: Array<string> = [];
         const savingsVolume: Array<number> = [];
         const withdrawalsVolume: Array<number> = [];
         const commissionsVolume: Array<number> = [];
-        const dataset:Array<any> = []
-        const dataset2:Array<any> = []
+        const dataset: Array<any> = []
+        const dataset2: Array<any> = []
         new Array(trnxVolumesByMonth.length).fill(null).map((x, i) => {
           const element = trnxVolumesByMonth[i];
           labelVolume.push(element?.month);
@@ -224,80 +227,80 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
           withdrawalsVolume.push(element?.withdrawal);
           commissionsVolume.push(element?.commission);
         });
-        const savingsVolumeSum = savingsVolume.reduce((acc: any, cur: any)=>  acc + cur);
-        const withdrawalVolumeSum = withdrawalsVolume.reduce((acc: any, cur: any)=>  acc + cur);
-        const commissionVolumeSum = commissionsVolume.reduce((acc: any, cur: any)=>  acc + cur);
+        const savingsVolumeSum = savingsVolume.reduce((acc: any, cur: any) => acc + cur);
+        const withdrawalVolumeSum = withdrawalsVolume.reduce((acc: any, cur: any) => acc + cur);
+        const commissionVolumeSum = commissionsVolume.reduce((acc: any, cur: any) => acc + cur);
         this.tnxVolumeSum = savingsVolumeSum + withdrawalVolumeSum + commissionVolumeSum;
 
         //  this.getCanvasConfig();
 
-        this.canvas = <HTMLCanvasElement> document.getElementById('lineChart0'); // $("#canvas");  
-    this.ctx = this.canvas?.getContext('2d');
-    console.log(this.ctx);
-    //this.charts?.get(0)?.ctx
-    console.log(this.charts?.get(0)?.ctx);
-    this.gradient = this.ctx?.createLinearGradient(0, 0, 0, 200);
-    this.gradient2 = this.ctx?.createLinearGradient(0, 0, 0, 200);
-    this.gradient3 = this.ctx?.createLinearGradient(0, 0, 0, 200);
+        this.canvas = <HTMLCanvasElement>document.getElementById('lineChart0'); // $("#canvas");  
+        this.ctx = this.canvas?.getContext('2d');
+        console.log(this.ctx);
+        //this.charts?.get(0)?.ctx
+        console.log(this.charts?.get(0)?.ctx);
+        this.gradient = this.ctx?.createLinearGradient(0, 0, 0, 200);
+        this.gradient2 = this.ctx?.createLinearGradient(0, 0, 0, 200);
+        this.gradient3 = this.ctx?.createLinearGradient(0, 0, 0, 200);
 
-    // this.canvas1 = <HTMLCanvasElement> document.getElementById('lineChart1');
-    // this.ctx1 = this.canvas1?.getContext('2d');
-    // this.gradient11 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
-    // this.gradient12 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
-    // this.gradient13 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
+        // this.canvas1 = <HTMLCanvasElement> document.getElementById('lineChart1');
+        // this.ctx1 = this.canvas1?.getContext('2d');
+        // this.gradient11 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
+        // this.gradient12 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
+        // this.gradient13 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
 
-    // this.canvas2 = <HTMLCanvasElement> document.getElementById('lineChart2');
-    // this.ctx2 = this.canvas2?.getContext('2d');    
-    // this.gradient21 = this.ctx2?.createLinearGradient(0, 0, 0, 200);
+        // this.canvas2 = <HTMLCanvasElement> document.getElementById('lineChart2');
+        // this.ctx2 = this.canvas2?.getContext('2d');    
+        // this.gradient21 = this.ctx2?.createLinearGradient(0, 0, 0, 200);
 
-    // this.canvas3 = <HTMLCanvasElement> document.getElementById('lineChart3');
-    // this.ctx3 = this.canvas3?.getContext('2d');
-    
-    // this.gradient31 = this.ctx3?.createLinearGradient(0, 0, 0, 200);
-    // this.gradient32 = this.ctx3?.createLinearGradient(0, 0, 0, 200); 
-    
+        // this.canvas3 = <HTMLCanvasElement> document.getElementById('lineChart3');
+        // this.ctx3 = this.canvas3?.getContext('2d');
 
-    this.gradient?.addColorStop(0, 'rgba(55,125,255, .5)');
-    this.gradient?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        // this.gradient31 = this.ctx3?.createLinearGradient(0, 0, 0, 200);
+        // this.gradient32 = this.ctx3?.createLinearGradient(0, 0, 0, 200); 
 
-    this.gradient2?.addColorStop(0, 'rgba(0, 201, 219, .5)');
-    this.gradient2?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
-    this.gradient3?.addColorStop(0, 'rgba(100, 0, 214, 0.8)');
-    this.gradient3?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        this.gradient?.addColorStop(0, 'rgba(55,125,255, .5)');
+        this.gradient?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
-    this.gradient11?.addColorStop(0, 'rgba(55,125,255, .5)');
-    this.gradient11?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        this.gradient2?.addColorStop(0, 'rgba(0, 201, 219, .5)');
+        this.gradient2?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
-    this.gradient12?.addColorStop(0, 'rgba(0, 201, 219, .5)');
-    this.gradient12?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        this.gradient3?.addColorStop(0, 'rgba(100, 0, 214, 0.8)');
+        this.gradient3?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
-    this.gradient13?.addColorStop(0, 'rgba(100, 0, 214, 0.8)');
-    this.gradient13?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        this.gradient11?.addColorStop(0, 'rgba(55,125,255, .5)');
+        this.gradient11?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
-    this.gradient21?.addColorStop(0, 'rgba(55,125,255, .5)');
-    this.gradient21?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        this.gradient12?.addColorStop(0, 'rgba(0, 201, 219, .5)');
+        this.gradient12?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
-    this.gradient31?.addColorStop(0, 'rgba(55,125,255, .5)');
-    this.gradient31?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        this.gradient13?.addColorStop(0, 'rgba(100, 0, 214, 0.8)');
+        this.gradient13?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
-    this.gradient32?.addColorStop(0, 'rgba(0, 201, 219, .5)');
-    this.gradient32?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+        this.gradient21?.addColorStop(0, 'rgba(55,125,255, .5)');
+        this.gradient21?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+        this.gradient31?.addColorStop(0, 'rgba(55,125,255, .5)');
+        this.gradient31?.addColorStop(1, 'rgba(255, 255, 255, .2)');
+
+        this.gradient32?.addColorStop(0, 'rgba(0, 201, 219, .5)');
+        this.gradient32?.addColorStop(1, 'rgba(255, 255, 255, .2)');
 
 
 
 
         const data = [savings, withdrawals, commissions];
-        const data2 = [savingsVolume, withdrawalsVolume, commissionsVolume]; 
-        const gradient = [this.gradient, this.gradient2, this.gradient3]; 
+        const data2 = [savingsVolume, withdrawalsVolume, commissionsVolume];
+        const gradient = [this.gradient, this.gradient2, this.gradient3];
         const gradient2 = [this.gradient11, this.gradient12, this.gradient13];
         const datasets = this.getDataSet(this.lineChartLabels[0], data, gradient, dataset);
         console.log(datasets);
-        const datasets2 = this.getDataSet(this.lineChartLabels[1], data2, gradient2, dataset2);  
+        const datasets2 = this.getDataSet(this.lineChartLabels[1], data2, gradient2, dataset2);
         this.labels = labels;
-        
+
         this.lineChartData[0] = {
-          labels: labels, 
+          labels: labels,
           datasets: datasets,
         }
 
@@ -318,11 +321,10 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
       }
 
     } catch (error) {
+      this.loading = false;
       this.toastService.showError('Please check your internet and refresh', 'Error');
-
     }
 
-  
   }
 
   dataSetConfig(label: string, data: any, bgColor: any, color: string) {
@@ -330,57 +332,58 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     console.log(data);
     console.log(bgColor);
     console.log(color);
-    return { data: data, label: label, backgroundColor: bgColor, borderColor: color,
-      borderWidth: 2, pointRadius: 0, hoverBorderColor: color, pointBackgroundColor: color, 
+    return {
+      data: data, label: label, backgroundColor: bgColor, borderColor: color,
+      borderWidth: 2, pointRadius: 0, hoverBorderColor: color, pointBackgroundColor: color,
       pointBorderColor: "#fff", pointHoverRadius: 0, fill: true,
       fillColor: bgColor,
     }
   }
 
-  getDataSet(chartLabel:Array<any>, data: Array<any>, gradient:Array<any>, dataset:Array<any> ){
-      for (let i = 0; i < chartLabel.length; i++) {
-        const element = chartLabel[i];
-        const val = this.dataSetConfig(element, data[i], gradient[i], this.color[i]);
-        dataset.push(val);             
-      }
-      return dataset;
+  getDataSet(chartLabel: Array<any>, data: Array<any>, gradient: Array<any>, dataset: Array<any>) {
+    for (let i = 0; i < chartLabel.length; i++) {
+      const element = chartLabel[i];
+      const val = this.dataSetConfig(element, data[i], gradient[i], this.color[i]);
+      dataset.push(val);
+    }
+    return dataset;
   }
 
-  getAllUsers(result: Array<any>){
+  getAllUsers(result: Array<any>) {
     // try {
     //   this.dataService.getAllcustomers().subscribe((result: any) => {
-        console.log(result);
-        this.userRecord = result;
-        const userRecord = this.statService.getTotalUsersByMonth(result);
-        //this.getCanvasConfig();
-        const lab: Array<string> = [];
-        const users: Array<number> = [];   
-        const dataset:Array<any> = []     
-        const grad3 = [this.gradient21]
-        new Array(userRecord.length).fill(null).map((x, i) => {          
-          const element = userRecord[i];
-          lab.push(element?.month);
-          users.push(element?.users);
-        })
-        console.log(users);
-        const data = [users];
-        const dataSum = data[0].reduce((acc: any, cur: any)=>  acc + cur);
-        console.log(dataSum);
-        this.userVolume = dataSum;
-        const datasets = this.getDataSet(this.lineChartLabels[2], data, grad3, dataset);
-        console.log(datasets)
-        
-        this.lineChartData[2] = {
-          labels: lab,
-          datasets: datasets,
-          }
-      // }, (error: any) =>{
-      //   console.log(error);
-      //   this.toastService.showError(error?.message, 'Error');
-      // })
-      
+    console.log(result);
+    this.userRecord = result;
+    const userRecord = this.statService.getTotalUsersByMonth(result);
+    //this.getCanvasConfig();
+    const lab: Array<string> = [];
+    const users: Array<number> = [];
+    const dataset: Array<any> = []
+    const grad3 = [this.gradient21]
+    new Array(userRecord.length).fill(null).map((x, i) => {
+      const element = userRecord[i];
+      lab.push(element?.month);
+      users.push(element?.users);
+    })
+    console.log(users);
+    const data = [users];
+    const dataSum = data[0].reduce((acc: any, cur: any) => acc + cur);
+    console.log(dataSum);
+    this.userVolume = dataSum;
+    const datasets = this.getDataSet(this.lineChartLabels[2], data, grad3, dataset);
+    console.log(datasets)
+
+    this.lineChartData[2] = {
+      labels: lab,
+      datasets: datasets,
+    }
+    // }, (error: any) =>{
+    //   console.log(error);
+    //   this.toastService.showError(error?.message, 'Error');
+    // })
+
     // } catch (error) {
-      
+
     // }
   }
 
@@ -389,7 +392,7 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     const labels: Array<string> = [];
     const male: Array<number> = [];
     const female: Array<number> = [];
-    const dataset:Array<any> = []
+    const dataset: Array<any> = []
     new Array(value.length).fill(null).map((x, i) => {
       const element = value[i];
       labels.push(element?.month);
@@ -400,11 +403,11 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     console.log(male)
     console.log(female)
     const data = [male, female];
-    const maleSum = male.reduce((acc: any, cur: any)=>  acc + cur);
+    const maleSum = male.reduce((acc: any, cur: any) => acc + cur);
     console.log(maleSum);
-    const femaleSum = female.reduce((acc: any, cur: any)=>  acc + cur);
+    const femaleSum = female.reduce((acc: any, cur: any) => acc + cur);
     console.log(femaleSum);
-    this.genderVolume = maleSum + femaleSum; 
+    this.genderVolume = maleSum + femaleSum;
     const gradient = [this.gradient31, this.gradient32]
     const datasets3 = this.getDataSet(this.lineChartLabels[3], data, gradient, dataset);
     this.lineChartData[3] = {
@@ -413,7 +416,7 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  getCanvasConfig(){
+  getCanvasConfig() {
     // this.canvas = this.el.nativeElement.querySelector('canvas');
     // this.ctx = this.canvas.getContext('2d');
 
@@ -425,7 +428,7 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
 
     //   return new Chart(chartElementRef.nativeElement, config);
     // });
-    
+
     // for (const chart of this.charts) {
     //   const ctx2: CanvasRenderingContext2D = chart //getContext('2d');
     // }
@@ -436,7 +439,7 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     // })  //nativeElement.getContext('2d');
     //console.log(ctx);
 
-    this.canvas = <HTMLCanvasElement> document.getElementById('lineChart0'); // $("#canvas"); 
+    this.canvas = <HTMLCanvasElement>document.getElementById('lineChart0'); // $("#canvas"); 
     this.ctx = this.canvas?.getContext('2d');
     console.log(this.ctx);
     this.charts?.get(0)?.ctx
@@ -445,22 +448,22 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     this.gradient2 = this.ctx?.createLinearGradient(0, 0, 0, 200);
     this.gradient3 = this.ctx?.createLinearGradient(0, 0, 0, 200);
 
-    this.canvas1 = <HTMLCanvasElement> document.getElementById('lineChart1');
+    this.canvas1 = <HTMLCanvasElement>document.getElementById('lineChart1');
     this.ctx1 = this.canvas1?.getContext('2d');
     this.gradient11 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
     this.gradient12 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
     this.gradient13 = this.ctx1?.createLinearGradient(0, 0, 0, 200);
 
-    this.canvas2 = <HTMLCanvasElement> document.getElementById('lineChart2');
-    this.ctx2 = this.canvas2?.getContext('2d');    
+    this.canvas2 = <HTMLCanvasElement>document.getElementById('lineChart2');
+    this.ctx2 = this.canvas2?.getContext('2d');
     this.gradient21 = this.ctx2?.createLinearGradient(0, 0, 0, 200);
 
-    this.canvas3 = <HTMLCanvasElement> document.getElementById('lineChart3');
+    this.canvas3 = <HTMLCanvasElement>document.getElementById('lineChart3');
     this.ctx3 = this.canvas3?.getContext('2d');
-    
+
     this.gradient31 = this.ctx3?.createLinearGradient(0, 0, 0, 200);
-    this.gradient32 = this.ctx3?.createLinearGradient(0, 0, 0, 200); 
-    
+    this.gradient32 = this.ctx3?.createLinearGradient(0, 0, 0, 200);
+
 
     this.gradient?.addColorStop(0, 'rgba(55,125,255, .5)');
     this.gradient?.addColorStop(1, 'rgba(255, 255, 255, .2)');
@@ -494,11 +497,11 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     return this.charts.get(chartId)?.toBase64Image();
   }
 
-  downloadGraph(chartId: number){
+  downloadGraph(chartId: number) {
     console.log(chartId)
     console.log(this.charts);
-    const fileName = this.charts.get(chartId)?.type +'chart'+ new Date().getTime()+Math.floor(Math.random() * 10000) + '.png';
-    const src = this.getBase64(chartId)+'';
+    const fileName = this.charts.get(chartId)?.type + 'chart' + new Date().getTime() + Math.floor(Math.random() * 10000) + '.png';
+    const src = this.getBase64(chartId) + '';
     const link = document.createElement("a");
     link.href = src
     link.download = fileName
@@ -512,26 +515,26 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
       [this.gradient, this.gradient2, this.gradient3],
       [this.gradient11, this.gradient12, this.gradient13]
     ];
-      const element = this.lineChartData[id].datasets;
-      if(tab === 'bar'){
-        if (this.lineChartType[id] === 'line'  ) {
-          this.lineChartType[id] = 'bar';
-          for (let i = 0; i < element.length; i++) {
-            element[i].backgroundColor = this.gradients[i][0];
-            element[i].hoverBackgroundColor = this.gradients[i][0];        
-          }       
+    const element = this.lineChartData[id].datasets;
+    if (tab === 'bar') {
+      if (this.lineChartType[id] === 'line') {
+        this.lineChartType[id] = 'bar';
+        for (let i = 0; i < element.length; i++) {
+          element[i].backgroundColor = this.gradients[i][0];
+          element[i].hoverBackgroundColor = this.gradients[i][0];
         }
-      } else if(tab === 'line') {
-        if (this.lineChartType[id] === 'bar') {
-          this.lineChartType[id] = 'line'
-          for (let i = 0; i < element.length; i++) {
-            element[i].backgroundColor = gradient1[0][i];  
-            element[i].hoverBackgroundColor = gradient1[0][i];        
-          } 
-        }
-        this.charts.get(id)?.update();
       }
-        
+    } else if (tab === 'line') {
+      if (this.lineChartType[id] === 'bar') {
+        this.lineChartType[id] = 'line'
+        for (let i = 0; i < element.length; i++) {
+          element[i].backgroundColor = gradient1[0][i];
+          element[i].hoverBackgroundColor = gradient1[0][i];
+        }
+      }
+      this.charts.get(id)?.update();
+    }
+
   }
 
 }

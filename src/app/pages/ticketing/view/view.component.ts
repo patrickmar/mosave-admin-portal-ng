@@ -34,6 +34,7 @@ export class ViewComponent implements OnInit, OnDestroy, AfterViewInit {
   dummyImage = 'https://placehold.co/600x400?text=No+Banner';
   avatar = environment.avatar;
   emptyTable = environment.emptyTable;
+  public showComponent = false;
 
   constructor(private dataService: DataService, private toastService: ToastService,
     private modalService: NgbModal) {
@@ -48,8 +49,9 @@ export class ViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getAllTickets(){
     try {
+      this.loading = true;
       this.dataService.getAllTickets().subscribe((res: any) => {
-        console.log(res);
+        console.log(res);        
         this.allTickets = res.data;
         // this.allTickets = res.filter((r:any)=>{
         //   return r.submerchantId !== '0';
@@ -63,12 +65,14 @@ export class ViewComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           this.isDtInitialized = true
           this.dtTrigger.next('');
-        }   
+        }
+        this.loading = false;
+        this.showComponent = true; 
       }, (error: any)=> {
         this.toastService.showError(error.message, 'Error');
-      });
-      
+      });      
     } catch (error) {
+      this.loading = false;
       this.toastService.showError('Error loading tickets. Please check you internet', 'Error');      
     }
   }

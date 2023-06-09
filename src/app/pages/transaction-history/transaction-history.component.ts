@@ -30,6 +30,8 @@ export class TransactionHistoryComponent implements OnInit {
   customerInfo!: any;
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
+  public loading = false;
+  public showComponent = false;
 
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
@@ -137,6 +139,8 @@ export class TransactionHistoryComponent implements OnInit {
 
   getCustomerTrxs() {
     console.log(this.customerId);
+    try {
+      this.loading = true;
     forkJoin([
       this.dataService.getAllCustomersTnxs(this.customerId),
       this.dataService.getCustomersSavingsTnxs(this.customerId),
@@ -148,10 +152,18 @@ export class TransactionHistoryComponent implements OnInit {
       this.allRecords = result[0];
       this.savingsRecords = result[1];
       this.withdrawalRecords = result[2];
+      this.loading = false;
+      this.showComponent = true;
       this.dtTrigger.next('');
     }), (error: any) => {
       console.log(error);
+      this.loading = false;
+      this.toastService.showError('Error fetching customer transactions', 'Error');  
     }
+  } catch (error) {
+    this.loading = false; 
+    this.toastService.showError('Error fetching data', 'Error');     
+  }
 
   }
 

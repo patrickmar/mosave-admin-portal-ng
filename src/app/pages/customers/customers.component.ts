@@ -38,6 +38,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
   dtTrigger: Subject<any> = new Subject<any>();
   avatar = environment.avatar;
   emptyTable = environment.emptyTable;
+  public loading = false;
+  public showComponent = false;
 
   @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;
@@ -149,6 +151,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
   }
 
   getAllCustomers(){ 
+    try {
+      this.loading = true;    
     forkJoin([
       this.dataService.getAllcustomers(),
       this.dataService.getTotalActiveCustomers()
@@ -159,6 +163,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
       this.activeCustomers = data[1];
       this.inactiveCustomers = Number(data[0].length) - Number(data[1]);
       console.log(this.inactiveCustomers);
+      this.loading = false;
+      this.showComponent = true;
       this.getNewCustomers();
       if(this.customer?.length > 0 ){
         this.customerExist = true;
@@ -169,6 +175,9 @@ export class CustomersComponent implements OnInit, OnDestroy {
     }),((error: any)=>{
       console.log(error);
     })
+  } catch (error) {
+    this.loading = false;
+  }
   }
 
   getNewCustomers(){

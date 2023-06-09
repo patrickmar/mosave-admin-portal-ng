@@ -38,6 +38,8 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
   isCopied!: boolean;
   img = environment.mini_logo;
   modalContent!: object | any;
+  public loading = false;
+  public showComponent = false;
 
   constructor(private route: ActivatedRoute, private router: Router,
      private dataService: DataService, private toastService: ToastService,
@@ -158,8 +160,11 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
   getTicketsById(){
     const ticketId = Number(this.getTicketId());
     try {
+      this.loading = true;
       this.dataService.getTicketsById(ticketId).subscribe((res: any) => {
         console.log(res);
+        this.loading = false;
+        this.showComponent = true;
         this.allRecords = res;
         this.ticketSum = this.allRecords.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
 
@@ -214,8 +219,8 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
       });
       
     } catch (error) {
-      this.toastService.showError('Please check your internet', 'Error')
-      
+      this.loading = false;
+      this.toastService.showError('Please check your internet', 'Error');
     }
   }
 
