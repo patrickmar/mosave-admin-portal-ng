@@ -65,8 +65,34 @@ export class HeaderComponent implements OnInit {
 
   jsInit(){
     window.onload = function () {
-    new HSFormSearch('.js-form-search');
+    // new HSFormSearch('.js-form-search');
+    const HSFormSearchInstance = new HSFormSearch('.js-form-search');
+      if (HSFormSearchInstance.collection.length) {
+        HSFormSearchInstance.getItem(1).on('close', function (el:any) {
+          el.classList.remove('top-0')
+        })
+
+        document.querySelector('.js-form-search-mobile-toggle')?.addEventListener('click', (e:any) => {
+          //const el = e.currentTarget as HTMLInputElement
+          let dataOptions = JSON.parse(e.currentTarget?.getAttribute('data-hs-form-search-options')),
+            $menu = document.querySelector(dataOptions.dropMenuElement);
+          $menu.classList.add('top-0')
+          $menu.style.left = 0
+        })
+      };
     }
+  }
+
+  openClose(open: any) {
+    if (open) {
+      $('#clearSearchResultsIcon').css({"display":"block"});;
+    } else {
+      $("#clearSearchResultsIcon").css({"display":"none"});
+    }
+  }
+
+  clearText(){
+    $('#searchField').val('');
   }
 
   getUserDetails(){
@@ -75,13 +101,11 @@ export class HeaderComponent implements OnInit {
       var titleCasePipe = new TitleCasePipe();
       this.firstname = titleCasePipe.transform(this.user?.firstname);
       this.userRole = this.roles.filter((i: any) => i.id === Number(this.user.level));
-      console.log(this.userRole);
     });
   }
 
   getRecentSearches(){
     this.storageService.get('search').then(resp => {
-      console.log(this.recentSearches);
       if(resp != false){
         this.recentSearches = resp;        
       }
@@ -100,7 +124,6 @@ export class HeaderComponent implements OnInit {
         this.loading = true;
         this.noRecord = false;
         this.dataService.searchCustomer(query).subscribe((res: any) => {
-          console.log(res);
           this.loading = false;
           if(res.customer.length > 0){
             this.searchResult = res.customer;
@@ -111,12 +134,9 @@ export class HeaderComponent implements OnInit {
           
           if(query.length > 3){ 
            this.storageService.get('search').then(resp => {
-            console.log(resp);
             const oldSearch = resp == false ? [] : resp;
-            console.log(oldSearch);
             const value =  [query];
             const allSearch = [...oldSearch, ...value];
-            console.log(allSearch);
             this.storageService.store('search', allSearch);
            });
            

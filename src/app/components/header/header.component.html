@@ -21,7 +21,8 @@
 
         <!-- Search Form -->
         <form [formGroup]="searchForm" (ngSubmit)="searchCustomer($event)">
-        <div class="dropdown ms-2">
+
+        <div class="dropdown ms-2" ngbDropdown #myDrop="ngbDropdown" (openChange)="openClose($event)">
           <!-- Input Group -->
           <div class="d-none d-lg-block">
             <div class="input-group input-group-merge input-group-borderless input-group-hover-light navbar-input-group">
@@ -29,15 +30,9 @@
                 <i class="bi-search"></i>
               </div>
 
-              <input type="search" class="js-form-search form-control" placeholder="Search Customer" (keyup)="searchCustomer($event)"
-              formControlName="searchQuery" aria-label="search Customer" data-hs-form-search-options='{
-                       "clearIcon": "#clearSearchResultsIcon",
-                       "dropMenuElement": "#searchDropdownMenu",
-                       "dropMenuOffset": 20,
-                       "toggleIconOnFocus": true,
-                       "activeClass": "focus"
-                     }'>
-              <a class="input-group-append input-group-text" href="javascript:;">
+              <input type="search" class="form-control" id="searchField" placeholder="Search Customer" NgbDropdownAnchor (focus)="myDrop.open()" (keyup)="searchCustomer($event)"
+              formControlName="searchQuery" aria-label="search Customer">
+              <a class="input-group-append input-group-text" href="javascript:;" type="button" (click)="clearText(); $event.stopPropagation(); myDrop.close();">
                 <i id="clearSearchResultsIcon" class="bi-x-lg" style="display: none;"></i>
               </a>
             </div>
@@ -55,7 +50,7 @@
           <!-- End Input Group -->
 
           <!-- Card Search Content -->
-          <div id="searchDropdownMenu" class="hs-form-search-menu-content dropdown-menu dropdown-menu-form-search navbar-dropdown-menu-borderless">
+          <div  ngbDropdownMenu id="searchDropdownMenu" class="dropdown-menu dropdown-menu-form-search navbar-dropdown-menu-borderless" style="top: 120%; width: 100%; animation-duration: 300ms;">
             <!-- Body -->
             <div class="card-body-height">
               <div class="d-lg-none">
@@ -118,10 +113,6 @@
                   <p class="mb-0">No customer found</p>
                 </div>
               </ng-container>
-
-              
-
-
               
             </div>
             <!-- End Body -->

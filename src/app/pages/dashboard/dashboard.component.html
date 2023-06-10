@@ -31,16 +31,14 @@
                 <div class="col-12">
                   <h2 class="card-title text-inherit">{{savingsSum | currency :'₦'}}</h2>
                 </div>
-                <!-- End Col -->
-
-               
+                <!-- End Col -->               
               </div>
               <!-- End Row -->
 
               <span class="badge bg-soft-success text-success">
-                <i class="bi-graph-up"></i> 12.5%
+                <i class="bi-graph-up"></i> {{((savingsSum) / convertNum(savingsSum) * 100).toFixed(2) }}%
               </span>
-              <span class="text-body fs-6 ms-1" *ngIf="savingsRecords != undefined">from {{savingsRecords.length}}</span>
+              <span class="text-body fs-6 ms-1" *ngIf="savingsRecords != undefined"><span class="h4 mb-0">|</span> {{savingsRecords.length}}</span>
             </div>
           </a>
           <!-- End Card -->
@@ -61,9 +59,9 @@
               <!-- End Row -->
 
               <span class="badge bg-soft-success text-success">
-                <i class="bi-graph-up"></i> 1.7%
+                <i class="bi-graph-up"></i> {{((withdrawalSum) / convertNum(savingsSum) * 100).toFixed(2) }}%
               </span>
-              <span class="text-body fs-6 ms-1" *ngIf="withdrawalRecords != undefined">from {{withdrawalRecords.length}}</span>
+              <span class="text-body fs-6 ms-1" *ngIf="withdrawalRecords != undefined"> <span class="h4 mb-0">|</span> {{withdrawalRecords.length}}</span>
             </div>
           </a>
           <!-- End Card -->
@@ -84,9 +82,9 @@
               <!-- End Row -->
 
               <span class="badge bg-soft-danger text-danger">
-                <i class="bi-graph-down"></i> 4.4%
+                <i class="bi-graph-down"></i> {{((commissionSum) / convertNum(savingsSum) * 100).toFixed(2) }}%
               </span>
-              <span class="text-body fs-6 ms-1" *ngIf="commissionRecords != undefined">from {{commissionRecords.length}}</span>
+              <span class="text-body fs-6 ms-1" *ngIf="commissionRecords != undefined"><span class="h4 mb-0">|</span> {{commissionRecords.length}}</span>
             </div>
           </a>
           <!-- End Card -->
@@ -108,8 +106,8 @@
               </div>
               <!-- End Row -->
 
-              <span class="badge bg-soft-secondary text-body">0.0%</span>
-              <span class="text-body fs-6 ms-1" *ngIf="savingsRecords != undefined">from {{savingsRecords.length - savingsRecords.length}}</span>
+              <span class="badge bg-soft-secondary text-body">{{((totalBalance) / convertNum(savingsSum) * 100).toFixed(2) }}%</span>
+              <span class="text-body fs-6 ms-1" *ngIf="savingsRecords != undefined"><span class="h4 mb-0">|</span> {{savingsRecords.length - savingsRecords.length}}</span>
             </div>
           </a>
           <!-- End Card -->
@@ -512,10 +510,6 @@
               <p>Launch our third party applications from here</p>
 
               <ul class="list-group list-group-flush list-group-no-gutters">
-                <!-- <li class="list-group-item">
-                  <h5 class="card-title">Import users from:</h5>
-                </li> -->
-
                 <!-- List Group Item -->
                 <li class="list-group-item" *ngFor="let item of thirdPartyApps">
                   <div class="d-flex">

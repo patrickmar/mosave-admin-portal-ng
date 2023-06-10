@@ -516,7 +516,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     console.log(this.yesterdaytrnxSum);
   }
 
-  
+  convertNum(number: any) {
+    return Number(number);
+  }  
 
   getBase64(chartId: number) {
     //console.log(this.charts.get(chartId)?.toBase64Image());
@@ -623,23 +625,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
       // INITIALIZATION OF BOOTSTRAP DROPDOWN
       // =======================================================
-      HSBsDropdown.init()
-
-      const HSFormSearchInstance = new HSFormSearch('.js-form-search');      
-
-      if (HSFormSearchInstance.collection.length) {
-        HSFormSearchInstance.getItem(1).on('close', function (el:any) {
-          el.classList.remove('top-0')
-        })
-
-        document.querySelector('.js-form-search-mobile-toggle')?.addEventListener('click', (e:any) => {
-          //const el = e.currentTarget as HTMLInputElement
-          let dataOptions = JSON.parse(e.currentTarget?.getAttribute('data-hs-form-search-options')),
-            $menu = document.querySelector(dataOptions.dropMenuElement);
-          $menu.classList.add('top-0')
-          $menu.style.left = 0
-        })
-      };
+      HSBsDropdown.init()      
 
           // INITIALIZATION OF SELECT
       // =======================================================
@@ -649,86 +635,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       // INITIALIZATION OF CLIPBOARD
       // =======================================================
       HSCore.components.HSClipboard.init('.js-clipboard')
-
-      // INITIALIZATION OF CHARTJS
-        // =======================================================
-        // HSCore.components.HSChartJS.init('.js-chart-datalabels', {
-        //   plugins: [ChartDataLabels],
-        //   options: {
-        //     plugins: {
-        //       datalabels: {
-        //         anchor: (context: any) => {
-        //           var value = context.dataset.data[context.dataIndex];
-        //           return value.r < 20 ? 'end' : 'center';
-        //         },
-        //         align: (context: any) => {
-        //           var value = context.dataset.data[context.dataIndex];
-        //           return value.r < 20 ? 'end' : 'center';
-        //         },
-        //         color: (context: any) => {
-        //           var value = context.dataset.data[context.dataIndex];
-        //           return value.r < 20 ? context.dataset.backgroundColor : context.dataset.color;
-        //         },
-        //         font: (context: any) => {
-        //           var value = context.dataset.data[context.dataIndex],
-        //             fontSize = 25;
-
-        //           if (value.r > 50) {
-        //             fontSize = 35;
-        //           }
-
-        //           if (value.r > 70) {
-        //             fontSize = 55;
-        //           }
-
-        //           return {
-        //             weight: 'lighter',
-        //             size: fontSize
-        //           };
-        //         },
-        //         offset: 2,
-        //         padding: 0
-        //       }
-        //     }
-        //   }
-        // })
-
-
-
-      
-    // INITIALIZATION OF DATATABLES
-    // =======================================================
-    // HSCore.components.HSDatatables.init($('#datatable'), {
-    //   select: {
-    //     style: 'multi',
-    //     selector: 'td:first-child input[type="checkbox"]',
-    //     classMap: {
-    //       checkAll: '#datatableCheckAll',
-    //       counter: '#datatableCounter',
-    //       counterInfo: '#datatableCounterInfo'
-    //     }
-    //   },
-    //   language: {
-    //     zeroRecords: `<div class="text-center p-4">
-    //           <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-    //           <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
-    //         <p class="mb-0">No data to show</p>
-    //         </div>`
-    //   }
-    // });
-
-    // const datatable = HSCore.components.HSDatatables.getItem(0);
-    // console.log(datatable);
-
-    // document.querySelectorAll('.js-datatable-filter').forEach(function (item) {
-    //   item.addEventListener('change',function(e) {
-    //     const elVal = (e.target as HTMLSelectElement).value,
-    // targetColumnIndex = (e.target as HTMLSelectElement) .getAttribute('data-target-column-index'),
-    // targetTable = (e.target as HTMLSelectElement).getAttribute('data-target-table');
-
-    // HSCore.components.HSDatatables.getItem(targetTable).column(targetColumnIndex).search(elVal !== 'null' ? elVal : '').draw()
-    //   })
-    // });    
+    
     }
   })()
   }
