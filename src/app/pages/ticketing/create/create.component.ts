@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { DataService } from 'src/app/services/data.service';
 import { StatService } from 'src/app/services/stat.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -25,7 +26,7 @@ declare var HSQuantityCounter: any;
   styleUrls: ['./create.component.css']
 })
 
-export class CreateComponent implements OnInit {  
+export class CreateComponent implements OnInit {
   tableHead = ["Name", "Price", "Disc. Price", "Wallet Disc.", "Quantity", "Action"];
   eventTypes = ["Festival", "Conference", "Seminar", "Executive Meeting", "Webinar", "Comedy", "Gala Night", "Musical show", "Trade Fair", "Others",]
   ticketForm: FormGroup;
@@ -37,9 +38,11 @@ export class CreateComponent implements OnInit {
   allMerchants!: Array<any>;
   setFiles: Array<any> = [];
   files: File[] = [];
-  bearers = [{name:"MoLoyal", value: "account"}, {name:"Client", value: "subaccount"}]
+  bearers = [{ name: "MoLoyal", value: "account" }, { name: "Client", value: "subaccount" }]
+  public loading2 = false;
+  public showComponent = false;
 
-  constructor(private fb: FormBuilder, private dataService: DataService, 
+  constructor(private fb: FormBuilder, private dataService: DataService,
     private toastService: ToastService, private statService: StatService) {
     this.getAllMerchants();
 
@@ -104,7 +107,6 @@ export class CreateComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.jsInit();
     this.jsInit2();
     // this.addTicket();
     this.addStartDate();
@@ -195,8 +197,8 @@ export class CreateComponent implements OnInit {
     this.endDate().removeAt(i);
   }
 
-  updateMerchant(event: any){
-   const value = this.allMerchants.filter((obj)=>{
+  updateMerchant(event: any) {
+    const value = this.allMerchants.filter((obj) => {
       return obj.merchantId === event.target.value;
     })
     this.ticketForm.get('merchantId')?.setValue(value[0].programId);
@@ -204,18 +206,21 @@ export class CreateComponent implements OnInit {
 
   getAllMerchants() {
     try {
+      this.loading2 = true;
       this.dataService.getAllMerchants().subscribe((res: any) => {
         this.allMerchants = res;
-      }, (error: any)=>{
-        this.toastService.showError(error?.message, 'Error');
+        this.loading2 = false;
+        this.showComponent = true;
+      }, (error: any) => {
+        this.loading2 = false;
+        this.toastService.showError('Error fetching all merchants', 'Error');
       })
     } catch (error) {
       console.log(error);
+      this.loading2 = false;
       this.toastService.showError('Could not fetch all Merchants', 'Error');
     }
   }
-
-
 
   handleMinus(e: any, index: number, name: string, minQty: number) {
     let value = this.ticketForm.get("ticketCategories")?.value[index]?.[name];
@@ -248,7 +253,7 @@ export class CreateComponent implements OnInit {
     });
   }
 
-   getBase64 (file: any) {
+  getBase64(file: any) {
     return new Promise(resolve => {
       //let baseURL = "";
       // Make new FileReader
@@ -282,7 +287,7 @@ export class CreateComponent implements OnInit {
   }
 
   onSelect(e: any) {
-    if(e.addedFiles.length > 0){
+    if (e.addedFiles.length > 0) {
       this.files.push(...e.addedFiles);
       var regex = /(\.jpg|\.jpeg|\.svg|\.pdf|\.gif|\.png)$/i;
       let file2 = e.addedFiles;
@@ -308,18 +313,17 @@ export class CreateComponent implements OnInit {
         }
       }
 
-    }else if(e.rejectedFiles.length > 0) {
+    } else if (e.rejectedFiles.length > 0) {
       for (let i = 0; i < e.rejectedFiles.length; i++) {
-        if(e.rejectedFiles[i].reason === "type"){
+        if (e.rejectedFiles[i].reason === "type") {
           this.toastService.showError('Accepted file format is (.png, .jpg, .jpeg, .pdf)', 'Error');
-        }else if( e.rejectedFiles[i].reason === "size") {
-          this.toastService.showError('Maximum of ' +  this.statService.getFilesize(this.maxFileSize, false) +' file size is allowed', 'Error');
+        } else if (e.rejectedFiles[i].reason === "size") {
+          this.toastService.showError('Maximum of ' + this.statService.getFilesize(this.maxFileSize, false) + ' file size is allowed', 'Error');
         } else {
           this.toastService.showError('Unknown Error. Please try another file', 'Error')
-        }        
+        }
       }
     }
-
 
     // const formData = new FormData();
 
@@ -332,109 +336,91 @@ export class CreateComponent implements OnInit {
   onRemove(item: any, e?: any) {
     this.files.splice(this.files.indexOf(item), 1);
     this.setFiles.splice(this.setFiles.indexOf(item), 1);
-    if(e != undefined){
+    if (e != undefined) {
       e.preventDefault();
       e.stopPropagation();
     }
-}
-
-removeAll(array: Array<any>){
-  for (let i = 0; i < array.length; i++) {
-    const element = array[i]; 
-    array.splice(array.indexOf(element), 1);
   }
-}
 
-async onSubmit() {
-    var val = $("#quillArea .ql-editor").html();
-    this.ticketForm.get('description')?.setValue(val);
+  removeAll(array: Array<any>) {
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i];
+      array.splice(array.indexOf(element), 1);
+    }
+  }
+
+  async onSubmit() {
     const form = this.ticketForm.value;
     console.log(form);
-    if (this.setFiles.length == 0) {
-      this.toastService.showError('Banner can not be empty', 'Error');
-    } else {
-      const startDate = moment(this.ticketForm.value.start[0].date);
-      const endDate = moment(this.ticketForm.value.end[0].date);
-      console.log(endDate.isBefore(startDate));
-      if (endDate.isBefore(startDate)) {
-        this.toastService.showError('Event end date must be greater than start date.', 'Error');
-    }else {     
-      this.loading = true;
-      const formData = new FormData();
-      for (var i = 0; i < this.setFiles.length; i++) {
-        const fileName = new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
-        const response = await fetch(this.setFiles[i].file.base64);
-        const blob = await response.blob();
-        // const blob2 = this.dataURItoBlob4(this.setFiles[i].file.base64);
-        formData.append("banner[]", blob, fileName);
-      }      
-    //remove array from the form object
-    //  const  {ticketCategories, start, end, ...newForm} = form;
-    //  console.log(newForm);
-    //  console.log(form);
-
-      Object.keys(form).forEach((key) => {
-          Array.isArray(form[key]) ? 
-          form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value))}) : formData.append(key, form[key])
-      });
-      // formData.forEach((value, key) => {
-      //   console.log(key + ": " + value);
-      // });
-
-      try {
-        this.dataService.createEventTicket(formData).subscribe((res: any) => {
-          console.log(res);
-          this.loading = false;
-          if (res.error == false) {            
-            this.ticketForm.reset();
-            this.ticketCategories().controls.length = 1;
-            // this.removeAll(this.setFiles)
-            // this.removeAll(this.files);  
-            this.setFiles.length = 0;
-            this.files.length = 0;  
-            this.toastService.showSuccess(res?.message, 'Success');        
-          } else {
-            this.toastService.showError(res?.message, 'Error');   
+    console.log(this.ticketForm.valid);
+    if (this.ticketForm.valid) {
+      if (this.setFiles.length == 0) {
+        this.toastService.showError('Banner can not be empty', 'Error');
+      } else {
+        const startDate = moment(this.ticketForm.value.start[0].date);
+        const endDate = moment(this.ticketForm.value.end[0].date);
+        console.log(endDate.isBefore(startDate));
+        if (endDate.isBefore(startDate)) {
+          this.toastService.showError('Event end date must be greater than start date.', 'Error');
+        } else {
+          this.loading = true;
+          const formData = new FormData();
+          for (var i = 0; i < this.setFiles.length; i++) {
+            const fileName = new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';
+            const response = await fetch(this.setFiles[i].file.base64);
+            const blob = await response.blob();
+            // const blob2 = this.dataURItoBlob4(this.setFiles[i].file.base64);
+            formData.append("banner[]", blob, fileName);
           }
-        }, (error: any)=>{
-          this.loading = false;
-          console.log(error);
-          this.toastService.showError(error?.message, 'Error');
-        })
-      } catch (error) {
-        this.loading = false;
-        console.log(error);
-        this.toastService.showError('Could not create ticket. Please try again later', 'Error');
+          //remove array from the form object
+          //  const  {ticketCategories, start, end, ...newForm} = form;
+          //  console.log(newForm);
+          //  console.log(form);
+
+          Object.keys(form).forEach((key) => {
+            Array.isArray(form[key]) ?
+              form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value)) }) : formData.append(key, form[key])
+          });
+          // formData.forEach((value, key) => {
+          //   console.log(key + ": " + value);
+          // });
+
+          try {
+            this.dataService.createEventTicket(formData).subscribe((res: any) => {
+              console.log(res);
+              this.loading = false;
+              if (res.error == false) {
+                this.ticketForm.reset();
+                this.ticketCategories().controls.length = 1;
+                // this.removeAll(this.setFiles)
+                // this.removeAll(this.files);  
+                this.setFiles.length = 0;
+                this.files.length = 0;
+                this.toastService.showSuccess(res?.message, 'Success');
+              } else {
+                this.toastService.showError(res?.message, 'Error');
+              }
+            }, (error: any) => {
+              this.loading = false;
+              console.log(error);
+              this.toastService.showError('Ticket could not be created. Please try again.', 'Error');
+            })
+          } catch (error) {
+            this.loading = false;
+            console.log(error);
+            this.toastService.showError('Could not create ticket. Please try again later.', 'Error');
+          }
+        }
+
       }
+    } else {
+      this.toastService.showError('Please fill all input fields', 'Error');
     }
 
-    }
   }
 
   getFilesize(size: number) {
-   return this.statService.getFilesize(size, true);
-  }
-
-
-
-  jsInit() {
-
-    $(document).on('ready', function () {
-      // INITIALIZATION OF DATATABLES
-      // =======================================================
-      HSCore.components.HSDatatables.init($('#datatable'), {
-        select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
-          classMap: {
-            checkAll: '#datatableCheckAll',
-            counter: '#datatableCounter',
-            counterInfo: '#datatableCounterInfo'
-          }
-        }
-      });
-    });
-
+    return this.statService.getFilesize(size, true);
   }
 
   jsInit2() {
@@ -445,11 +431,9 @@ async onSubmit() {
         // =======================================================
         new HSSideNav('.js-navbar-vertical-aside').init()
 
-
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init()
-
 
         // INITIALIZATION OF SELECT
         // =======================================================
@@ -468,16 +452,13 @@ async onSubmit() {
         HSCore.components.HSFlatpickr.init('#eventDateRangeLabel3');
         HSCore.components.HSFlatpickr.init('#eventDateRangeLabel4');
 
-
         // INITIALIZATION OF DROPZONE
         // =======================================================
-        HSCore.components.HSDropzone.init('.js-dropzone')
-        
-
+        HSCore.components.HSDropzone.init('.js-dropzone');
 
         // INITIALIZATION OF QUILLJS EDITOR
         // =======================================================
-        HSCore.components.HSQuill.init('.js-quill')
+        // HSCore.components.HSQuill.init('.js-quill')
       }
     })()
   }

@@ -110,7 +110,6 @@ export class UpdateComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.jsInit();
     this.jsInit2();
     // this.addTicket();
     // this.addStartDate();
@@ -212,6 +211,9 @@ export class UpdateComponent implements OnInit {
         this.showEndDate = this.ticketForm.value.end[0].date !== '' ? true : false;
         this.showSeat = this.ticketForm.value.enableSeat == true ? true : false;
 
+      }, (error: any) => {
+        this.loading2 = false;
+        this.toastService.showError('Error fetching ticket details', 'Error');
       });
     } catch (error) {
       console.log(error);
@@ -342,69 +344,68 @@ export class UpdateComponent implements OnInit {
   }
 
   async onSubmit() {
-    const val = $("#quillArea .ql-editor").html();
-    val != undefined ? this.ticketForm.get('description')?.setValue(val) : "";
     const form = this.ticketForm.value;
     console.log(form);
-
-    const startDate = moment(this.ticketForm.value.start[0].date);
-    const endDate = moment(this.ticketForm.value.end[0].date);
-    if (endDate.isBefore(startDate)) {
-      this.toastService.showError('Event end date must be greater than start date.', 'Error');
-    } else {
-      this.loading = true;
-      const formData = new FormData();
-      const eventId = String(this.getTicketId());
-      formData.append("eventid", eventId);
-      console.log(this.setFiles);
-      console.log(this.files);
-      if (this.setFiles.length > 0) {
-        for (var i = 0; i < this.setFiles.length; i++) {
-          const fileName = new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';
-          const response = await fetch(this.setFiles[i].file.base64);
-          const blob = await response.blob();
-          formData.append("banner[]", blob, fileName);
-        }
-      }
-
-      Object.keys(form).forEach((key) => {
-        Array.isArray(form[key]) ?
-          form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value)) }) : formData.append(key, form[key])
-      });
-      // formData.forEach((value, key) => {
-      //   console.log(key + ": " + value);
-      // });
-
-      try {
-        this.dataService.updateEventTicket(formData).subscribe((res: any) => {
-          console.log(res);
-          this.loading = false;
-          if (res.error == false) {
-            this.ticketCategories().controls.length = 0;
-            this.startDate().controls.length = 0;
-            this.endDate().controls.length = 0;
-            this.setFiles.length = 0;
-            this.files.length = 0;
-            if (this.ticketCategories().controls?.length == 0) {
-              this.getTicket();
-            }
-            this.toastService.showSuccess(res?.message, 'Success');
-          } else {
-            this.toastService.showError(res?.message, 'Error');
+    if (this.ticketForm.valid) {
+      const startDate = moment(this.ticketForm.value.start[0].date);
+      const endDate = moment(this.ticketForm.value.end[0].date);
+      if (endDate.isBefore(startDate)) {
+        this.toastService.showError('Event end date must be greater than start date.', 'Error');
+      } else {
+        this.loading = true;
+        const formData = new FormData();
+        const eventId = String(this.getTicketId());
+        formData.append("eventid", eventId);
+        console.log(this.setFiles);
+        console.log(this.files);
+        if (this.setFiles.length > 0) {
+          for (var i = 0; i < this.setFiles.length; i++) {
+            const fileName = new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';
+            const response = await fetch(this.setFiles[i].file.base64);
+            const blob = await response.blob();
+            formData.append("banner[]", blob, fileName);
           }
-        }, (error: any) => {
+        }
+
+        Object.keys(form).forEach((key) => {
+          Array.isArray(form[key]) ?
+            form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value)) }) : formData.append(key, form[key])
+        });
+        // formData.forEach((value, key) => {
+        //   console.log(key + ": " + value);
+        // });
+
+        try {
+          this.dataService.updateEventTicket(formData).subscribe((res: any) => {
+            console.log(res);
+            this.loading = false;
+            if (res.error == false) {
+              this.ticketCategories().controls.length = 0;
+              this.startDate().controls.length = 0;
+              this.endDate().controls.length = 0;
+              this.setFiles.length = 0;
+              this.files.length = 0;
+              if (this.ticketCategories().controls?.length == 0) {
+                this.getTicket();
+              }
+              this.toastService.showSuccess(res?.message, 'Success');
+            } else {
+              this.toastService.showError(res?.message, 'Error');
+            }
+          }, (error: any) => {
+            this.loading = false;
+            console.log(error);
+            this.toastService.showError(error?.message, 'Error');
+          })
+        } catch (error) {
           this.loading = false;
           console.log(error);
-          this.toastService.showError(error?.message, 'Error');
-        })
-      } catch (error) {
-        this.loading = false;
-        console.log(error);
-        this.toastService.showError('Could not create ticket. Please try again later', 'Error');
+          this.toastService.showError('Could not create ticket. Please try again later', 'Error');
+        }
       }
+    } else {
+      this.toastService.showError('Please fill all input fields', 'Error');
     }
-
-
   }
 
   deleteModal(content: any, tableRow: any) {
@@ -515,30 +516,6 @@ export class UpdateComponent implements OnInit {
       };
     });
   };
-
-
-
-
-
-  jsInit() {
-
-    $(document).on('ready', function () {
-      // INITIALIZATION OF DATATABLES
-      // =======================================================
-      HSCore.components.HSDatatables.init($('#datatable'), {
-        select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
-          classMap: {
-            checkAll: '#datatableCheckAll',
-            counter: '#datatableCounter',
-            counterInfo: '#datatableCounterInfo'
-          }
-        }
-      });
-    });
-
-  }
 
   jsInit2() {
     (function () {

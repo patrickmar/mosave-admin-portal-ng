@@ -472,11 +472,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         ],
         }
         this.getCalculatedTransactions();
-        this.filterDataByMonth(moment().format('MMM D, YYYY'));
-        
-        
+        this.filterDataByMonth(moment().format('MMM D, YYYY'));        
       }), (error: any) => {
         console.log(error);
+        this.loading = false;
         this.toastService.showError(error[0]?.message, 'Error');
       }
       

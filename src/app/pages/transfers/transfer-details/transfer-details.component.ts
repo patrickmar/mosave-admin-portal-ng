@@ -39,6 +39,9 @@ export class TransferDetailsComponent implements OnInit {
         }else {
           this.toastService.showError(res?.message, 'Error');
         }
+       }, (error: any)=>{
+        this.loading = false;
+        this.toastService.showError('Error fetching data', 'Error');
        });
     } catch (error: any) {
       console.log(error);

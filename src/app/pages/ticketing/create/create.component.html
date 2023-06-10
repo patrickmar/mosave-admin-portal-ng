@@ -1,5 +1,5 @@
 <!-- Content -->
-<div class="content container-fluid">
+<div class="content container-fluid" *ngIf="showComponent">
     <!-- Page Header -->
     <div class="page-header">
         <div class="row align-items-center">
@@ -122,20 +122,28 @@
                                 class="form-label-secondary">(Optional)</span></label>
 
                         <!-- Quill -->
-                        <div class="quill-custom">
-                            <div class="js-quill" id="quillArea" style="height: 15rem;" data-hs-quill-options='{
+                        <!-- <div class="quill-custom"> -->
+                            <!-- <div class="js-quill" id="quillArea" style="height: 15rem;" data-hs-quill-options='{
                    "placeholder": "Type your description...",
                     "modules": {
                       "toolbar": [
                         ["bold", "italic", "underline", "strike", "link", "image", "blockquote", "code", {"list": "bullet"}]
                       ]
-                    }
+                    }          
                    }'>
-                            </div>
-
-                            <textarea formControlName="description" style="display:none" id="textArea"></textarea>
-                        </div>
+                            </div> -->
+                            <!-- <textarea formControlName="description" style="display:none" id="textArea"></textarea> -->
+                        <!-- </div> -->
                         <!-- End Quill -->
+
+                        <div class="mb-4 mt-4">
+                        <div class="quill-custom">
+                            <quill-editor  class="js-quill"  [styles]="{height: '15rem' }" formControlName="description"></quill-editor>
+                        </div>
+
+                    </div>
+
+                        
 
                     </div>
                     <!-- Body -->
@@ -691,7 +699,7 @@
         </div>
         <!-- End Row -->
 
-        <button type="submit" class="btn btn-primary" [disabled]="loading">Submit
+        <button type="submit" class="btn btn-primary"  [disabled]="loading || !ticketForm.valid">Submit
             <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
                 <span class="visually-hidden">Loading...</span>
               </div>
@@ -702,6 +710,8 @@
 
 </div>
 <!-- End Content -->
+
+<ngx-loading [show]="loading2" ></ngx-loading>
 
 
 <!-- Add Image from URL Modal -->

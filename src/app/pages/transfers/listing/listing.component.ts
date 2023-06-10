@@ -171,6 +171,9 @@ export class ListingComponent implements OnInit, OnDestroy {
         }else {
           this.toastService.showError(res?.message, 'Error');  
         }
+       }, (error: any)=>{        
+        this.loading = false;
+        this.toastService.showError('Error fetching data', 'Error');
        });
     } catch (error: any) {
       console.log(error);

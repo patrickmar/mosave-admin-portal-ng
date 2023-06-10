@@ -345,7 +345,9 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
 
     }), (error: any) => {
-      console.log(error);
+      console.log(error);      
+      this.loading = false;
+      this.toastService.showError('Error fetching transaction info', 'Error');
     }
   } catch (error) {
     this.loading = false;

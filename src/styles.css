@@ -14,8 +14,11 @@ body
 @import url("assets/vendor/tom-select/dist/css/tom-select.bootstrap5.css");
 @import url("assets/vendor/jsvectormap/dist/css/jsvectormap.min.css");
 @import url("assets/vendor/swiper/swiper-bundle.min.css");
-@import url("assets/vendor/quill/dist/quill.snow.css");
+/* @import url("assets/vendor/quill/dist/quill.snow.css"); */
 @import url("assets/vendor/flatpickr/dist/flatpickr.min.css");
+
+@import 'quill/dist/quill.bubble.css';
+@import 'quill/dist/quill.snow.css'; 
 .navbar-fixed>.main {
   padding-top: 3.875rem;
 } 

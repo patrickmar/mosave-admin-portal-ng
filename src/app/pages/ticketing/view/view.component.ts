@@ -68,8 +68,9 @@ export class ViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.loading = false;
         this.showComponent = true; 
-      }, (error: any)=> {
-        this.toastService.showError(error.message, 'Error');
+      }, (error: any)=> {        
+        this.loading = false;
+        this.toastService.showError('Error fetching all tickets', 'Error');
       });      
     } catch (error) {
       this.loading = false;

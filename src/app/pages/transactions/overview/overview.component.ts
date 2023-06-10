@@ -316,8 +316,9 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
         this.totalValue = [this.totalBalance, this.tnxVolumeSum, this.userVolume, this.genderVolume];
 
       }), (error: any) => {
-        console.log(error);
-        this.toastService.showError(error[0]?.message, 'Error');
+        console.log(error);        
+        this.loading = false;
+        this.toastService.showError('Error fetching data', 'Error');
       }
 
     } catch (error) {

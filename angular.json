@@ -33,6 +33,9 @@
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",  
               "node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css",
               "node_modules/datatables.net-select-dt/css/select.dataTables.css",
+              "./node_modules/quill/dist/quill.core.css",
+              "./node_modules/quill/dist/quill.bubble.css",
+              "./node_modules/quill/dist/quill.snow.css",
               "./src/assets/vendor/chart.js/dist/Chart.min.css",
               "./src/assets/css/theme.min.css",
               "src/styles.css"
@@ -67,7 +70,8 @@
               "node_modules/datatables.net-buttons/js/buttons.flash.js",
               "node_modules/datatables.net-buttons/js/buttons.html5.js",
               "node_modules/datatables.net-buttons/js/buttons.print.js",
-              "node_modules/datatables.net-select/js/dataTables.select.js",            
+              "node_modules/datatables.net-select/js/dataTables.select.js", 
+              "./node_modules/quill/dist/quill.min.js",           
               
               "./src/assets/vendor/datatables.net.extensions/select/select.min.js",
               "./src/assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js",
@@ -90,7 +94,7 @@
               "./src/assets/vendor/hs-scrollspy/dist/hs-scrollspy.min.js",
               "./src/assets/vendor/swiper/swiper-bundle.min.js",
               "./src/assets/vendor/tom-select/dist/js/tom-select.complete.min.js",
-              "./src/assets/vendor/quill/dist/quill.min.js",
+              
               "./src/assets/vendor/dropzone/dist/min/dropzone.min.js",
 
               "./src/assets/vendor/clipboard/dist/clipboard.min.js",

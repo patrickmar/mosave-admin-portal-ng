@@ -141,7 +141,8 @@ export class ViewProgramComponent implements OnInit, OnDestroy {
         this.showComponent = true;
         this.dtTrigger.next('');
       }, (error: any) => {
-        this.toastService.showError(error?.message, 'Error');
+        this.loading = false;
+        this.toastService.showError('Error fetching all '+this.getProgramType(), 'Error');
       })
     } catch (error) {
       console.log(error);

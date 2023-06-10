@@ -216,6 +216,9 @@ export class TicketDetailsComponent implements OnInit, OnDestroy {
         ],
         }
         this.dtTrigger.next('');
+      }, (error: any)=>{        
+        this.loading = false;
+        this.toastService.showError('Error fetching ticket details', 'Error');       
       });
       
     } catch (error) {
