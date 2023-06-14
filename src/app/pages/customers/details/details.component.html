@@ -1,5 +1,5 @@
 <!-- Content -->
-<div class="content container-fluid" >
+<div class="content container-fluid" *ngIf="customer != undefined">
   <div class="row justify-content-lg-center">
     <div class="col-lg-10">
       <!-- Profile Cover -->
@@ -91,13 +91,13 @@
             <div class="d-flex gap-2">
               <!-- Form Check -->
               <div class="form-check form-check-switch">
-                <input class="form-check-input" type="checkbox" value="" id="connectCheckbox">
+                <input class="form-check-input" type="checkbox" id="connectCheckbox" (change)="switch = !switch;">
                 <label class="form-check-label btn-sm" for="connectCheckbox">
                   <span class="form-check-default">
-                    <i class="bi-person-plus-fill"></i> Connect
+                    <i class="bi-person-plus-fill"></i> {{switch ? 'Connected'  : 'Connect'}} 
                   </span>
                   <span class="form-check-active">
-                    <i class="bi-check-lg me-2"></i> Connected
+                    <i class="bi-check-lg me-2"></i> {{!switch ? 'Connect' : 'Connected'}}  
                   </span>
                 </label>
               </div>
@@ -128,7 +128,7 @@
 
                   <span class="dropdown-header">Feedback</span>
 
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item disabled" href="javascript:;">
                     <i class="bi-flag dropdown-item-icon"></i> Report
                   </a>
                 </div>
@@ -234,10 +234,10 @@
                       <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="contentActivityStreamDropdown">
                         <span class="dropdown-header">Settings</span>
 
-                        <a class="dropdown-item" href="javascript:;">
-                          <i class="bi-share-fill dropdown-item-icon"></i> Share connections
+                        <a class="dropdown-item disabled" href="javascript:;">
+                          <i class="bi-share-fill dropdown-item-icon"></i> Share Profile
                         </a>
-                        <a class="dropdown-item" href="javascript:;">
+                        <a class="dropdown-item disabled" href="javascript:;">
                           <i class="bi-info-circle dropdown-item-icon"></i> Suggest edits
                         </a>
 
@@ -245,7 +245,7 @@
 
                         <span class="dropdown-header">Feedback</span>
 
-                        <a class="dropdown-item" href="javascript:;">
+                        <a class="dropdown-item disabled" href="javascript:;">
                           <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                         </a>
                       </div>
@@ -611,7 +611,7 @@
                         <div class="mb-4">
                           <label for="bankLabel" class="form-label">Bank <i class="bi-question-circle text-body ms-1"
                               data-bs-toggle="tooltip" data-bs-placement="top"
-                              ngbTooltip="Select the bank to transfer to?"></i></label>
+                              ngbTooltip="Select the bank to transfer to"></i></label>
   
                           <!-- Select -->
                           <div class="tom-select-custom">
@@ -631,7 +631,7 @@
                         <div class="mb-4">
                           <label for="accountNoLabel" class="form-label">Account Number</label>
                           <input type="text" class="form-control" (keyup)="verifyAccount($event)" formControlName="account_number" id="accountNoLabel">
-                        <small [ngClass]="error == true ? 'text-danger' : 'form-text' " *ngIf="verifiedAcctName">{{verifiedAcctName}}</small>
+                        <small [ngClass]="error == true ? 'text-danger' : 'text-success' " *ngIf="verifiedAcctName">{{verifiedAcctName}}</small>
                         </div>
                         <!-- End Form -->
 
@@ -997,7 +997,7 @@
                     <div class="form-check mb-4">
                       <input class="form-check-input" type="checkbox" formControlName="terms" id="termsCheckboxProfile">
                       <label class="form-check-label" for="termsCheckboxProfile">I have the consent of the customer
-                        to perform this transaction.</label>
+                        to update this profile.</label>
                     </div>
                     <!-- End Form Check -->
 

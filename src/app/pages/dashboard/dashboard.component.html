@@ -1,5 +1,5 @@
     <!-- Content -->
-    <div class="content container-fluid" *ngIf="showComponent">
+    <div class="content container-fluid">
       <!-- Page Header -->
       <div class="page-header">
         <div class="row align-items-center">
@@ -29,7 +29,7 @@
 
               <div class="row align-items-center gx-2 mb-1">
                 <div class="col-12">
-                  <h2 class="card-title text-inherit">{{savingsSum | currency :'₦'}}</h2>
+                  <h2 class="card-title text-inherit" ngbTooltip="Total savings collected">{{savingsSum | currency :'₦'}}</h2>
                 </div>
                 <!-- End Col -->               
               </div>
@@ -52,7 +52,7 @@
 
               <div class="row align-items-center gx-2 mb-1">
                 <div class="col-12">
-                  <h2 class="card-title text-inherit">{{withdrawalSum| currency :'₦'}}</h2>
+                  <h2 class="card-title text-inherit" ngbTooltip="Total withdrawal completed">{{withdrawalSum| currency :'₦'}}</h2>
                 </div>
                 <!-- End Col -->
               </div>
@@ -75,7 +75,7 @@
 
               <div class="row align-items-center gx-2 mb-1">
                 <div class="col-12">
-                  <h2 class="card-title text-inherit">{{commissionSum | currency :'₦'}}</h2>
+                  <h2 class="card-title text-inherit" ngbTooltip="Total commissions generated">{{commissionSum | currency :'₦'}}</h2>
                 </div>
                 <!-- End Col -->
               </div>
@@ -98,10 +98,9 @@
 
               <div class="row align-items-center gx-2 mb-1">
                 <div class="col-12">
-                  <h2 class="card-title text-inherit">{{totalBalance | currency :'₦'}}</h2>
+                  <h2 class="card-title text-inherit" ngbTooltip="Total balance remaining">{{totalBalance | currency :'₦'}}</h2>
                 </div>
                 <!-- End Col -->
-
                 
               </div>
               <!-- End Row -->
@@ -130,7 +129,7 @@
                 <span class="js-daterangepicker-predefined-preview ms-1" >{{ranges[0] +' - '+ ranges[1] }}</span>
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" type="button" *ngFor="let item of dateRanges" (click)="filterDataByDate(item.date[0], item.date[1], item.timeline)">{{item?.timeline}}</a>
+                <a class="dropdown-item" type="button" *ngFor="let item of dateRanges" (click)="filterDataByDate(item.date[0], item.date[1], item.timeline, content)">{{item?.timeline}}</a>
               </div>
               <!-- End Daterangepicker -->
             </div>
@@ -144,7 +143,7 @@
               <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsDropdown">
                 <span class="dropdown-header">Settings</span>
 
-                <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                <a class="dropdown-item disabled" href="javascript:;" type="button">
                   <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                 </a>
                 <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(0)">
@@ -155,7 +154,7 @@
 
                 <span class="dropdown-header">Feedback</span>
 
-                <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                <a class="dropdown-item disabled" href="javascript:;" type="button">
                   <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                 </a>
               </div>
@@ -200,10 +199,10 @@
                 <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsDropdown1">
                   <span class="dropdown-header">Settings</span>
 
-                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                  <a class="dropdown-item disabled" href="javascript:;" type="button">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
-                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true" (click)="downloadGraph(0)">
+                  <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(0)">
                     <i class="bi-download dropdown-item-icon"></i> Download
                   </a>
 
@@ -211,7 +210,7 @@
 
                   <span class="dropdown-header">Feedback</span>
 
-                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                  <a class="dropdown-item disabled" href="javascript:;" type="button">
                     <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                   </a>
                 </div>
@@ -265,7 +264,7 @@
                 <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsDropdown2">
                   <span class="dropdown-header">Settings</span>
 
-                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                  <a class="dropdown-item disabled" href="javascript:;" type="button">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
                   <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(1)">
@@ -276,7 +275,7 @@
 
                   <span class="dropdown-header">Feedback</span>
 
-                  <a class="dropdown-item" href="javascript:;" type="button" [attr.disabled]="true">
+                  <a class="dropdown-item disabled" href="javascript:;" type="button">
                     <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                   </a>
                 </div>
@@ -319,7 +318,7 @@
 
                 <div class="chartjs-doughnut-custom-stat" style="top: 12rem;">
                   <small class="text-cap">{{!switch ? 'Account balance' : 'Bank balance' }}</small>
-                  <span class="h1">{{(!switch ? totalBalance : totalBalance + commissionSum) | currency :'₦'}}</span>
+                  <span class="h1" [ngbTooltip]="!switch ? 'Total Account Balance' : 'Total Total Account Balance plus commission' ">{{(!switch ? totalBalance : totalBalance + commissionSum) | currency :'₦'}}</span>
                 </div>
               </div>
               <!-- End Chart Half -->
@@ -363,7 +362,7 @@
                 <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown3">
                   <span class="dropdown-header">Settings</span>
 
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item disabled" href="javascript:;">
                     <i class="bi-share-fill dropdown-item-icon"></i> Share reports
                   </a>
                   <a class="dropdown-item" type="button">
@@ -374,7 +373,7 @@
 
                   <span class="dropdown-header">Feedback</span>
 
-                  <a class="dropdown-item" href="javascript:;">
+                  <a class="dropdown-item disabled" href="javascript:;">
                     <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
                   </a>
                 </div>
@@ -464,7 +463,7 @@
                 <div class="flex-grow-1 ms-lg-3">
                   <span class="d-block fs-6">Average Savings</span>
                   <div class="d-flex align-items-center">
-                    <h3 class="mb-0">{{avgSavings | currency :'₦'}}</h3>
+                    <h3 class="mb-0" ngbTooltip="Average savings collected during the selected period">{{avgSavings | currency :'₦'}}</h3>
                     <!-- <span class="badge bg-soft-success text-success ms-2">
                       <i class="bi-graph-up"></i> 12.5%
                     </span> -->
@@ -484,13 +483,12 @@
                 <div class="flex-grow-1 ms-lg-3">
                   <span class="d-block fs-6">Average Withdrawals</span>
                   <div class="d-flex align-items-center">
-                    <h3 class="mb-0">{{avgWithdrawals| currency :'₦'}}</h3>
+                    <h3 class="mb-0" ngbTooltip="Average withdrawals completed during the selected period">{{avgWithdrawals| currency :'₦'}}</h3>
                   </div>
                 </div>
               </div>
               <!-- End Stats -->
             </div>
-
             
           </div>
           <!-- End Row -->
@@ -575,8 +573,8 @@
                 <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown2">
                   <span class="dropdown-header">Settings</span>
               
-                  <a class="dropdown-item" href="javascript:;" type="button" disabled="true">
-                    <i class="bi-share-fill dropdown-item-icon"></i> Share chart
+                  <a class="dropdown-item disabled" href="javascript:;" type="button" disabled="true">
+                    <i class="bi-share-fill dropdown-item-icon"></i> Share Chart
                   </a>
                   <a class="dropdown-item" href="javascript:;" type="button" (click)="downloadGraph(2)">
                     <i class="bi-download dropdown-item-icon"></i> Download
@@ -594,7 +592,7 @@
               <div class="row mb-4">
                 <div class="col-sm mb-2 mb-sm-0">
                   <div class="d-flex align-items-center">
-                    <span class="h1 text-success mb-0" ngbTooltip="Savings Collected during this period">{{savingsGraphSum > 0 ? (savingsGraphSum | shortNumber) : 0}}</span>
+                    <span class="h1 text-success mb-0" ngbTooltip="Savings collected during this period">{{savingsGraphSum > 0 ? (savingsGraphSum | shortNumber) : 0}}</span>
                     <span class="h1 ms-2 mb-0">|</span>
                     <span class="h1 text-danger me-2 ms-2 mb-0" ngbTooltip="Withdrawals completed during this period">{{withdrawalGraphSum > 0 ? (withdrawalGraphSum | shortNumber) : 0}}</span>
                   </div>
@@ -670,21 +668,19 @@
                 <div class="col-sm-auto">
                   <div class="row align-items-center gx-0">
                     <div class="col">
-                      <span class="text-secondary me-2">Status:</span>
+                      <span class="text-secondary me-2">Plans:</span>
                     </div>
                     <!-- End Col -->
 
                     <div class="col-auto">
                       <!-- Select -->
                       <div class="tom-select-custom tom-select-custom-end">
-                        <select class="js-select js-datatable-filter form-select form-select-sm form-select-borderless" data-target-column-index="5" data-target-table="datatable" autocomplete="off" data-hs-tom-select-options='{
+                        <select #selectPlan (change)='onSelect(selectPlan.value)' class="js-select js-datatable-filter form-select form-select-sm form-select-borderless" data-target-column-index="5" data-target-table="datatable" autocomplete="off" data-hs-tom-select-options='{
                                   "searchInDropdown": false,
                                   "hideSearch": true,
                                   "dropdownWidth": "10rem"
                                 }'>
-                          <option value="null" selected>All</option>
-                          <option value="Active">Active</option>
-                          <option value="Inactive">Inactive</option>
+                          <option *ngFor="let item of plans"  [value]="item.plan_name">{{item.plan_name}}</option>
                         </select>
                       </div>
                       <!-- End Select -->
@@ -705,15 +701,12 @@
                     <div class="col-auto">
                       <!-- Select -->
                       <div class="tom-select-custom tom-select-custom-end">
-                        <select class="js-select js-datatable-filter form-select form-select-sm form-select-borderless" data-target-column-index="6" data-target-table="datatable" autocomplete="off" data-hs-tom-select-options='{
+                        <select #selectTimeline (change)='onSelect(selectTimeline.value)' class="js-select js-datatable-filter form-select form-select-sm form-select-borderless" data-target-column-index="6" data-target-table="datatable" autocomplete="off" data-hs-tom-select-options='{
                                   "searchInDropdown": false,
                                   "hideSearch": true,
                                   "dropdownWidth": "10rem"
                                 }'>
                           <option value="null" selected>All</option>
-                          <!-- <option value="1 year ago">1 year ago</option>
-                          <option value="6 months ago">6 months ago</option>
-                          <option value="3 months ago">3 months ago</option> -->
                           <option value="1 month ago">1 month ago</option>
                           <option value="3 weeks ago">3 weeks ago</option>
                           <option value="2 weeks ago">2 weeks ago</option>
@@ -819,3 +812,34 @@
     <ngx-loading [show]="loading"></ngx-loading>
 
 <app-edit-customer></app-edit-customer>
+
+<ng-template #content let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Set Date Range</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+        (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <!-- Flatpickr -->
+        <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+          outsideDays="hidden">
+        </ngb-datepicker>
+
+        <ng-template #t let-date let-focused="focused">
+          <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+            [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+            (mouseleave)="hoveredDate = null">
+            {{ date.day }}
+          </span>
+        </ng-template>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+        (click)="modal.dismiss('Cross click')">Close</button>
+      <button type="button" class="btn btn-primary" [disabled]="fromDate == undefined || fromDate == null" (click)="onSave()">Save changes</button>
+    </div>
+  </div>
+</ng-template>

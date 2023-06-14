@@ -2,7 +2,7 @@
 <header id="header" class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered bg-white">
     <div class="navbar-nav-wrap">
       <!-- Logo -->
-      <a class="navbar-brand" href="javascript:;" aria-label="Front">
+      <a class="navbar-brand" href="javascript:;" aria-label="MoLoyal">
         <img class="navbar-brand-logo" src="{{logo2}}" alt="Logo" data-hs-theme-appearance="default">
         <!-- <img class="navbar-brand-logo" src="{{logo2}}" alt="Logo" data-hs-theme-appearance="dark"> -->
         <img class="navbar-brand-logo-mini" src="{{mini_logo}}" alt="Logo" data-hs-theme-appearance="default">
@@ -31,7 +31,7 @@
               </div>
 
               <input type="search" class="form-control" id="searchField" placeholder="Search Customer" NgbDropdownAnchor (focus)="myDrop.open()" (keyup)="searchCustomer($event)"
-              formControlName="searchQuery" aria-label="search Customer">
+              formControlName="searchQuery" aria-label="search Customer" autocomplete="off">
               <a class="input-group-append input-group-text" href="javascript:;" type="button" (click)="clearText(); $event.stopPropagation(); myDrop.close();">
                 <i id="clearSearchResultsIcon" class="bi-x-lg" style="display: none;"></i>
               </a>

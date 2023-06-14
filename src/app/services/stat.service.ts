@@ -15,13 +15,34 @@ export class StatService {
   dictFileSizeUnits: any = { tb: "TB", gb: "GB", mb: "MB", kb: "KB", b: "b" }
   filesizeBase: number = 1000;
   lanchDate: string = '04-07-2022'
+  plans = [
+    {
+      "amount": "0",
+      "plan_name": "All",
+  },
+    {
+        "amount": "1000",
+        "plan_name": "Premium",
+    },
+    {
+        "amount": "500",
+        "plan_name": "Basic",
+    },
+    {
+        "amount": "200",
+        "plan_name": "Starter",
+    },
+    {
+        "amount": "0",
+        "plan_name": "Any Amount",
+    }
+]
 
   constructor(private datePipe: DatePipe) { 
     
   }
 
   getBestStat(array: Array<any>, total: number){
-    console.log(total);
     let result = Object.values(array.reduce((c:any, {accountNo, firstName, lastName, customerId, transAmount}: any) => {
       c[accountNo] = c[accountNo] || {accountNo, firstName, lastName, customerId, percent: 0, transAmount: 0};      
       c[accountNo].transAmount += Number(transAmount);

@@ -99,6 +99,21 @@ table-layout: fixed;
 word-wrap:break-word;       
 }
 
+.disabled{
+  pointer-events: unset !important;
+  cursor: not-allowed !important;
+}
+
+/* select {
+  max-height: calc(1.2em + 24px) !important;
+  height: calc(1.2em + 24px) !important;
+} */
+
+/* .tom-select-custom .ts-dropdown .create, .tom-select-custom .ts-dropdown .no-results, .tom-select-custom .ts-dropdown .optgroup-header,  */
+/* .tom-select-custom .ts-dropdown .option{
+  padding: 0.5rem 2.5rem 0.5rem 1rem !important;
+} */
+
 
 
 

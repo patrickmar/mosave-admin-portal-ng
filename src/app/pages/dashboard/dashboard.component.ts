@@ -10,15 +10,13 @@ import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { BaseChartDirective } from 'ng2-charts';
+import { NgbCalendar, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-
-
-declare var $:any;
-declare var moment:any;
-declare var HSCore:any;
-declare var HSSideNav:any;
-declare var HSFormSearch:any;
-declare var HSBsDropdown:any;
+declare var $: any;
+declare var moment: any;
+declare var HSCore: any;
+declare var HSSideNav: any;
+declare var HSBsDropdown: any;
 
 @Component({
   selector: 'app-dashboard',
@@ -26,14 +24,14 @@ declare var HSBsDropdown:any;
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
-  dataTable:any;
+  dataTable: any;
   user: any;
   firstname!: string;
   customer!: Array<any>;
   thisMonthCustomer!: Array<any>;
   customerExist: boolean = false;
   date: any;
-  imagePath: string  = environment.app.baseUrl+environment.app.imagePath;
+  imagePath: string = environment.app.baseUrl + environment.app.imagePath;
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
   allRecords !: Array<any>;
@@ -50,16 +48,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   commissionSum!: number;
   yesterdaytrnxSum!: number;
   totalBalance!: number;
-  trnxMap: any = {'Savings': 'Deposit', 'Withdrawal': 'Withdrawal', 'commission': 'Commission'};
+  trnxMap: any = { 'Savings': 'Deposit', 'Withdrawal': 'Withdrawal', 'commission': 'Commission' };
   dayDiff: number = 10;
   switch!: boolean;
   emptyTable = environment.emptyTable;
   maxCount = 5;
   public loading = false;
   public showComponent = false;
+  fromDate: NgbDate;
+  toDate: NgbDate | null = null;
+  modalContent!: object | any;
+  hoveredDate: NgbDate | null = null;
+  plans = this.statService.plans;
 
-
-  @ViewChild(DataTableDirective, {static: false})
+  @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
 
   public pieChartOptions: ChartConfiguration['options'] = {
@@ -74,7 +76,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   };
 
   public pieChartLabels = ['Withdrawal', 'Savings', 'Commissions'];
-  public pieChartData!: any; 
+  public pieChartData!: any;
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = true;
   public pieChartPlugins = [];
@@ -97,8 +99,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   };
   public doughnutHalfChartType: ChartType = 'doughnut';
   public doughnutHalfChartLabels = ["Savings", "Withdrawal"];
-  public doughnutHalfChartData!: any; 
-   
+  public doughnutHalfChartData!: any;
 
   public barChartOptions: any = this.getChartConfig1(50000, '₦');
   public barChartType: ChartType = 'bar';
@@ -106,9 +107,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   public barChartData!: any;
 
   thirdPartyApps = [
-    { name: 'Paystack', url: 'https://dashboard.paystack.com/', service: 'Payment Gateway', src: 'paystack-logo.svg'},
-    { name: 'MailChimp', url: 'https://login.mailchimp.com/', service: 'Email Service', src: 'mailchimp-icon.svg'},
-    { name: 'SendGrid', url: 'https://app.sendgrid.com/login?redirect_to=%2F', service: 'Email Service', src: 'SendGrid.svg'}
+    { name: 'Paystack', url: environment.thirdParty.paystack, service: 'Payment Gateway', src: 'paystack-logo.svg' },
+    { name: 'MailChimp', url: environment.thirdParty.mailchimp, service: 'Email Service', src: 'mailchimp-icon.svg' },
+    { name: 'SendGrid', url: environment.thirdParty.sendgrid, service: 'Email Service', src: 'SendGrid.svg' }
   ]
   savingsGraphSum!: number;
   withdrawalGraphSum!: number;
@@ -116,89 +117,90 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   avgSavings!: number;
   avgWithdrawals!: number;
   dateRanges!: Array<any>;
-  
-  
 
-  constructor(private authservice: AuthService, 
-    private dataService: DataService, private statService: StatService, private toastService: ToastService, private ngZone: NgZone,
-    private decimalPipe: DecimalPipe
-    ) {
-      //Chart.register(Annotation)
-     }
+  constructor(private authservice: AuthService, private dataService: DataService, private statService: StatService,
+    private toastService: ToastService, private ngZone: NgZone, private decimalPipe: DecimalPipe, calendar: NgbCalendar,
+    private modalService: NgbModal) {
+    //Chart.register(Annotation)
+    //this.fromDate = calendar.getToday();
+    //this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    this.fromDate = calendar.getPrev(calendar.getToday(), 'd', 7);
+    this.toDate = calendar.getToday();
+  }
 
-     getChartConfig1(stepSize: number, postfix: string){
-      return {    
-        responsive: true,
-        aspectRatio: 1.6,
-        interaction: {
+  getChartConfig1(stepSize: number, postfix: string) {
+    return {
+      responsive: true,
+      aspectRatio: 1.6,
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      plugins: {
+        legend: {
+          display: false,
+          //position: 'top',
+        },
+        tooltip: {
+          position: 'nearest', //'average' or 'bottom' ;
+          mode: "index",
           intersect: false,
-          mode: 'index',
-        },
-        plugins: {
-          legend: {
-            display: false,
-            //position: 'top',
-          },
-          tooltip: {
-            position: 'nearest', //'average' or 'bottom' ;
-            mode: "index",
-            intersect: false,
-            callbacks: {
-              title:(tooltipItems: any)=> {
-                  return tooltipItems[0].label //+ ' '+  moment().format('YYYY.');
-              },
-              footer: (tooltipItems: any) => {
-                let sum = 0;
-                let deduct = 0
-                // Calculate difference
-                deduct = tooltipItems[0].parsed.y - tooltipItems[1].parsed.y;
-                //calculate sum
-                // tooltipItems.forEach((tooltipItem: any, i:number) => {
-                //   console.log(tooltipItem);
-                //   //x+=y // x= x+y
-                //   //sum = sum + tooltipItem.parsed.y ;
-                //   deduct = deduct - (tooltipItem.parsed.y);
-                // });
-                return 'Diff: ' + deduct;
-              },
-              label: (tooltipItems: any)=> {
-                return tooltipItems.dataset.label + ': ' + postfix + tooltipItems.formattedValue;
+          callbacks: {
+            title: (tooltipItems: any) => {
+              return tooltipItems[0].label //+ ' '+  moment().format('YYYY.');
             },
-            }
-             //postfix: "%"
-          },
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Days'
+            footer: (tooltipItems: any) => {
+              let sum = 0;
+              let deduct = 0
+              // Calculate difference
+              deduct = tooltipItems[0].parsed.y - tooltipItems[1].parsed.y;
+              //calculate sum
+              // tooltipItems.forEach((tooltipItem: any, i:number) => {
+              //   console.log(tooltipItem);
+              //   //x+=y // x= x+y
+              //   //sum = sum + tooltipItem.parsed.y ;
+              //   deduct = deduct - (tooltipItem.parsed.y);
+              // });
+              return 'Diff: ' + deduct;
             },
-            grid: {
-              display: false,
-              drawBorder: false
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Transaction Values'
-            },
-            grid: {
-              drawBorder: false,
-              color: "#e7eaf3",
-            },
-             min: 0,
-             //max: 100000,
-            ticks: {
-              //stepSize: stepSize,
-              //padding: 10,
+            label: (tooltipItems: any) => {
+              return tooltipItems.dataset.label + ': ' + postfix + tooltipItems.formattedValue;
             },
           }
+          //postfix: "%"
         },
-        
-      }
-     }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Days'
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Transaction Values'
+          },
+          grid: {
+            drawBorder: false,
+            color: "#e7eaf3",
+          },
+          min: 0,
+          //max: 100000,
+          ticks: {
+            //stepSize: stepSize,
+            //padding: 10,
+          },
+        }
+      },
+
+    }
+  }
 
   ngOnInit(): void {
     this.getLast12Months();
@@ -217,50 +219,50 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
           <p class="mb-0">No data to show</p>
           </div>`,
-          paginate: {
-            next: 'Next',
-            previous: 'Prev',
-            first: '<i class="bi bi-skip-backward"></i>',
-            last: '<i class="bi bi-skip-forward"></i>'
-         },
+        paginate: {
+          next: 'Next',
+          previous: 'Prev',
+          first: '<i class="bi bi-skip-backward"></i>',
+          last: '<i class="bi bi-skip-forward"></i>'
+        },
       },
       lengthMenu: [10, 15, 20],
       select: true,
       dom: 'Brtip',
       buttons: [
-      {
-        extend: 'copy',
-        className: 'd-none'
-      },
-      {
-        extend: 'excel',
-        className: 'd-none'
-      },
-      {
-        extend: 'csv',
-        className: 'd-none',
-      },
-      {
-        extend: 'print',
-        className: 'd-none'
-      },
-      {
-        extend: 'pdf',
-        className: 'd-none'
-      },
-      ],      
+        {
+          extend: 'copy',
+          className: 'd-none'
+        },
+        {
+          extend: 'excel',
+          className: 'd-none'
+        },
+        {
+          extend: 'csv',
+          className: 'd-none',
+        },
+        {
+          extend: 'print',
+          className: 'd-none'
+        },
+        {
+          extend: 'pdf',
+          className: 'd-none'
+        },
+      ],
       info: true,
       lengthChange: true,
     };
     this.download();
-        
+
   }
 
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.jsInit();
   }
 
@@ -268,31 +270,31 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (this.savingsTrnxRecords != null || this.savingsTrnxRecords != undefined) {
       this.ngZone.run(() => {
         this.savingsRecords = timeline === 'All' ? this.savingsTrnxRecords : this.filterDate(startDate, endDate, this.savingsTrnxRecords);
-        this.withdrawalRecords = timeline === 'All' ? this.withTrnxRecords : this.filterDate(startDate, endDate, this.withTrnxRecords); 
+        this.withdrawalRecords = timeline === 'All' ? this.withTrnxRecords : this.filterDate(startDate, endDate, this.withTrnxRecords);
         this.commissionRecords = timeline === 'All' ? this.commTrnxRecords : this.filterDate(startDate, endDate, this.commTrnxRecords);
         this.updateGraph(this.withdrawalRecords, this.savingsRecords, this.commissionRecords);
       });
     }
   }
 
-  filterDate(startDate: any, endDate: any, record: Array<any>){
+  filterDate(startDate: any, endDate: any, record: Array<any>) {
     return record.filter((m: any) => new Date(m.transDate) >= new Date(startDate) && new Date(m.transDate) <= new Date(endDate));
   }
 
   public updateGraph(withdrawalRecords: any, savingsRecords: any, commissionRecords: any): void {
     for (let i = 0; i < this.pieChartData.datasets.length; i++) {
-        this.pieChartData.datasets[i].data[0] = withdrawalRecords?.length;
-        this.pieChartData.datasets[i].data[1] = savingsRecords?.length;
-        this.pieChartData.datasets[i].data[2] = commissionRecords?.length;
+      this.pieChartData.datasets[i].data[0] = withdrawalRecords?.length;
+      this.pieChartData.datasets[i].data[1] = savingsRecords?.length;
+      this.pieChartData.datasets[i].data[2] = commissionRecords?.length;
     }
     // console.log(this.charts);
-    this.charts.get(0)?.update();    
+    this.charts.get(0)?.update();
     // if we want to update all the charts together
-  //   this.charts?.forEach((child, i) => {
-  //     if(i == 0){
-  //       child?.update();
-  //     }      
-  // });
+    //   this.charts?.forEach((child, i) => {
+    //     if(i == 0){
+    //       child?.update();
+    //     }      
+    // });
   }
   //ranges = [moment().format('MMM D'), moment().format('MMM D, YYYY')]
   //ranges2 = [moment().format('MMM YYYY'), moment().format('MMM YYYY')]
@@ -300,20 +302,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ranges = [moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
   ranges2 = [moment(this.statService.lanchDate).startOf('day').format('MMM YYYY'), moment().endOf('day').format('MMM YYYY')]
 
-  getLast12Months(){
+  getLast12Months() {
     this.last12Months = new Array(12).fill(null).map((x, i) => moment().subtract(i, 'months').format('MMMM YYYY')); //this.statService.getMonthDate();
     console.log(this.last12Months);
   }
 
   // var start = moment();
-  //     var end = moment();
+  // var end = moment();
 
-  filterDataByDate(start: any, end:any, timeline?: string) {
-    const format = timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
-    $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(start.format(format) + ' - ' + end.format('MMM D, YYYY'));
-    const startDate = start.format('YYYY-MM-DD');
-    const endDate = end.format('YYYY-MM-DD');
-     this.onChangeDate(startDate, endDate, timeline);
+  filterDataByDate(start: any, end: any, timeline?: string, content?: any) {
+    if (timeline === 'Custom Range') {
+      //this.modalContent = ev;
+      this.modalService.open(content);
+    } else {
+      const format = timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
+      $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(start.format(format) + ' - ' + end.format('MMM D, YYYY'));
+      const startDate = start.format('YYYY-MM-DD');
+      const endDate = end.format('YYYY-MM-DD');
+      this.onChangeDate(startDate, endDate, timeline);
+    }
+
   }
 
   filterDataByMonth(date: string, timeline?: string) {
@@ -324,14 +332,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const startDate = start.format('YYYY-MM-DD');
     const endDate = end.format('YYYY-MM-DD');
     const value = this.statService.getAverageByMonth(this.allRecords, startDate);
-    if(Array.isArray(value)){
-     this.avgSavings = value[0].totalSavings > 0 ? value[0].totalSavings / value[0].savingsVolume : 0;
-     this.avgWithdrawals = value[0].totalWithdrawal > 0 ? value[0].totalWithdrawal / value[0].WithdrawalVolume : 0;
+    if (Array.isArray(value)) {
+      this.avgSavings = value[0].totalSavings > 0 ? value[0].totalSavings / value[0].savingsVolume : 0;
+      this.avgWithdrawals = value[0].totalWithdrawal > 0 ? value[0].totalWithdrawal / value[0].WithdrawalVolume : 0;
     }
   }
 
 
-  getUserDetails(){
+  getUserDetails() {
     this.authservice.userData$.subscribe((response: any) => {
       this.user = response;
       var titleCasePipe = new TitleCasePipe();
@@ -339,29 +347,28 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getAllCustomers(){
-    try {    
-    this.dataService.getAllcustomers().subscribe((data: any) =>{
-      console.log(data);
-      this.customer = data;
-      const thisMonthCustomer  = this.statService.getMonthlyCustomers(this.customer);
-      const newRecords = thisMonthCustomer.map((res: any) => {
-        const allPlans = res?.plans?.map((p:any) => p.plan_name).join(', ');
-        return { ...res, allPlans: allPlans };
-      });
+  getAllCustomers() {
+    try {
+      this.dataService.getAllcustomers().subscribe((data: any) => {
+        this.customer = data;
+        const thisMonthCustomer = this.statService.getMonthlyCustomers(this.customer);
+        const newRecords = thisMonthCustomer.map((res: any) => {
+          const allPlans = res?.plans?.map((p: any) => p.plan_name).join(', ');
+          return { ...res, allPlans: allPlans };
+        });
 
-      this.thisMonthCustomer = newRecords;
-      this.dtTrigger.next('');
-      if(this.customer?.length > 0 ){
-        this.customerExist = true;
-      }else {
-        this.customerExist = false;
-      }
-    }),((error: any)=>{
-      console.log(error);
-    })
-  } catch (error) {
-      
+        this.thisMonthCustomer = newRecords;
+        this.dtTrigger.next('');
+        if (this.customer?.length > 0) {
+          this.customerExist = true;
+        } else {
+          this.customerExist = false;
+        }
+      }), ((error: any) => {
+        console.log(error);
+      })
+    } catch (error) {
+
     }
   }
 
@@ -375,10 +382,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         console.log(result[0]);
         console.log(result[1]);
         this.loading = false;
-      this.showComponent = true;
+        this.showComponent = true;
         const newRecords = result[0].map((res: any) => {
-          const type2 = res.transType == "S" ? res.transType + "avings" : 
-          res.transType == "W" ? res.transType + "ithdrawal" : res.transType + "";
+          const type2 = res.transType == "S" ? res.transType + "avings" :
+            res.transType == "W" ? res.transType + "ithdrawal" : res.transType + "";
           // if (res.transType == "S") {
           //   var type = res.transType + "avings";
           // } else if (res.transType == "W") {
@@ -391,17 +398,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.allRecords = newRecords;
         this.trnxRecords = newRecords;
         this.savingsRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
-      this.savingsTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
-      this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-      this.withTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-      this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");
-      this.commTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'commission');
-      this.savingsSum = this.savingsRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
-      //calculate the total withdrawals
-      this.withdrawalSum = this.withdrawalRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
-      //calculate the total commissions
-      this.commissionSum = this.commissionRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
-      this.totalBalance = this.savingsSum - this.withdrawalSum;
+        this.savingsTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
+        this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
+        this.withTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
+        this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");
+        this.commTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'commission');
+        this.savingsSum = this.savingsRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+        //calculate the total withdrawals
+        this.withdrawalSum = this.withdrawalRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+        //calculate the total commissions
+        this.commissionSum = this.commissionRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+        this.totalBalance = this.savingsSum - this.withdrawalSum;
         this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
         this.pieChartData = {
           labels: this.pieChartLabels,
@@ -410,13 +417,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             backgroundColor: ['rgb(237,76,120)', 'rgb(0,201,167)', 'rgb(245,202,153)'],
             hoverBackgroundColor: ['rgb(201,65,102)', 'rgb(0,171,142)', 'rgb(247,210,168)'],
             borderColor: ['rgb(237,76,120)', 'rgb(0,201,167)', 'rgb(245,202,153)'],
-            hoverBorderColor:['rgb(201,65,102)', 'rgb(0,171,142)', 'rgb(247,210,168)'],
+            hoverBorderColor: ['rgb(201,65,102)', 'rgb(0,171,142)', 'rgb(247,210,168)'],
             hoverOffset: 4
           }],
         }
-        
-        const savingsPercent = this.decimalPipe.transform(this.savingsSum / (this.savingsSum +  this.withdrawalSum)  * 100, '1.0-1');
-        const withdrawalPercent = this.decimalPipe.transform(this.withdrawalSum / (this.savingsSum +  this.withdrawalSum) * 100, '1.0-1');
+
+        const savingsPercent = this.decimalPipe.transform(this.savingsSum / (this.savingsSum + this.withdrawalSum) * 100, '1.0-1');
+        const withdrawalPercent = this.decimalPipe.transform(this.withdrawalSum / (this.savingsSum + this.withdrawalSum) * 100, '1.0-1');
 
         this.doughnutHalfChartData = {
           labels: this.doughnutHalfChartLabels,
@@ -437,31 +444,31 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const lastfewDays = this.statService.getTransactionByDays(lastdaysSavings);
         //const label = [];
         const label: any = [];
-        const lab = new Array(lastfewDays.length).fill(null).map((x, i) =>{
-          label.push(moment(lastfewDays[i].transDate).format('MMM D YYYY'));          
-      })
+        const lab = new Array(lastfewDays.length).fill(null).map((x, i) => {
+          label.push(moment(lastfewDays[i].transDate).format('MMM D YYYY'));
+        })
         console.log(label);
         //const dates = new Array(lastfewDays.length).fill(null).map((x, i) => moment().subtract(9, 'days').add(i, 'days').format('MMM D'));
         //console.log(dates);
         const savings = [];
         const withdrawals = [];
         for (let i = 0; i < lastfewDays.length; i++) {
-          const element = lastfewDays[i];  
+          const element = lastfewDays[i];
           savings.push(element?.savings);
-          withdrawals.push(element?.withdraw);     
+          withdrawals.push(element?.withdraw);
         }
         console.log(savings);
         console.log(withdrawals);
-        this.savingsGraphSum = savings.reduce((acc: any, cur: any)=>  acc + cur);
-        this.withdrawalGraphSum = withdrawals.reduce((acc: any, cur: any)=>  acc + cur);
+        this.savingsGraphSum = savings.reduce((acc: any, cur: any) => acc + cur);
+        this.withdrawalGraphSum = withdrawals.reduce((acc: any, cur: any) => acc + cur);
         this.barChartData = {
           labels: label, //dates,//labels, //() => { for (let i = 0; i < label.length; i++) { const element = label[i];}}, //labels, //["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7", "May 8", "May 9", "May 10"], ////this.barChartLabels,
           datasets: [{
-              label: 'Savings',
-              data: savings,
-              backgroundColor: "#377dff",
-              hoverBackgroundColor: "#377dff",
-              borderColor: "#377dff"
+            label: 'Savings',
+            data: savings,
+            backgroundColor: "#377dff",
+            hoverBackgroundColor: "#377dff",
+            borderColor: "#377dff"
           },
           {
             label: 'Withdrawal',
@@ -469,24 +476,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             backgroundColor: "#e7eaf3",
             borderColor: "#e7eaf3"
           }
-        ],
+          ],
         }
         this.getCalculatedTransactions();
-        this.filterDataByMonth(moment().format('MMM D, YYYY'));        
+        this.filterDataByMonth(moment().format('MMM D, YYYY'));
       }), (error: any) => {
         console.log(error);
         this.loading = false;
         this.toastService.showError(error[0]?.message, 'Error');
       }
-      
+
     } catch (error) {
       this.loading = false;
-      this.toastService.showError('Please check your internet and refresh', 'Error');      
-    }    
-
+      this.toastService.showError('Please check your internet and refresh', 'Error');
+    }
   }
 
-  getChartConfig(){
+  getChartConfig() {
     const val = [];
     const array = this.statService.getMonthDate();
     for (let i = 0; i < array.length; i++) {
@@ -495,14 +501,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       for (let ix = 0; ix < array2.length; ix++) {
         const el = array2[ix];
         const v = this.statService.calculateTransactions(array2);
-        val.push(v);        
-      }      
+        val.push(v);
+      }
     }
     console.log(val);
   }
 
 
-  getCalculatedTransactions(){
+  getCalculatedTransactions() {
     const yesterdaySavings = this.statService.getYesterdayTransactions(this.savingsRecords);
     const yesterdayWithdrawal = this.statService.getYesterdayTransactions(this.withdrawalRecords);
     // const lastMonthSavings = this.statService.getYesterdayTransactions(this.savingsRecords);
@@ -511,25 +517,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     console.log(yesterdayWithdrawal);
     const yesterdaySavingsSum = this.statService.calculateTransactions(yesterdaySavings);
     const yesterdayWithdrawalSum = this.statService.calculateTransactions(yesterdayWithdrawal);
-    const yesterdayBalance = yesterdaySavingsSum - yesterdayWithdrawalSum;    
+    const yesterdayBalance = yesterdaySavingsSum - yesterdayWithdrawalSum;
     this.yesterdaytrnxSum = this.totalBalance - yesterdayBalance;
     console.log(this.yesterdaytrnxSum);
   }
 
   convertNum(number: any) {
     return Number(number);
-  }  
+  }
 
   getBase64(chartId: number) {
     //console.log(this.charts.get(chartId)?.toBase64Image());
     return this.charts.get(chartId)?.toBase64Image();
   }
 
-  downloadGraph(chartId: number){
+  downloadGraph(chartId: number) {
     console.log(chartId);
     console.log(this.charts)
-    const fileName = this.charts.get(chartId)?.type +'chart'+ new Date().getTime()+''+Math.floor(Math.random() * 10000) + '.png';
-    const src = this.getBase64(chartId)+'';
+    const fileName = this.charts.get(chartId)?.type + 'chart' + new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';
+    const src = this.getBase64(chartId) + '';
     const link = document.createElement("a");
     link.href = src
     link.download = fileName
@@ -543,42 +549,98 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     //   [this.gradient, this.gradient2, this.gradient3],
     //   [this.gradient11, this.gradient12, this.gradient13]
     // ];
-      const element = this.barChartData.datasets;
-      if(tab === 'bar'){
-        if (this.barChartType === 'line'  ) {
-          this.barChartType = 'bar';
-          // for (let i = 0; i < element.length; i++) {
-          //   element[i].backgroundColor = this.gradients[i][0];
-          //   element[i].hoverBackgroundColor = this.gradients[i][0];        
-          // }       
-        }
-      } else if(tab === 'line') {
-        if (this.barChartType === 'bar') {
-          this.barChartType = 'line'
-          // for (let i = 0; i < element.length; i++) {
-          //   element[i].backgroundColor = gradient1[0][i];  
-          //   element[i].hoverBackgroundColor = gradient1[0][i];        
-          // } 
-        }
-        this.charts.get(id)?.update();
+    const element = this.barChartData.datasets;
+    if (tab === 'bar') {
+      if (this.barChartType === 'line') {
+        this.barChartType = 'bar';
+        // for (let i = 0; i < element.length; i++) {
+        //   element[i].backgroundColor = this.gradients[i][0];
+        //   element[i].hoverBackgroundColor = this.gradients[i][0];        
+        // }       
       }
-        
+    } else if (tab === 'line') {
+      if (this.barChartType === 'bar') {
+        this.barChartType = 'line'
+        // for (let i = 0; i < element.length; i++) {
+        //   element[i].backgroundColor = gradient1[0][i];  
+        //   element[i].hoverBackgroundColor = gradient1[0][i];        
+        // } 
+      }
+      this.charts.get(id)?.update();
+    }
+
   }
 
-  rerender(event: any){
+  onSelect(value: string) {
+    console.log(value)
+    if (value === 'null' || value === 'All') value = '';
+    // else {
+    $("#datatable").DataTable().search(value, true, false, false).draw();
+    // }
+  }
+
+  rerender(event: any) {
     var value = event.target.value;
     // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-            $("#datatableSearch").on("keyup", function () {
-              if (value === 'null') value = '';
-              // if (dtInstance.search() !== value) {
-                // dtInstance.search(value).draw();
-                $("#datatable").DataTable().search(value).draw();
-              //}
-            });
-        // });    
+    $("#datatableSearch").on("keyup", function () {
+      if (value === 'null') value = '';
+      // if (dtInstance.search() !== value) {
+      // dtInstance.search(value).draw();
+      $("#datatable").DataTable().search(value).draw();
+      //}
+    });
+    // });    
   }
 
-  download(){
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return (
+      this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
+    );
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return (
+      date.equals(this.fromDate) ||
+      (this.toDate && date.equals(this.toDate)) ||
+      this.isInside(date) || this.isHovered(date)
+    );
+  }
+
+  onSave() {
+    const from = this.fromDate;
+    const to = this.toDate;
+    const fromDate = from.year + '-' + from.month + '-' + from.day;
+    const toDate = to?.year + '-' + to?.month + '-' + to?.day;
+    const format = from.year === to?.year ? 'MMM D' : 'MMM D, YYYY';
+    const ev = {
+      "start": moment(fromDate).startOf('day'),
+      "end": moment(toDate).endOf('day'),
+      "timeline": "Custom Range",
+    }
+    console.log(ev);
+    $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
+    const startDate = ev.start.format('YYYY-MM-DD');
+    const endDate = ev.end.format('YYYY-MM-DD');
+    this.onChangeDate(startDate, endDate, ev.timeline);
+    this.modalService.dismissAll('save changes');
+  }
+
+  download() {
     $('#export-excel').on('click', () => {
       $("#datatable").DataTable().button('.buttons-excel').trigger();
     });
@@ -595,8 +657,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       $("#datatable").DataTable().button('.buttons-copy').trigger();
     });
 
-    $('.js-datatable-filter').on('change', function(this: any) {
-      var $this = $(this),        
+    $('.js-datatable-filter').on('change', function (this: any) {
+      var $this = $(this),
         elVal = $this.val(),
         targetColumnIndex = $this.data('target-column-index');
       if (elVal === 'null') elVal = '';
@@ -604,40 +666,40 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
 
     document.querySelectorAll('.js-datatable-filter2').forEach(function (item) {
-      item.addEventListener('change',function(e) {
+      item.addEventListener('change', function (e) {
         var elVal = (e.target as HTMLSelectElement).value,
-    targetColumnIndex = (e.target as HTMLSelectElement).getAttribute('data-target-column-index'),
-    targetTable = (e.target as HTMLSelectElement).getAttribute('data-target-table');
-   if (elVal === 'null') elVal = '';
-    $("#datatable").DataTable().getItem(targetTable).column(targetColumnIndex).search(elVal, true, false, false).draw(false);
+          targetColumnIndex = (e.target as HTMLSelectElement).getAttribute('data-target-column-index'),
+          targetTable = (e.target as HTMLSelectElement).getAttribute('data-target-table');
+        if (elVal === 'null') elVal = '';
+        $("#datatable").DataTable().getItem(targetTable).column(targetColumnIndex).search(elVal, true, false, false).draw(false);
       })
-    }); 
+    });
   }
 
-  jsInit(){
-    (function() {
-    
-    window.onload = function () {
+  jsInit() {
+    (function () {
 
-      new HSSideNav('.js-navbar-vertical-aside').init()
-    // INITIALIZATION OF FORM SEARCH
-      // =======================================================
+      window.onload = function () {
 
-      // INITIALIZATION OF BOOTSTRAP DROPDOWN
-      // =======================================================
-      HSBsDropdown.init()      
+        new HSSideNav('.js-navbar-vertical-aside').init()
+        // INITIALIZATION OF FORM SEARCH
+        // =======================================================
 
-          // INITIALIZATION OF SELECT
-      // =======================================================
-      HSCore.components.HSTomSelect.init('.js-select')
+        // INITIALIZATION OF BOOTSTRAP DROPDOWN
+        // =======================================================
+        HSBsDropdown.init()
+
+        // INITIALIZATION OF SELECT
+        // =======================================================
+        HSCore.components.HSTomSelect.init('.js-select')
 
 
-      // INITIALIZATION OF CLIPBOARD
-      // =======================================================
-      HSCore.components.HSClipboard.init('.js-clipboard')
-    
-    }
-  })()
+        // INITIALIZATION OF CLIPBOARD
+        // =======================================================
+        HSCore.components.HSClipboard.init('.js-clipboard')
+
+      }
+    })()
   }
 
   jsOnLoad() {

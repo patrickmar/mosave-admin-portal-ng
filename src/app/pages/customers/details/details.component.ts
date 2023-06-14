@@ -48,6 +48,7 @@ export class DetailsComponent implements OnInit {
   addInfo!: Array<any>;
   plansInfo!: Array<any> | any;
   pinData!: object;
+  switch: boolean = false;
 
   otp!: string;
   data: any;
@@ -233,11 +234,9 @@ export class DetailsComponent implements OnInit {
       forkJoin([
         this.dataService.getCustomerProfile(this.customerId)
       ]).subscribe((res: any) => {
-        console.log(res[0]);
         this.customer = res[0][0];
         console.log(this.customer);
         this.fullName = this.customer.firstName + ' ' + this.customer.lastName;
-        console.log(this.fullName);
         this.loading2 = false;
         this.showComponent = true;
         var titlecase = new TitleCasePipe;
@@ -427,8 +426,6 @@ export class DetailsComponent implements OnInit {
         plan_duration: 'Monthly'
       },
     ];
-
-    console.log(this.addInfo);
   }
 
   onOtpChange(otp: any) {
@@ -604,7 +601,7 @@ export class DetailsComponent implements OnInit {
         })
         this.customerTrxs = replaceStr;
       } else {
-        this.toastService.showError(result.message, 'Error');
+        //this.toastService.showError(result.message, 'Error');
         this.customerTrxs = [];
       }
 
@@ -625,15 +622,13 @@ export class DetailsComponent implements OnInit {
         console.log(assignPlan);
         this.plans = res.map((item: any, i: any) => Object.assign({}, item, assignPlan[i]));
         console.log(this.plans);
-
       } else {
         let msg = 'No saving plans available for customer';
-        this.toastService.showSuccess(msg, 'Info');
+        //this.toastService.showSuccess(msg, 'Info');
         this.plans = res;
         this.plansInfo = msg;
         console.log(this.plansInfo);
       }
-
     }, (error: any) => {
       console.log(error);
       this.toastService.showError('Error: Could not fetch customer plans', 'Error');
