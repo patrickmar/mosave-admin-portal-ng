@@ -60,6 +60,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   modalContent!: object | any;
   hoveredDate: NgbDate | null = null;
   plans = this.statService.plans;
+  duration = 5000;
 
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
@@ -119,7 +120,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   dateRanges!: Array<any>;
 
   constructor(private authservice: AuthService, private dataService: DataService, private statService: StatService,
-    private toastService: ToastService, private ngZone: NgZone, private decimalPipe: DecimalPipe, calendar: NgbCalendar,
+    private toastService: ToastService, private ngZone: NgZone, private decimalPipe: DecimalPipe, public calendar: NgbCalendar,
     private modalService: NgbModal) {
     //Chart.register(Annotation)
     //this.fromDate = calendar.getToday();
@@ -304,7 +305,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   getLast12Months() {
     this.last12Months = new Array(12).fill(null).map((x, i) => moment().subtract(i, 'months').format('MMMM YYYY')); //this.statService.getMonthDate();
-    console.log(this.last12Months);
   }
 
   // var start = moment();
@@ -321,7 +321,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       const endDate = end.format('YYYY-MM-DD');
       this.onChangeDate(startDate, endDate, timeline);
     }
-
   }
 
   filterDataByMonth(date: string, timeline?: string) {
@@ -379,8 +378,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.dataService.getMosaveTransactions(),
         this.dataService.getMosaveSavingTransactions()
       ]).subscribe((result: any) => {
-        console.log(result[0]);
-        console.log(result[1]);
         this.loading = false;
         this.showComponent = true;
         const newRecords = result[0].map((res: any) => {
@@ -447,7 +444,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const lab = new Array(lastfewDays.length).fill(null).map((x, i) => {
           label.push(moment(lastfewDays[i].transDate).format('MMM D YYYY'));
         })
-        console.log(label);
         //const dates = new Array(lastfewDays.length).fill(null).map((x, i) => moment().subtract(9, 'days').add(i, 'days').format('MMM D'));
         //console.log(dates);
         const savings = [];
@@ -457,10 +453,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           savings.push(element?.savings);
           withdrawals.push(element?.withdraw);
         }
-        console.log(savings);
-        console.log(withdrawals);
-        this.savingsGraphSum = savings.reduce((acc: any, cur: any) => acc + cur);
-        this.withdrawalGraphSum = withdrawals.reduce((acc: any, cur: any) => acc + cur);
+        this.savingsGraphSum = savings.length > 0 ? savings.reduce((acc: any, cur: any) => acc + cur) : 0;
+        this.withdrawalGraphSum = withdrawals.length > 0 ? withdrawals.reduce((acc: any, cur: any) => acc + cur) : 0;
         this.barChartData = {
           labels: label, //dates,//labels, //() => { for (let i = 0; i < label.length; i++) { const element = label[i];}}, //labels, //["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7", "May 8", "May 9", "May 10"], ////this.barChartLabels,
           datasets: [{
@@ -504,7 +498,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         val.push(v);
       }
     }
-    console.log(val);
   }
 
 
@@ -513,13 +506,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const yesterdayWithdrawal = this.statService.getYesterdayTransactions(this.withdrawalRecords);
     // const lastMonthSavings = this.statService.getYesterdayTransactions(this.savingsRecords);
     // const lastMonthWithdrawal = this.statService.getYesterdayTransactions(this.withdrawalRecords);
-    console.log(yesterdaySavings);
-    console.log(yesterdayWithdrawal);
     const yesterdaySavingsSum = this.statService.calculateTransactions(yesterdaySavings);
     const yesterdayWithdrawalSum = this.statService.calculateTransactions(yesterdayWithdrawal);
     const yesterdayBalance = yesterdaySavingsSum - yesterdayWithdrawalSum;
     this.yesterdaytrnxSum = this.totalBalance - yesterdayBalance;
-    console.log(this.yesterdaytrnxSum);
   }
 
   convertNum(number: any) {
@@ -532,8 +522,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   downloadGraph(chartId: number) {
-    console.log(chartId);
-    console.log(this.charts)
     const fileName = this.charts.get(chartId)?.type + 'chart' + new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';
     const src = this.getBase64(chartId) + '';
     const link = document.createElement("a");
@@ -572,7 +560,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   onSelect(value: string) {
-    console.log(value)
     if (value === 'null' || value === 'All') value = '';
     // else {
     $("#datatable").DataTable().search(value, true, false, false).draw();
@@ -632,7 +619,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       "end": moment(toDate).endOf('day'),
       "timeline": "Custom Range",
     }
-    console.log(ev);
     $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
     const startDate = ev.start.format('YYYY-MM-DD');
     const endDate = ev.end.format('YYYY-MM-DD');

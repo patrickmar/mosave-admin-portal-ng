@@ -57,6 +57,11 @@ import { CreateProgramComponent } from './pages/programs/create-program/create-p
 import { ShowHidePasswordComponent } from './components/show-hide-password/show-hide-password.component';
 import { UpdateProgramComponent } from './pages/programs/update-program/update-program.component';
 import { ShortNumberPipe } from './pipes/short-number.pipe';
+import { CountUpDirective } from './directives/count-up.directive';
+import { StepsComponent } from './components/steps/steps.component';
+import { CreateCustomerComponent } from './pages/customers/create-customer/create-customer.component';
+import { StepTemplateComponent } from './components/step-template/step-template.component';
+import { CompletePageComponent } from './components/complete-page/complete-page.component';
 //import { ClipboardModule } from 'ngx-clipboard';
 
 
@@ -72,6 +77,8 @@ const appRoutes: Routes = [
   {path: "dashboard", component: DashboardComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard] },
   {path: "customers", component: CustomersComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "customer/register", component: RegisterCustomerComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard] },
+  {path: 'create-customer', component: CreateCustomerComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
+  {path: 'complete', component: CompletePageComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "customer/:sn/trans-history", component: TransactionHistoryComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "customer/:sn/details", component: DetailsComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
   {path: "profile", component: ProfileComponent, resolve:{userData: UserDataResolver}, canActivate:[AuthGuard]},
@@ -144,6 +151,11 @@ const appLoader = {
     ShowHidePasswordComponent,
     UpdateProgramComponent,
     ShortNumberPipe,
+    CountUpDirective,
+    StepTemplateComponent,
+    StepsComponent,
+    CreateCustomerComponent,
+    CompletePageComponent,
   ],
   imports: [
     BrowserModule,

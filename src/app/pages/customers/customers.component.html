@@ -37,7 +37,8 @@
 
           <div class="row align-items-center gx-2">
             <div class="col">
-              <span class="js-counter display-4 text-dark">{{customer?.length}}</span>
+              <span class="display-4 text-dark" *ngIf="customer?.length > 0" [appCountUp]="customer?.length" [duration]="duration">{{customer?.length}}</span>
+              <!-- <span class="js-counter display-4 text-dark">{{customer?.length}}</span> -->
               <!-- <span class="text-body fs-5 ms-1">from 22</span> -->
             </div>
             <!-- End Col -->
@@ -63,7 +64,7 @@
 
           <div class="row align-items-center gx-2">
             <div class="col">
-              <span class="js-counter display-4 text-dark">{{activeCustomers}}</span>
+              <span class="display-4 text-dark" *ngIf="parseInt(activeCustomers) > 0" [appCountUp]="parseInt(activeCustomers)" [duration]="duration">{{activeCustomers}}</span>
             </div>
 
             <div class="col-auto">
@@ -86,7 +87,7 @@
 
           <div class="row align-items-center gx-2">
             <div class="col">
-              <span class="js-counter display-4 text-dark">{{newCustomers}}</span>
+              <span class="display-4 text-dark" *ngIf="newCustomers != undefined" [appCountUp]="newCustomers" [duration]="duration">{{newCustomers}}</span>
               <span class="text-body fs-5 ms-1">in this week</span>
             </div>
 
@@ -110,7 +111,7 @@
 
           <div class="row align-items-center gx-2">
             <div class="col">
-              <span class="js-counter display-4 text-dark">{{inactiveCustomers}}</span>
+              <span class="display-4 text-dark" *ngIf="inactiveCustomers > 0" [appCountUp]="inactiveCustomers" [duration]="duration">{{inactiveCustomers}}</span>
             </div>
 
             <div class="col-auto">
@@ -161,10 +162,15 @@
 
         <div class="">
           <!-- Daterangepicker -->
-          <button id="js-daterangepicker-predefined" class="btn btn-white btn-sm dropdown-toggle">
+          <button id="daterangepicker-predefined" class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false">
             <i class="bi-calendar-week"></i>
-            <span class="js-daterangepicker-predefined-preview ms-1"></span>
+            <span class="daterangepicker-preview ms-1">{{ranges[0] +' - '+ ranges[1] }}</span>
           </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" type="button" *ngFor="let item of dateRanges"
+              (click)="filterDataByDate(item.date[0], item.date[1], item.timeline, content)">{{item?.timeline}}</a>
+          </div>
           <!-- End Daterangepicker -->
         </div>
         <!-- End Col -->
@@ -178,46 +184,26 @@
 
           <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
             <span class="dropdown-header">Options</span>
-            <a id="export-copy" class="dropdown-item" href="javascript:;">
-              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/copy-icon.svg"
-                alt="Image Description">
-              Copy
-            </a>
-            <a id="export-print" class="dropdown-item" href="javascript:;">
-              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/illustrations/print-icon.svg"
-                alt="Image Description">
-              Print
-            </a>
-            <div class="dropdown-divider"></div>
-            <span class="dropdown-header">Download options</span>
-            <a id="export-excel" class="dropdown-item" href="javascript:;">
-              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/excel-icon.svg"
-                alt="Image Description">
-              Excel
-            </a>
-            <a id="export-csv" class="dropdown-item" href="javascript:;">
-              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/components/placeholder-csv-format.svg"
-                alt="Image Description">
-              .CSV
-            </a>
-            <a id="export-pdf" class="dropdown-item" href="javascript:;">
-              <img class="avatar avatar-xss avatar-4x3 me-2" src="./assets/svg/brands/pdf-icon.svg"
-                alt="Image Description">
-              PDF
-            </a>
+            <ng-container *ngFor="let it of downloadOptions; let i = index;">
+              <div class="dropdown-divider" *ngIf="i == 2"></div>
+              <span class="dropdown-header" *ngIf="i == 2">Download options</span>
+              <a id="export-{{it.name}}" class="dropdown-item" type="button" (click)="export(it.name)">
+                <img class="avatar avatar-xss avatar-4x3 me-2" src="{{it.src}}" alt="Image Description">
+                {{it.name | titlecase }}
+              </a>
+            </ng-container>
           </div>
         </div>
         <!-- End Dropdown -->
 
         <!-- Dropdown -->
         <div class="dropdown">
-          <button type="button" class="btn btn-white btn-sm w-100" id="usersFilterDropdown" data-bs-toggle="dropdown"
-            data-bs-auto-close="outside" aria-expanded="false">
+          <button type="button" class="btn btn-white dropdown-toggle btn-sm w-100" id="usersFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
             <i class="bi-filter me-1"></i> Filter <span
               class="badge bg-soft-dark text-dark rounded-circle ms-1">2</span>
           </button>
 
-          <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered"
+          <div class="userdropdown dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered"
             aria-labelledby="usersFilterDropdown" style="min-width: 22rem;">
             <!-- Card -->
             <div class="card">
@@ -225,7 +211,7 @@
                 <h5 class="card-header-title">Filter users</h5>
 
                 <!-- Toggle Button -->
-                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm ms-2">
+                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm ms-2" (click)="hideDropdown()">
                   <i class="bi-x-lg"></i>
                 </button>
                 <!-- End Toggle Button -->
@@ -237,17 +223,16 @@
                   <div class="row">
                     <div class="col-sm mb-4">
                       <small class="text-cap text-body">Account Type</small>
-
                       <!-- Select -->
                       <div class="tom-select-custom">
-                        <select class="js-select js-datatable-filter form-select form-select-sm"
+                        <select #acctType class="js-select js-datatable-filter form-select form-select-sm acctType"
                           data-target-column-index="3" data-hs-tom-select-options='{
                                         "placeholder": "Any",
                                         "searchInDropdown": false,
                                         "hideSearch": true,
                                         "dropdownWidth": "10rem"
                                       }'>
-                          <option value="">Any</option>
+                          <option value="Any">Any</option>
                           <option value="Savings">Savings</option>
                           <option value="Current">Current</option>
                         </select>
@@ -258,29 +243,18 @@
 
                     <div class="col-sm mb-4">
                       <small class="text-cap text-body">Gender</small>
-
                       <!-- Select -->
                       <div class="tom-select-custom">
-                        <select class="js-select js-datatable-filter form-select form-select-sm"
+                        <select #gender class="js-select js-datatable-filter form-select form-select-sm gender"
                           data-target-column-index="5" data-hs-tom-select-options='{
-                                        "placeholder": "All",
+                                        "placeholder": "Any",
                                         "searchInDropdown": false,
                                         "hideSearch": true,
                                         "dropdownWidth": "10rem"
                                       }'>
-                          <option value=""
-                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>All</span>'>
-                            All</option>
-                          <option value="">All Gender</option>
-                          <option value="Male"
-                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Male</span>'>
-                            Male</option>
-                          <option value="Female"
-                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-warning"></span>Female</span>'>
-                            Female</option>
-                          <option value="Others"
-                            data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Others</span>'>
-                            Others</option>
+                          <option value="Any">Any</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
                         </select>
                       </div>
                       <!-- End Select -->
@@ -289,8 +263,11 @@
                   </div>
                   <!-- End Row -->
 
-                  <div class="d-grid">
-                    <a type="button" class="btn btn-primary">Apply</a>
+                  <div class="d-flex justify-content-md-between">
+                    <a type="button" (click)="applyFilter(acctType.value, gender.value)"
+                      [ngClass]="acctType.value === 'Any' && gender.value === 'Any' ? 'disabled btn btn-primary' : 'btn btn-primary' ">Apply</a>
+                    <a type="button" (click)="resetFilter();"
+                      [ngClass]="acctType.value !== 'Any' || gender.value !== 'Any' ? 'btn btn-primary': 'disabled btn btn-primary' ">Reset</a>
                   </div>
                 </form>
               </div>
@@ -319,6 +296,7 @@
             <th>Account No</th>
             <th>Account Type</th>
             <th>Date Registered</th>
+            <th>Active Plans</th>
             <th>Registered By</th>
             <th>Gender</th>
             <th>Phone No</th>
@@ -338,7 +316,7 @@
                 <ng-container>
                   <div class="avatar avatar-circle" *ngIf="data.image">
                     <img class="avatar-img" [src]="imageBaseURL+data?.image" alt="{{data?.firstName}}"
-                      onerror="this.src=avatar">
+                      onerror="this.src='../../../assets/img/160x160/img1.jpg'">
                   </div>
                 </ng-container>
                 <div class="avatar avatar-soft-primary avatar-circle" *ngIf="!data.image">
@@ -366,6 +344,7 @@
             <td>
               <span class=""></span>{{data?.date_registered}}
             </td>
+            <td>{{data?.allPlans }}</td>
             <td>
               {{ (data?.agent_firstname?.concat(' ').concat(data?.agent_lastname) | titlecase) }}
             </td>
@@ -458,5 +437,37 @@
   <!-- End Card -->
 </div>
 <!-- End Content -->
+
+<ng-template #content let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Set Date Range</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+        (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <!-- Flatpickr -->
+        <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+          outsideDays="hidden">
+        </ngb-datepicker>
+
+        <ng-template #t let-date let-focused="focused">
+          <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+            [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+            (mouseleave)="hoveredDate = null">
+            {{ date.day }}
+          </span>
+        </ng-template>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+        (click)="modal.dismiss('Cross click')">Close</button>
+      <button type="button" class="btn btn-primary" [disabled]="fromDate == undefined || fromDate == null"
+        (click)="onSave()">Save changes</button>
+    </div>
+  </div>
+</ng-template>
 
 <ngx-loading [show]="loading"></ngx-loading>

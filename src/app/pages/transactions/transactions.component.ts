@@ -623,11 +623,11 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     const toDate = to?.year + '-' + to?.month + '-' + to?.day;
     const format = from.year === to?.year ? 'MMM D' : 'MMM D, YYYY';
     const ev = {
-      "start": moment(fromDate).startOf('day'),
-      "end": moment(toDate).endOf('day'),
-      "timeline": this.modalContent2.timeline,
-      "id": this.modalContent2.id,
-      "tableName": this.modalContent2.tableName
+      start: moment(fromDate).startOf('day'),
+      end: moment(toDate).endOf('day'),
+      timeline: this.modalContent2.timeline,
+      id: this.modalContent2.id,
+      tableName: this.modalContent2.tableName
     }
     $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
     this.applyfilter(ev);

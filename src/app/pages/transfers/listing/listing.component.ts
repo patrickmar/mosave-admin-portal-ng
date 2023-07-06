@@ -27,6 +27,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   dtTrigger: Subject<any> = new Subject<any>();
   imageBaseURL: string = environment.app.baseUrl+environment.app.imagePath;
   avatar = environment.avatar;  
+  duration = 20000;
   successRecords!: Array<any>;
   failedRecords!: Array<any>;
   totalSum!: number;
@@ -150,11 +151,9 @@ export class ListingComponent implements OnInit, OnDestroy {
       perPage: 1000+''
     }
     let params = decodeURIComponent(new URLSearchParams(config).toString());
-    console.log(params);
     try {
       this.loading = true;
       this.dataService.getAllTransfers(params).subscribe((res: any) => {
-        console.log(res);
         this.loading = false;
       this.showComponent = true;
         if(res?.status == true){
@@ -166,7 +165,6 @@ export class ListingComponent implements OnInit, OnDestroy {
             //calculate the total failed transfers
             this.totalFailedSum = this.failedRecords.reduce((sum: any, current: any) => sum + Number(current.amount), 0);
             this.getAllTimeTransfers();
-            console.log(this.totalSum);
           this.dtTrigger.next('');
         }else {
           this.toastService.showError(res?.message, 'Error');  
@@ -223,7 +221,6 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   download(name: string) {
     var table = '#datatable';
-    console.log(name);
     $(table).DataTable().button('.buttons-'+name).trigger();
   }
 
@@ -250,11 +247,6 @@ export class ListingComponent implements OnInit, OnDestroy {
       // INITIALIZATION OF SELECT
       // =======================================================
       HSCore.components.HSTomSelect.init('.js-select')
-
-
-      // INITIALIZATION OF COUNTER
-      // =======================================================
-      new HSCounter('.js-counter')
 
 
       // INITIALIZATION OF CLIPBOARD

@@ -26,22 +26,22 @@
       <div class="card">
         <div class="card-body text-center">
           <small class="text-cap">Number of Transfers</small>
-          <span class="js-counter d-block display-3 text-dark mb-2"
+          <span class="d-block display-3 text-dark mb-2"
             *ngIf="transferRecords != undefined">{{transferRecords.length}}</span>
 
           <div class="row col-divider">
             <div class="col text-end">
-              <span class="d-block fw-semi-bold text-dark"> {{lastWeekTransfer?.length | number }}</span>
+              <span class="d-block fw-semi-bold text-dark" [appCountUp]="lastWeekTransfer?.length" [duration]="duration"> {{lastWeekTransfer?.length | number }}</span>
               <span class="d-block">Last week</span>
             </div>
 
             <div class="col text-center">
-              <span class="d-block fw-semi-bold text-dark">{{thisWeekTransfer?.length | number }}</span>
+              <span class="d-block fw-semi-bold text-dark" [appCountUp]="thisWeekTransfer?.length" [duration]="duration">{{thisWeekTransfer?.length | number }}</span>
               <span class="d-block">This week</span>
             </div>
 
             <div class="col text-start">
-              <span class="d-block fw-semi-bold text-dark">{{thisMonthTransfer?.length | number }}</span>
+              <span class="d-block fw-semi-bold text-dark" [appCountUp]="thisMonthTransfer?.length" [duration]="duration">{{thisMonthTransfer?.length | number }}</span>
               <span class="d-block">This month</span>
             </div>
           </div>
@@ -57,8 +57,8 @@
       <div class="card">
         <div class="card-body text-center">
           <small class="text-cap"><span class="legend-indicator bg-success"></span>Total Successful Transfers</small>
-          <!-- js-counter is part of the class here -->
-          <span class=" d-block display-3 text-dark mb-2" *ngIf="totalSum != undefined">{{totalSum/ 100 | currency :
+          
+          <span class="d-block display-3 text-dark mb-2" *ngIf="totalSum != undefined">{{totalSum/ 100 | currency :
             '₦'}}</span>
 
           <div class="row col-divider">
@@ -89,8 +89,8 @@
       <div class="card">
         <div class="card-body text-center">
           <small class="text-cap"><span class="legend-indicator bg-danger"></span>Total Failed Transfers</small>
-          <span class="js-counter d-block display-3 text-dark mb-2 "
-            *ngIf="failedRecords != undefined">{{failedRecords.length}}</span>
+          <span class="d-block display-3 text-dark mb-2 "
+            *ngIf="failedRecords != undefined" [appCountUp]="failedRecords.length" [duration]="duration">{{failedRecords.length}}</span>
 
           <div class="row col-divider">
             <div class="col text-end">

@@ -184,13 +184,11 @@ export class CreateProgramComponent implements OnInit {
   fetchAllPrograms() {
     try {
       this.dataService.getAllPrograms().subscribe((res: any) => {
-        console.log(res)
         this.allPrograms = res;
       }, (error: any) => {
         this.toastService.showError(error?.message, 'Error');
       })
     } catch (error) {
-      console.log(error);
       this.toastService.showError('Could not fetch all ' + this.getProgramType(), 'Error');
     }
   }
@@ -198,7 +196,6 @@ export class CreateProgramComponent implements OnInit {
   fetchStates() {
     const selectedCountry = this.programForm.value.country_phone.country.name;
     selectedCountry === "United States of America" ? "United States" : selectedCountry;
-    console.log(selectedCountry);
     const data = {
       "country": selectedCountry
     }
@@ -233,7 +230,6 @@ export class CreateProgramComponent implements OnInit {
             //this.countries.push(new CountryPhone(country.cca2, country.name.common)); // version 3
           }
         }
-        console.log(this.defaultCountry)
         const defaultCountry = this.countries.filter((c: any) => {
           return c.iso === this.defaultCountry[0].iso || c.name === this.defaultCountry[0].name
         });
@@ -255,7 +251,6 @@ export class CreateProgramComponent implements OnInit {
   }
 
   onSelect(e: any) {
-    console.log(e.target.files);
     if (e.target.files.length > 0) {
       var regex = /(\.jpg|\.jpeg|\.svg|\.pdf|\.gif|\.png)$/i;
       const doc = e.target.files[0];
@@ -305,7 +300,6 @@ export class CreateProgramComponent implements OnInit {
   };
 
   dataURItoBlob(dataURI: any) {
-    console.log(dataURI);
     const binary = atob(dataURI.split(',')[1]);
     const array = [];
     for (let i = 0; i < binary.length; i++) {
@@ -346,16 +340,13 @@ export class CreateProgramComponent implements OnInit {
           this.loading = true;
           const api = this.programType === 'merchant' ? this.dataService.createMerchant(formData) : this.dataService.createProgram(formData);
           api.subscribe((res: any) => {
-            console.log(res);
             this.response = res;
             if (res.error == false) {
               this.loading = false;
-              console.log(res.message);
               this.toastService.showSuccess(res.message, 'success');
               this.programForm.reset();
             } else {
               this.loading = false;
-              console.log(res.message);
               this.toastService.showError(res.message, 'Error');
             }
           },
