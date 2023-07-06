@@ -227,7 +227,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords; let i = index;" [userId]="r?.userId"
+                <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords | slice:0:maxCount; let i = index;" [userId]="r?.userId"
                   [customerId]="r?.customerId" [firstName]="r?.firstName" [lastName]="r?.lastName"
                   [fullName]="(r?.firstName?.concat(' ').concat(r?.lastName) | titlecase)" [plan_name]="r?.plan_name"
                   [transAmount]="r?.transAmount" [transref]="r?.transref" [transType]="r?.transType"
