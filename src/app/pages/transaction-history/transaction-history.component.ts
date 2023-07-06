@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { forkJoin, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.css']
 })
-export class TransactionHistoryComponent implements OnInit {
+export class TransactionHistoryComponent implements OnInit, OnDestroy {
   records!: Array<any>;
   recordsExist: boolean = false;
   user: any;
@@ -64,7 +64,7 @@ export class TransactionHistoryComponent implements OnInit {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;">
           <p class="mb-0">No data to show</p>
           </div>`,
         paginate: {

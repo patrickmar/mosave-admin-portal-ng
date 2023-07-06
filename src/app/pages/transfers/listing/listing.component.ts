@@ -61,7 +61,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;">
           <p class="mb-0">No data to show</p>
           </div>`,
       },

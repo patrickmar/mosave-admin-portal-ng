@@ -21,6 +21,7 @@ export class TransactionsHeaderComponent implements OnInit {
   @Output() onDownloadPdf: EventEmitter<any> = new EventEmitter();
   @Output() onShowColumn: EventEmitter<any> = new EventEmitter();
   @Output() onFilterDate: EventEmitter<any> = new EventEmitter();
+  @Output() onSetCount: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -51,6 +52,14 @@ export class TransactionsHeaderComponent implements OnInit {
   filterDate(start:any, end:any, timeline: string, id: number, tableName: string){
     const value = {start, end, timeline, id, tableName}
     this.onFilterDate?.emit(value);
+  }
+
+  getMaxCount(value: number){
+    this.onSetCount?.emit(value);
+  }
+
+  convertNum(value: string){
+    return Number(value);
   }
 
 }

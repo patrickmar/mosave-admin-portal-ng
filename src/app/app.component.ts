@@ -13,10 +13,7 @@ export class AppComponent {
   isLoggedIn$!: Observable<boolean>;
 
   constructor(
-    private authService: AuthService,) {
-      
-      
-     }
+    private authService: AuthService) {}
 
      ngOnInit(): void {
       this.getUserDetails();
@@ -25,7 +22,6 @@ export class AppComponent {
 
   getUserDetails(){
     this.authService.userData$.subscribe((response: any) => {
-      console.log(response);
       this.user = response;
     });
   }

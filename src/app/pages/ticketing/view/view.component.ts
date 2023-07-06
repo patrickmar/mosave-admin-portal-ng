@@ -8,9 +8,6 @@ import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 declare var $: any;
-declare var HSCore: any;
-declare var HSCounter: any;
-declare var HSBsDropdown: any;
 
 @Component({
   selector: 'app-view',
@@ -99,7 +96,7 @@ export class ViewComponent implements OnInit, OnDestroy, AfterViewInit {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;">
           <p class="mb-0">No data to show</p>
           </div>`,
           paginate: {

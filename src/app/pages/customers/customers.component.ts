@@ -9,14 +9,7 @@ import { StatService } from 'src/app/services/stat.service';
 import { NgbCalendar, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 declare var $: any;
 declare var HSCore: any;
-declare var HSSideNav: any;
-declare var HSFormSearch: any;
 declare var HSBsDropdown: any;
-declare var HsNavScroller: any;
-declare var HSCounter: any;
-declare var HSTogglePassword: any;
-declare var HSFileAttach: any;
-// declare var moment: any;
 
 @Component({
   selector: 'app-customers',
@@ -93,7 +86,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
       //searching: false,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;">
           <p class="mb-0">No data to show</p>
           </div>`,
         paginate: {
@@ -156,9 +149,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    // We will unsubscribe the even
+    // We will unsubscribe the table
     this.dtTrigger.unsubscribe();
-    //$.fn['dataTable'].ext.search.pop();
   }
 
   getAllCustomers() {
@@ -350,45 +342,15 @@ export class CustomersComponent implements OnInit, OnDestroy {
   jsOnload() {
     (function () {
       window.onload = function () {
-
-
-        // INITIALIZATION OF NAVBAR VERTICAL ASIDE
-        // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
-
-
-        // INITIALIZATION OF FORM SEARCH
-        // =======================================================
-        new HSFormSearch('.js-form-search');
-
-
+        
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init();
-
 
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init('.js-select');
 
-
-        // INITIALIZATION OF INPUT MASK
-        // =======================================================
-        HSCore.components.HSMask.init('.js-input-mask');
-
-
-        // INITIALIZATION OF NAV SCROLLER
-        // =======================================================
-        new HsNavScroller('.js-nav-scroller');
-
-        // INITIALIZATION OF TOGGLE PASSWORD
-        // =======================================================
-        new HSTogglePassword('.js-toggle-password');
-
-
-        // INITIALIZATION OF FILE ATTACHMENT
-        // =======================================================
-        new HSFileAttach('.js-file-attach');
       }
     })()
   }

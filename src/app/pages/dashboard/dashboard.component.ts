@@ -1,5 +1,5 @@
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
-import { AfterViewInit, Component, NgZone, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Chart, ChartConfiguration, ChartOptions, ChartType, DoughnutControllerChartOptions, } from 'chart.js';
 import { forkJoin, Subject } from 'rxjs';
@@ -11,9 +11,9 @@ import { environment } from 'src/environments/environment';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { BaseChartDirective } from 'ng2-charts';
 import { NgbCalendar, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 
 declare var $: any;
-declare var moment: any;
 declare var HSCore: any;
 declare var HSSideNav: any;
 declare var HSBsDropdown: any;
@@ -23,7 +23,7 @@ declare var HSBsDropdown: any;
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   dataTable: any;
   user: any;
   firstname!: string;
@@ -217,7 +217,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       processing: true,
       language: {
         zeroRecords: `<div class="text-center p-4">
-            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;">
           <p class="mb-0">No data to show</p>
           </div>`,
         paginate: {

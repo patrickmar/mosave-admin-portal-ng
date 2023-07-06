@@ -128,7 +128,7 @@
 
     
     <div class="my-5">
-      <!-- <p class="text-muted"><i class="bi-exclamation-octagon"></i> Last referral: August 25, 2020.</p> -->
+      <p class="text-muted"><i class="bi-exclamation-octagon"></i> Last refreshed: {{time | date:'medium'}}. {{'  ' + maxCount}}</p>
     </div>
     <!-- Page Header -->
     <div class="page-header">
@@ -184,15 +184,6 @@
             <a class="btn btn-outline-danger btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
               <i class="bi-trash"></i> Delete
             </a>
-            <a class="btn btn-white btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
-              <i class="bi-archive"></i> Archive
-            </a>
-            <a class="btn btn-white btn-sm mb-2 mb-sm-0 me-2" href="javascript:;">
-              <i class="bi-upload"></i> Publish
-            </a>
-            <a class="btn btn-white btn-sm mb-2 mb-sm-0" href="javascript:;">
-              <i class="bi-x-lg"></i> Unpublish
-            </a>
           </div>
         </div>
         <!-- End Datatable Info -->
@@ -205,22 +196,21 @@
     <div class="card">
       <!-- Tab Content -->
       <div class="tab-content" id="transactionsTabContent">
-        <div
-          [ngClass]="transactionType === '' || transactionType === 'all' ? 'tab-pane fade show active' : 'tab-pane fade' "
-          id="all" role="tabpanel" aria-labelledby="all-tab">
+        <div [ngClass]="transactionType === '' || transactionType === 'all' ? 'tab-pane fade show active' : 'tab-pane fade' " id="all" 
+        role="tabpanel" aria-labelledby="all-tab">
           <!-- Header -->
           <app-transactions-header [id]="1" [tableName]="table[0]" [header]="tableHead" [ranges]="ranges"
             [dateRanges]="dateRanges" (onFilterDate)="filterDataByDate($event, content2)"
             (onShowColumn)="showColumn($event, table[0])" (onRender)="filter($event, 1, table[0])"
             (onDownloadCopy)="downloadAll(table[0], 'copy')" (onDownloadPrint)="downloadAll(table[0], 'print')"
             (onDownloadExcel)="downloadAll(table[0], 'excel')" (onDownloadCsv)="downloadAll(table[0], 'csv')"
-            (onDownloadPdf)="downloadAll(table[0], 'pdf')">
+            (onDownloadPdf)="downloadAll(table[0], 'pdf')" (onSetCount)="setCount($event, 0)">
           </app-transactions-header>
           <!-- End Header -->
 
           <!-- Table -->
           <div class="table-responsive">
-            <table datatable [dtOptions]="dtOptions[0]" [dtTrigger]="dtTrigger" id="datatable"
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="datatable"
               class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
               style="width: 100%">
               <thead class="thead-light">
@@ -237,7 +227,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords" [userId]="r?.userId"
+                <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords; let i = index;" [userId]="r?.userId"
                   [customerId]="r?.customerId" [firstName]="r?.firstName" [lastName]="r?.lastName"
                   [fullName]="(r?.firstName?.concat(' ').concat(r?.lastName) | titlecase)" [plan_name]="r?.plan_name"
                   [transAmount]="r?.transAmount" [transref]="r?.transref" [transType]="r?.transType"
@@ -250,9 +240,6 @@
             </table>
           </div>
           <!-- End Table -->
-          <!-- Footer -->
-          <!-- <app-transactions-footer [tableLength]="allRecords?.length"></app-transactions-footer> -->
-          <!-- End Footer -->
         </div>
 
         <!-- Tab Panel -->
@@ -264,12 +251,12 @@
             (onShowColumn)="showColumn($event, table[1])" (onRender)="filter($event, 2, table[1])"
             (onDownloadCopy)="downloadAll(table[1], 'copy')" (onDownloadPrint)="downloadAll(table[1], 'print')"
             (onDownloadExcel)="downloadAll(table[1], 'excel')" (onDownloadCsv)="downloadAll(table[1], 'csv')"
-            (onDownloadPdf)="downloadAll(table[1], 'pdf')"></app-transactions-header>
+            (onDownloadPdf)="downloadAll(table[1], 'pdf')" (onSetCount)="setCount($event, 1)"></app-transactions-header>
           <!-- End Header -->
 
           <!-- Table -->
           <div class="table-responsive ">
-            <table datatable [dtOptions]="dtOptions[1]" [dtTrigger]="dtTrigger" id="savingsDatatable"
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger2" id="savingsDatatable"
               class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
               style="width: 100%">
               <thead class="thead-light">
@@ -287,7 +274,7 @@
               </thead>
 
               <tbody>
-                <tr app-transactions-table [records]="savingsRecords" *ngFor="let s of savingsRecords; let i = index;"
+                <tr app-transactions-table [records]="savingsRecords" *ngFor="let s of savingsRecords | slice:0:maxCount; let i = index;"
                   [userId]="s?.userId" [customerId]="s?.customerId" [firstName]="s?.firstName" [lastName]="s?.lastName"
                   [fullName]="(s?.firstName?.concat(' ').concat(s?.lastName) | titlecase)" [plan_name]="s?.plan_name"
                   [transAmount]="s?.transAmount" [transref]="s?.transref" [transType]="s?.transType"
@@ -299,10 +286,6 @@
             </table>
           </div>
           <!-- End Table -->
-
-          <!-- Footer -->
-          <!-- <app-transactions-footer [tableLength]="savingsRecords?.length"></app-transactions-footer> -->
-          <!-- End Footer -->
 
         </div>
         <!-- End Tab Panel -->
@@ -316,11 +299,11 @@
             (onShowColumn)="showColumn($event, table[2])" (onRender)="filter($event, 3, table[2])"
             (onDownloadCopy)="downloadAll(table[2], 'copy')" (onDownloadPrint)="downloadAll(table[2], 'print')"
             (onDownloadExcel)="downloadAll(table[2], 'excel')" (onDownloadCsv)="downloadAll(table[2], 'csv')"
-            (onDownloadPdf)="downloadAll(table[2], 'pdf')"></app-transactions-header>
+            (onDownloadPdf)="downloadAll(table[2], 'pdf')" (onSetCount)="setCount($event, 2)"></app-transactions-header>
           <!-- End Header -->
           <!-- Table -->
           <div class="table-responsive ">
-            <table datatable [dtOptions]="dtOptions[2]" [dtTrigger]="dtTrigger" id="withdrawalsDatatable"
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger3" id="withdrawalsDatatable"
               class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
               style="width: 100%">
               <thead class="thead-light">
@@ -339,7 +322,7 @@
 
               <tbody>
                 <tr app-transactions-table [records]="withdrawalRecords"
-                  *ngFor="let w of withdrawalRecords; let i = index;" [userId]="w?.userId" [customerId]="w?.customerId"
+                  *ngFor="let w of withdrawalRecords | slice:0:maxCount; let i = index;" [userId]="w?.userId" [customerId]="w?.customerId"
                   [firstName]="w?.firstName" [lastName]="w?.lastName"
                   [fullName]="(w?.firstName?.concat(' ').concat(w?.lastName) | titlecase)" [plan_name]="w?.plan_name"
                   [transAmount]="w?.transAmount" [transref]="w?.transref" [transType]="w?.transType"
@@ -352,9 +335,6 @@
           </div>
           <!-- End Table -->
 
-          <!-- Footer -->
-          <!-- <app-transactions-footer [tableLength]="withdrawalRecords?.length"></app-transactions-footer> -->
-          <!-- End Footer -->
         </div>
         <!-- End Tab Panel -->
 
@@ -367,12 +347,12 @@
             (onShowColumn)="showColumn($event, table[3])" (onRender)="filter($event, 4, table[3])"
             (onDownloadCopy)="downloadAll(table[3], 'copy')" (onDownloadPrint)="downloadAll(table[3], 'print')"
             (onDownloadExcel)="downloadAll(table[3], 'excel')" (onDownloadCsv)="downloadAll(table[3], 'csv')"
-            (onDownloadPdf)="downloadAll(table[3], 'pdf')">
+            (onDownloadPdf)="downloadAll(table[3], 'pdf')" (onSetCount)="setCount($event, 3)">
           </app-transactions-header>
           <!-- End Header -->
           <!-- Table -->
           <div class="table-responsive">
-            <table datatable [dtOptions]="dtOptions[3]" [dtTrigger]="dtTrigger" id="commissionsDatatable"
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger4" id="commissionsDatatable"
               class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
               style="width: 100%">
               <thead class="thead-light">
@@ -391,7 +371,7 @@
 
               <tbody>
                 <tr app-transactions-table [records]="commissionRecords"
-                  *ngFor="let c of commissionRecords; let i = index;" [userId]="c?.userId" [customerId]="c?.customerId"
+                  *ngFor="let c of commissionRecords | slice:0:maxCount; let i = index;" [userId]="c?.userId" [customerId]="c?.customerId"
                   [firstName]="c?.firstName" [lastName]="c?.lastName"
                   [fullName]="(c?.firstName?.concat(' ').concat(c?.lastName) | titlecase)" [plan_name]="c?.plan_name"
                   [transAmount]="c?.transAmount" [transref]="c?.transref" [transType]="c?.transType"
@@ -404,9 +384,6 @@
           </div>
           <!-- End Table -->
 
-          <!-- Footer -->
-          <!-- <app-transactions-footer [tableLength]="commissionRecords?.length"></app-transactions-footer> -->
-          <!-- End Footer -->
         </div>
         <!-- End Tab Panel -->
 

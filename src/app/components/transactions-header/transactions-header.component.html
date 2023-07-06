@@ -13,7 +13,15 @@
       </form>
     </div>
 
+    <!-- <div class="mb-2 mb-md-0">
+      <div class="input-group input-group-merge">
+        <input type="number" #getcount class="form-control" placeholder="Enter max count">
+        <button type="button" class="input-group-append input-group-text" (click)="getMaxCount(convertNum(getcount.value))"><i class="bi-search"></i></button>
+      </div>
+    </div> -->
+
     <div class="d-grid d-sm-flex gap-2">
+
       <div class="btn-group" *ngIf="ranges != undefined">
         <!-- Daterangepicker -->
         <button id="js-daterangepicker-predefined{{id}}" class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,7 +31,7 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
           <a class="dropdown-item pickerDates" id="picker{{ix+1}}" [attr.data-range-key]="item.timeline" type="button" *ngFor="let item of dateRanges; let ix = index;" (click)="filterDate(item.date[0], item.date[1], item.timeline, id, tableName)">{{item?.timeline}}</a>
         </div>
-        <!-- End Daterangepicker item.date[0], item.date[1], item.timeline -->
+        <!-- End Daterangepicker -->
       </div>
       <!-- End Col -->
 
