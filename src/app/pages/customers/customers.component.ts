@@ -179,6 +179,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
           this.dtTrigger.next('');
         }), ((error: any) => {
           console.log(error);
+          this.loading = false;
         })
     } catch (error) {
       this.loading = false;
