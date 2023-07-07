@@ -78,7 +78,6 @@ export class StatService {
   getDailyTransactions(record: Array<object>) {
     //Filter Today's transactions 
     const today = this.datePipe.transform(new Date().setDate(new Date().getDate()), 'yyyy-MM-dd');
-    console.log(today);
     const data =  record.filter((d: any) => d.transDate == today);
     return data;
   }
@@ -88,7 +87,6 @@ export class StatService {
     const startOfMonth = moment().startOf('month').format();
     const endOfMonth = moment().endOf('month').format();
     const data = record.filter((m: any) => new Date(m.transDate + " " + m.time) >= new Date(startOfMonth) && new Date(m.transDate + " " + m.time) <= new Date(endOfMonth));
-    console.log(data);
     return data;
   }
 
@@ -96,7 +94,6 @@ export class StatService {
     const startOfWeek = moment().startOf('week').format();
     const endOfWeek = moment().endOf('week').format();
     const data = record.filter((w: any) => new Date(w.transDate + " " + w.time) >= new Date(startOfWeek) && new Date(w.transDate + " " + w.time) <= new Date(endOfWeek));
-    console.log(data);
     return data;
   }
 
@@ -104,7 +101,6 @@ export class StatService {
     console.log(record);
     const yesterday =  moment().subtract(1, 'days').format('YYYY-MM-DD');
     const data =  record.filter((d: any) => d.transDate == yesterday);   
-    console.log(data);
     return data;
   }
 
@@ -112,14 +108,12 @@ export class StatService {
     console.log(record);
     const day =  moment().subtract(dayNumber - 1, 'days').format('YYYY-MM-DD');
     const data =  record.filter((d: any) => d.transDate == day);   
-    console.log(data);
     return data;
   }
 
   calculateTransactions(record: Array<object>) {
     //calculate the total savings per day
     const data = record.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
-    console.log(data);
     return data;
   }
 
@@ -129,7 +123,6 @@ export class StatService {
     const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
     const endOfMonth = moment().endOf('month').format('YYYY-MM-DD');
     const data = record.filter((m: any) => new Date(m.date_registered) >= new Date(startOfMonth) && new Date(m.date_registered) <= new Date(endOfMonth));
-    console.log(data);
     return data;
   }
 
@@ -151,7 +144,7 @@ export class StatService {
       return acc;
     }, {}));
     const data = result.reverse();
-    console.log(data);
+
     return data;
   }
 
@@ -159,7 +152,7 @@ export class StatService {
     const startDate = moment().subtract(num - 1, 'days').format('YYYY-MM-DD');
     const endDate = moment().format('YYYY-MM-DD');
     const data = record.filter((m: any) => new Date(m.transDate) >= new Date(startDate) && new Date(m.transDate) <= new Date(endDate));
-    console.log(data);
+
     return data;
   }
 
@@ -167,7 +160,6 @@ export class StatService {
     const startDate = moment().subtract(num - 1, 'month').startOf('month').format('YYYY-MM-DD');
     const endDate = moment().format('YYYY-MM-DD');
     const data = record.filter((m: any) => new Date(m.transDate) >= new Date(startDate) && new Date(m.transDate) <= new Date(endDate));
-    console.log(data);
     this.test(record, startDate, endDate);
     return data;
   }
@@ -214,7 +206,7 @@ export class StatService {
       let totalPerMonth = Object.entries(sum).map(([month, sum]) => ({ month: moment(month).format('MMMM YYYY'), totalMonthlyValue: Number(sum) }))
       return { transType, totalPerMonth }
     }, {})
-    console.log(data);
+
     return data
   }
 
@@ -230,7 +222,7 @@ export class StatService {
       return previous;
     }, []);
     const data = result.reverse();
-    console.log(data);
+
     return data;
   };
 
@@ -248,7 +240,7 @@ export class StatService {
       return previous;
     }, []);
     const data = result.reverse();
-    console.log(data);
+
     return data;
   };
 
@@ -261,7 +253,7 @@ export class StatService {
       return previous;
     }, []);
     const data = result;
-    console.log(data);
+
     return data;
   };
 
@@ -291,7 +283,7 @@ export class StatService {
       return previous;
     }, []);
     const data = result.reverse();
-    console.log(data);
+
     return data;
   };
 
