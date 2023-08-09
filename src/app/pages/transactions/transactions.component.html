@@ -408,6 +408,7 @@
     (onPrintPdfContent)="printReceipt(modalContent)" (onModalClose)="modal.dismiss('Cross click')"></app-receipt>
 </ng-template>
 
+ <!-- date picker modal -->
 <ng-template #content2 let-modal>
   <div class="modal-content">
     <div class="modal-header">
@@ -417,10 +418,8 @@
     </div>
     <div class="modal-body">
       <form>
-        <!-- Flatpickr -->
-        <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
-          outsideDays="hidden">
-        </ngb-datepicker>
+        <!-- date picker -->
+        <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden"> </ngb-datepicker>
 
         <ng-template #t let-date let-focused="focused">
           <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"

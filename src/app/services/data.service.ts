@@ -110,6 +110,11 @@ export class DataService {
     return this.httpService.get('transactions/all' + '?' + this.time);
   }
 
+  // filter  all transactions
+  public filterMosaveTransactionsByDate(type: string, from: string, to:string): Observable<any> {
+    return this.httpService.get('transactions/filter/'+ type + '/'+ from + '/'+ to + '?' + this.time);
+  }
+
   // - Get all savings transactions
   public getMosaveSavingTransactions(): Observable<any> {
     return this.httpService.get('savings/transactions' + '?' + this.time);

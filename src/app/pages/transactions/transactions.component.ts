@@ -11,11 +11,15 @@ import { StatService } from 'src/app/services/stat.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 declare var $: any;
-declare var HSCore: any;
-declare var HSSideNav: any;
-declare var HSFormSearch: any;
 declare var HSBsDropdown: any;
 declare var HsNavScroller: any;
+
+type IFilter = {
+  [key: string]: string,
+  start: string
+  end: string
+  type: string
+}
 
 @Component({
   selector: 'app-transactions',
@@ -108,6 +112,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
+  searchType!: string;
 
   constructor(private dataService: DataService, private datePipe: DatePipe,
     private receiptService: ReceiptService, private modalService: NgbModal, private ref: ChangeDetectorRef,
@@ -123,7 +128,13 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.getTableHead();
     this.getTransactionType();
     var time = new Date().getTime();
-    this.dateRanges = this.statService.getDateRanges();
+    this.dateRanges = [...this.statService.getDateRanges(),
+    ...[
+      {
+        timeline: 'Search Overall',
+        date: []
+      }]
+    ];
     this.getOptions();
     this.getAllTrxs(this.maxCount);
   }
@@ -181,14 +192,11 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       ]).subscribe((result: any) => {
         console.log(result[0]);
         console.log(result[1]);
-        this.fetchTrnx(result, maxcount);  
+        this.fetchTrnx(result, maxcount);
         this.ref.detectChanges();
         // this.isDtInitialized = true
         // this.dtTrigger.next('');
-        this.rerender();
-        
-        console.log(this.bestSavers);
-        console.log('After best savers');
+        this.rerender(0);
       }), (error: any) => {
         console.log(error);
         this.loading = false;
@@ -209,7 +217,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       ]).subscribe((result: any) => {
         this.fetchTrnx(result, maxcount);
         console.log(this.allRecords)
-        this.rerender();      
+        this.rerender(0);
       }), (error: any) => {
         console.log(error);
         this.loading = false;
@@ -221,51 +229,85 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
   }
 
-  fetchTrnx(result: Array<any>, maxcount: number){
+  transformRecords (array: Array<any>) {
+    const newRecords: Array<any> = array.map((res: any) => {
+      if (res.transType == "S") {
+        var type = res.transType + "avings";
+      } else if (res.transType == "W") {
+        var type = res.transType + "ithdrawal";
+      } else {
+        var type = res.transType + "";
+      }
+      return { ...res, transType: type };
+    })
+    return newRecords;
+  }
+
+  fetchTrnx(result: Array<any>, maxcount: number) {
     this.loading = false;
-        this.showComponent = true;
-        const newRecords: Array<any> = result[0].map((res: any) => {
-          if (res.transType == "S") {
-            var type = res.transType + "avings";
-          } else if (res.transType == "W") {
-            var type = res.transType + "ithdrawal";
-          } else {
-            var type = res.transType + "";
+    this.showComponent = true;
+    const newRecords: Array<any> = this.transformRecords(result[0])
+    this.allRecords = newRecords //.slice(0, this.maxCount);
+    this.trnxRecords = newRecords;
+    const newSavingsRecords = this.transformRecords(result[1]);
+    //this.savingsRecords = newSavingsRecords;
+    this.savingsRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
+    this.savingsTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
+    this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
+    this.withTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
+    this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");
+    this.commTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'commission');
+
+    this.getDailyTransactions();
+    this.getMonthlyTransactions();
+    this.getWeeklyTransactions();
+
+    this.calculateAllTransactions();
+    this.calculateDailyTransactions();
+    this.calculateMonthlyTransactions();
+    this.calculateWeeklyTransactions();
+    this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
+  }
+
+  filterTrxs(event: any) {
+    console.log(event);
+    try {
+      this.loading = true;
+      this.dataService.filterMosaveTransactionsByDate(event.type, event.start.format('YYYY-MM-DD'), event.end.format('YYYY-MM-DD')).subscribe((result: any) => {
+        this.loading = false;
+        console.log(result);
+        if(result.error == false){
+          const id: number = event.id - 1;
+          console.log(id)
+          const newRecords: Array<any> = this.transformRecords(result.data)
+          if(id == 0){
+            this.allRecords = newRecords;
+          }else if(id == 1){
+            this.savingsRecords = newRecords;
+          }else if(id == 2){
+            this.withdrawalRecords = newRecords;
+          }else if(id == 3){
+            this.commissionRecords = newRecords;
           }
-          return { ...res, transType: type };
-        })
-        console.log(this.maxCount);
-        console.log(maxcount);
-        this.allRecords = newRecords //.slice(0, this.maxCount);
-        console.log('show all records');
-        console.log(this.allRecords)
-        this.trnxRecords = newRecords;
-
-        const newSavingsRecords = result[1].map((res: any) => {
-          if (res.transType == "S") {
-            var type = res.transType + "avings";
-          } else {
-            var type = res.transType + "";
-          }
-          return { ...res, transType: type };
-        })
-        //this.savingsRecords = newSavingsRecords;
-        this.savingsRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
-        this.savingsTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
-        this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-        this.withTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-        this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");
-        this.commTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'commission');        
-
-        this.getDailyTransactions();
-        this.getMonthlyTransactions();
-        this.getWeeklyTransactions();
-
-        this.calculateAllTransactions();
-        this.calculateDailyTransactions();
-        this.calculateMonthlyTransactions();
-        this.calculateWeeklyTransactions();
-        this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
+          this.toastService.showSuccess(result.message, 'Success')
+          
+          // Destroy the existing table and rerender the table again
+          if(this.dtElements.length > 0){
+            this.rerender(id)            
+          }          
+        }else {
+          this.toastService.showError(result.message, 'Error')
+        }
+        
+      }), (error: any) => {
+        console.log(error);
+        this.loading = false;
+        this.toastService.showError('Error fetching transaction info', 'Error');
+      }
+    } catch (error) {
+      this.loading = false;
+      this.toastService.showError('Error fetching data. Please refresh this page', 'Error');
+    }
   }
 
   calculateAllTransactions() {
@@ -387,12 +429,20 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   filterDataByDate(ev: any, content: any) {
     if (ev.timeline === 'Custom Range') {
+      this.searchType = "Custom Range"
+      this.modalContent2 = ev;
+      this.modalService.open(content);
+    } else if (ev.timeline === 'Search Overall') {
+      this.searchType = "Search Overall"
       this.modalContent2 = ev;
       this.modalService.open(content);
     } else {
       const format = ev.timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
       $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
-      this.applyfilter(ev);
+      //this.applyfilter(ev);
+      const obj = { ...ev, ...{ type: ev.tableName === "datatable" ? 'all' :
+      ev.tableName === "savingsDatatable" ? 'S' : ev.tableName === "withdrawalsDatatable" ? 'W' : 'commission' } }
+      this.filterTrxs(obj);
     }
   }
 
@@ -432,9 +482,17 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       id: this.modalContent2.id,
       tableName: this.modalContent2.tableName
     }
+    console.log(ev)
     $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
-    this.applyfilter(ev);
-    this.modalService.dismissAll('save changes');
+    // if (this.searchType === 'Custom Range') {
+    //   this.applyfilter(ev);
+    //   this.modalService.dismissAll('save changes');
+    // } else {
+      const obj = { ...ev, ...{ type: ev.tableName === "datatable" ? 'all' :
+      ev.tableName === "savingsDatatable" ? 'S' : ev.tableName === "withdrawalsDatatable" ? 'W' : 'commission' } }
+      this.filterTrxs(obj);
+      this.modalService.dismissAll('save changes');
+    // }
   }
 
   onDateSelection(date: NgbDate) {
@@ -478,7 +536,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       this.toastService.showError('Your input should not be more than 5000', 'Error')
     } else {
       this.clearCache();
-      this.maxCount = number;      
+      this.maxCount = number;
       this.getTrxs(this.maxCount);
       // setInterval(() => {
       //console.log("changes detected");
@@ -488,27 +546,29 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
   }
 
-  rerender(tableId?: number) {
-    console.log(this.dtElements);
+  rerender(tableId: number) {
     if (this.isDtInitialized) {
-      this.dtElements.forEach((dtElement: DataTableDirective, index: number) => {
-        dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-          // Destroy the table  first
-          dtInstance.destroy();
-          // Call the dtTrigger to rerender again
-          console.log('reach dtTrigger next ' + index);
+      this.dtElements.get(tableId)?.dtInstance.then((dtInstance: DataTables.Api) => {
+        // Destroy the table  first
+        dtInstance.destroy();
+        // Call the dtTrigger to rerender again
+        console.log(tableId)
+        if(tableId == 0){
           this.dtTrigger.next('');
+        } else if(tableId == 1){
           this.dtTrigger2.next('');
+        } else if(tableId == 2){
           this.dtTrigger3.next('');
+        } else if(tableId == 3){
           this.dtTrigger4.next('');
-        });
+        }              
       });
     } else {
-      this.isDtInitialized = true      
-        this.dtTrigger.next('');
-        this.dtTrigger2.next('');
-        this.dtTrigger3.next('');
-        this.dtTrigger4.next('');      
+      this.isDtInitialized = true
+      this.dtTrigger.next('');
+      this.dtTrigger2.next('');
+      this.dtTrigger3.next('');
+      this.dtTrigger4.next('');
     }
     // if (this.isDtInitialized) {
     //   console.log('reach dtElement dtInstance')
@@ -523,7 +583,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     // }
   }
 
-  getOptions(){
+  getOptions() {
     this.dtOptions = {
       pagingType: 'full_numbers',
       //ordering: true,
@@ -568,7 +628,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
         {
           extend: 'pdf',
           className: 'd-none',
-          filename:'MoSave_report_' + new Date().getTime(),
+          filename: 'MoSave_report_' + new Date().getTime(),
           exportOptions: {
             columns: [1, 2, 3, 4, 5, 6, 7]
           },
@@ -580,25 +640,10 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   jsOnLoad() {
     (function () {
-      window.onload = function () {
-        // INITIALIZATION OF NAVBAR VERTICAL ASIDE
-        // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
-
-        // INITIALIZATION OF FORM SEARCH
-        // =======================================================
-        new HSFormSearch('.js-form-search')
-
-
+      window.onload = () => {
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init()
-
-
-        // INITIALIZATION OF SELECT
-        // =======================================================
-        HSCore.components.HSTomSelect.init('.js-select')
-
 
         // INITIALIZATION OF NAV SCROLLER
         // =======================================================
@@ -648,7 +693,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   //   }
   // }
 
-  
+
   // filter2(event: any, id: number) {
   //   var value = event.target.value;
   //   this.dtElements.forEach((dtElement: DataTableDirective, index: number) => {
@@ -687,7 +732,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   //   });
   // }
 
-  
+
   // displayToConsole(): void {
   //   this.dtElements.forEach((dtElement: DataTableDirective, index: number) => {
   //     dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
