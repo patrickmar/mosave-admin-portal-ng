@@ -419,13 +419,10 @@ export class CreateComponent implements OnInit {
         this.endDate().at(0).get('date')?.setValue(getEndDate);
         const startTIme = sDate + ' ' +sTime.hour + ':' + sTime.minute + ':' + sTime.second;
         const endTime = eDate + ' ' + eTime.hour + ':' + eTime.minute + ':' + eTime.second;
-        console.log(startTIme, endTime);
         const getStartTime = moment(startTIme).format("hh:mm:ss")
         this.startDate().at(0).get('time')?.setValue(getStartTime);
         const getEndTime = moment(endTime).format("hh:mm:ss")
         this.endDate().at(0).get('time')?.setValue(getEndTime);
-        
-        console.log(this.ticketForm.value);
         const startDate = moment(getStartDate) // moment(form.start[0].date);
         const endDate = moment(getEndDate) // moment(form.end[0].date);
         if (endDate.isBefore(startDate)) {

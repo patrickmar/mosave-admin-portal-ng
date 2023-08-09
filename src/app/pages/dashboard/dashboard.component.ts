@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   savingsTrnxRecords!: Array<any>;
   withTrnxRecords!: Array<any>;
   commTrnxRecords!: Array<any>;
-  bestSavers !: Array<any>;
+  bestSavers!: Array<any>;
   savingsSum!: number;
   withdrawalSum!: number;
   commissionSum!: number;
@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   dayDiff: number = 10;
   switch!: boolean;
   emptyTable = environment.emptyTable;
-  maxCount = 5;
+  maxCount = 5; 
   public loading = false;
   public showComponent = false;
   fromDate: NgbDate;
@@ -61,7 +61,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   hoveredDate: NgbDate | null = null;
   plans = this.statService.plans;
   duration = 5000;
-
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
 
@@ -118,6 +117,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   avgSavings!: number;
   avgWithdrawals!: number;
   dateRanges!: Array<any>;
+  bestAccountBalances!: any[];
+  saversTab: boolean = true;
 
   constructor(private authservice: AuthService, private dataService: DataService, private statService: StatService,
     private toastService: ToastService, private ngZone: NgZone, private decimalPipe: DecimalPipe, public calendar: NgbCalendar,
@@ -383,13 +384,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         const newRecords = result[0].map((res: any) => {
           const type2 = res.transType == "S" ? res.transType + "avings" :
             res.transType == "W" ? res.transType + "ithdrawal" : res.transType + "";
-          // if (res.transType == "S") {
-          //   var type = res.transType + "avings";
-          // } else if (res.transType == "W") {
-          //   var type = res.transType + "ithdrawal";
-          // } else {
-          //   var type = res.transType + "";
-          // }
           return { ...res, transType: type2 };
         })
         this.allRecords = newRecords;
@@ -407,6 +401,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.commissionSum = this.commissionRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
         this.totalBalance = this.savingsSum - this.withdrawalSum;
         this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
+        this.bestAccountBalances = this.statService.getBestAccountHolder(this.allRecords, this.totalBalance)
         this.pieChartData = {
           labels: this.pieChartLabels,
           datasets: [{
@@ -482,6 +477,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     } catch (error) {
       this.loading = false;
+      console.log(error);
       this.toastService.showError('Please check your internet and refresh', 'Error');
     }
   }
@@ -529,6 +525,17 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     link.download = fileName
     link.click()
     link.remove()
+  }
+
+  switchTab(id: number, tab: string) {
+    if (tab === 'savers') {
+      this.saversTab = true
+    } else {
+      this.saversTab = false
+    }
+  }
+  onChoose(value: string){
+    this.maxCount = Number(value);
   }
 
   switchGraph(id: number, tab: string) {

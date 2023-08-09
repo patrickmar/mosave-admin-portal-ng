@@ -43,6 +43,7 @@ export class StatService {
   }
 
   getBestStat(array: Array<any>, total: number){
+    console.log(array)
     let result = Object.values(array.reduce((c:any, {accountNo, firstName, lastName, customerId, transAmount}: any) => {
       c[accountNo] = c[accountNo] || {accountNo, firstName, lastName, customerId, percent: 0, transAmount: 0};      
       c[accountNo].transAmount += Number(transAmount);
@@ -51,6 +52,22 @@ export class StatService {
     }, {}));
     //result.sort((a:any, b:any) =>  b - a);
     const data = result.sort((a:any, b:any) =>  b?.transAmount - a?.transAmount); 
+    console.log(data);
+    return data;
+  }
+
+  getBestAccountHolder(array: Array<any>, total: number){
+    let result = Object.values(array.reduce((c:any, {accountNo, firstName, lastName, customerId, transAmount, transType}: any) => {
+      c[accountNo] = c[accountNo] || {accountNo, firstName, lastName, customerId, percent: 0, balance:0, savings: 0, withdraw:0, commission:0};      
+      if (transType === "Savings") c[accountNo].savings += Number(transAmount);
+      if (transType === "Withdrawal") c[accountNo].withdraw += Number(transAmount);
+      if (transType === "commission") c[accountNo].commission += Number(transAmount);
+      c[accountNo].balance = Number(c[accountNo].savings - c[accountNo].withdraw);
+      c[accountNo].percent = Number(c[accountNo].balance)/total * 100;   
+      return c;
+    }, {}));
+    const data = result.sort((a:any, b:any) =>  b?.balance - a?.balance); 
+    console.log(data);
     return data;
   }
 

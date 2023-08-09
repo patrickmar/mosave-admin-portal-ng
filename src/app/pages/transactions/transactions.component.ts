@@ -107,7 +107,8 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   emptyTable = environment.emptyTable;
   table = ['datatable', 'savingsDatatable', 'withdrawalsDatatable', 'commissionsDatatable']
   //ranges = [moment().format('MMM D'), moment().format('MMM D, YYYY')]
-  ranges = [moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
+  //ranges = [moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
+  ranges = [moment().subtract(3, 'month').startOf('month').startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
   dateRanges!: Array<any>;
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate;
@@ -184,10 +185,15 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   getAllTrxs(maxcount: number) {
+    const obj = {
+      type: 'all',
+      from: moment().subtract(3, 'month').startOf('month').startOf('day').format(),
+      to: moment().endOf('day').format() 
+    }
     try {
       this.loading = true;
       forkJoin([
-        this.dataService.getMosaveTransactions(),
+        this.dataService.filterMosaveTransactionsByDate(obj.type, obj.from, obj.to),
         this.dataService.getMosaveSavingTransactions()
       ]).subscribe((result: any) => {
         console.log(result[0]);
@@ -203,6 +209,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.toastService.showError('Error fetching transaction info', 'Error');
       }
     } catch (error) {
+      console.log(error);
       this.loading = false;
       this.toastService.showError('Error fetching data. Please refresh this page', 'Error');
     }
@@ -246,7 +253,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   fetchTrnx(result: Array<any>, maxcount: number) {
     this.loading = false;
     this.showComponent = true;
-    const newRecords: Array<any> = this.transformRecords(result[0])
+    const newRecords: Array<any> = this.transformRecords(result[0].data)
     this.allRecords = newRecords //.slice(0, this.maxCount);
     this.trnxRecords = newRecords;
     const newSavingsRecords = this.transformRecords(result[1]);
