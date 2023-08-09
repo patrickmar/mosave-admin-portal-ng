@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, ElementRef, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ChangeDetectionStrategy, AfterViewChecked, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbActiveModal, NgbCalendar, NgbDate, NgbModal, NgbDatepickerModule, NgbDateStruct, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import * as moment from 'moment';
 import { forkJoin, Subject } from 'rxjs';

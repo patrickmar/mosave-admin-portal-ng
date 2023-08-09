@@ -118,8 +118,7 @@
                         </div>
                         <!-- End Row -->
 
-                        <label class="form-label">Description <span
-                                class="form-label-secondary">(Optional)</span></label>
+                        <label class="form-label">Description</label>
 
                         <!-- Quill -->
                         <!-- <div class="quill-custom"> -->
@@ -262,27 +261,15 @@
                                         <div class="col-sm-6 mb-2 mb-sm-0">
                                             <!-- <input type="text" formControlName="date" class="flatpickr-custom form-control"> -->
                                             <!-- Flatpickr -->
-                                            <input type="text" formControlName="date" id="eventDateRangeLabel"
-                                                class="flatpickr-custom form-control mb-2" placeholder="Select date"
-                                                data-hs-flatpickr-options='{
-                                                         "dateFormat": "m-d-Y",
-                                                         "mode": "single",
-                                                         "minDate": "today"
-                                                       }'>
+                                            <input type="text" formControlName="date" #startDate="ngbDatepicker" id="eventDateRangeLabel" ngbDatepicker
+                                                class="form-control mb-2" placeholder="Select date" (focus)="startDate.toggle()" (autoClose)="true" (dateSelect)="onStartDateSelection($event, startDate)">
                                             <!-- End Flatpickr -->
                                         </div>
                                         <!-- End Col -->
 
                                         <div class="col-sm-6">
                                             <!-- Flatpickr moment().subtract(18, "years") -->
-                                            <input type="text" formControlName="time" id="eventDateRangeLabel2"
-                                                class="flatpickr-custom form-control mb-2" placeholder="Select time"
-                                                data-hs-flatpickr-options='{
-                                                "noCalendar": true,
-                                                "dateFormat": "H:i",
-                                                "time_24hr": false,
-                                                "enableTime": "true"
-                                              }'>
+                                                <ngb-timepicker formControlName="time" [meridian]="meridian"></ngb-timepicker>
                                             <!-- End Flatpickr -->
                                         </div>
                                         <!-- End Col -->
@@ -302,27 +289,15 @@
                                         <ng-container [formGroupName]="ix">
                                             <div class="col-sm-6 mb-2 mb-sm-0">
                                                 <!-- Flatpickr -->
-                                                <input type="text" formControlName="date" id="eventDateRangeLabel3"
-                                                    class="flatpickr-custom form-control mb-2" placeholder="Select date"
-                                                    data-hs-flatpickr-options='{
-                                                                             "dateFormat": "m-d-Y",
-                                                                             "mode": "single",
-                                                                             "minDate": "today"
-                                                                           }'>
+                                                <input type="text" formControlName="date" id="eventDateRangeLabel3" #endDate="ngbDatepicker" ngbDatepicker
+                                                    class="form-control mb-2" placeholder="Select date" (focus)="endDate.toggle()" (autoClose)="true" (dateSelect)="onEndDateSelection($event, endDate)">
                                                 <!-- End Flatpickr -->
                                             </div>
                                             <!-- End Col -->
 
                                             <div class="col-sm-6">
                                                 <!-- Flatpickr -->
-                                                <input type="text" formControlName="time" id="eventDateRangeLabel4"
-                                                    class="flatpickr-custom form-control mb-2" placeholder="Select time"
-                                                    data-hs-flatpickr-options='{
-                                                                    "noCalendar": true,
-                                                                    "dateFormat": "H:i",
-                                                                    "time_24hr": false,
-                                                                    "enableTime": "true"
-                                                                  }'>
+                                                    <ngb-timepicker formControlName="time" [meridian]="meridian"></ngb-timepicker>
                                                 <!-- End Flatpickr -->
                                             </div>
                                             <!-- End Col -->
@@ -697,9 +672,9 @@
             </div>
             <!-- End Col -->
         </div>
-        <!-- End Row -->
+        <!-- End Row [ -->
 
-        <button type="submit" class="btn btn-primary"  [disabled]="loading || !ticketForm.valid">Submit
+        <button type="submit" class="btn btn-primary" [disabled]="loading || !ticketForm.valid" >Submit
             <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
                 <span class="visually-hidden">Loading...</span>
               </div>

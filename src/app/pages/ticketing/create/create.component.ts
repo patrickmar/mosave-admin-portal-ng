@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { NgbAlertModule, NgbCalendar, NgbDateAdapter, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { DataService } from 'src/app/services/data.service';
 import { StatService } from 'src/app/services/stat.service';
@@ -30,6 +31,9 @@ export class CreateComponent implements OnInit {
   tableHead = ["Name", "Price", "Disc. Price", "Wallet Disc.", "Quantity", "Action"];
   eventTypes = ["Festival", "Conference", "Seminar", "Executive Meeting", "Webinar", "Comedy", "Gala Night", "Musical show", "Trade Fair", "Others",]
   ticketForm: FormGroup;
+  model!: NgbDateStruct;
+  time = {hour: 13, minute: 30};
+  meridian = true;
   showEndDate: boolean = false;
   loading: boolean = false;
   maxQty = 10000;
@@ -41,9 +45,27 @@ export class CreateComponent implements OnInit {
   bearers = [{ name: "MoLoyal", value: "account" }, { name: "Client", value: "subaccount" }]
   public loading2 = false;
   public showComponent = false;
+  readonly DELIMITER = '-';
+
+  fromModel(value: string | null): NgbDateStruct | null {
+    if (value) {
+      const date = value.split(this.DELIMITER);
+      return {
+        day : parseInt(date[0], 10),
+        month : parseInt(date[1], 10),
+        year : parseInt(date[2], 10)
+      };
+    }
+    return null;
+  }
+
+  toModel(date: NgbDateStruct | null): string | null {
+    return date ? date.day + this.DELIMITER + date.month + this.DELIMITER + date.year : null;
+  }
 
   constructor(private fb: FormBuilder, private dataService: DataService,
-    private toastService: ToastService, private statService: StatService) {
+    private toastService: ToastService, private statService: StatService, 
+    private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>) {
     this.getAllMerchants();
 
     this.ticketForm = this.fb.group({
@@ -64,6 +86,10 @@ export class CreateComponent implements OnInit {
       start: this.fb.array([]),
       end: this.fb.array([]),
     });
+  }
+
+  get today() {
+    return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
   }
 
   validations = {
@@ -333,6 +359,19 @@ export class CreateComponent implements OnInit {
     // console.log(formData);
   }
 
+  onStartDateSelection(event: any, d: any){
+    console.log(event);
+    d.close();
+       
+    //this.ticketForm.value.start[0].date
+    // this.ticketForm?.get("start")?.at(0)?.setValue(newDate)
+    //this.startDate().at(0).get('date')?.setValue(newDate);
+  }
+
+  onEndDateSelection(event: any, d: any){
+    d.close();
+  }
+
   onRemove(item: any, e?: any) {
     this.files.splice(this.files.indexOf(item), 1);
     this.setFiles.splice(this.setFiles.indexOf(item), 1);
@@ -349,6 +388,17 @@ export class CreateComponent implements OnInit {
     }
   }
 
+  // onSubmit2() {
+  //   const form = this.ticketForm.value;
+  //   const start = form.start[0].date;
+  //   const end = form.end[0].date;
+  //   const startDate = moment(start.year+'-'+start.month+'-'+start.day).format("YYYY-MM-DD")
+  //   this.startDate().at(0).get('date')?.setValue(startDate);
+  //   const endDate = moment(end.year+'-'+end.month+'-'+end.day).format("YYYY-MM-DD")
+  //   this.endDate().at(0).get('date')?.setValue(endDate);
+  //   console.log(this.ticketForm.value);
+  // }
+  
   async onSubmit() {
     const form = this.ticketForm.value;
     console.log(form);
@@ -357,12 +407,31 @@ export class CreateComponent implements OnInit {
       if (this.setFiles.length == 0) {
         this.toastService.showError('Banner can not be empty', 'Error');
       } else {
-        const startDate = moment(this.ticketForm.value.start[0].date);
-        const endDate = moment(this.ticketForm.value.end[0].date);
-        console.log(endDate.isBefore(startDate));
+        const start = form.start[0].date;
+        const end = form.end[0].date;
+        const sTime = form.start[0].time;
+        const eTime = form.end[0].time;
+        const sDate = start.year + '-' + start.month + '-' + start.day;
+        const eDate = end.year + '-' + end.month + '-' + end.day;
+        const getStartDate = moment(sDate).format("YYYY-MM-DD")
+        this.startDate().at(0).get('date')?.setValue(getStartDate);
+        const getEndDate = moment(eDate).format("YYYY-MM-DD")
+        this.endDate().at(0).get('date')?.setValue(getEndDate);
+        const startTIme = sDate + ' ' +sTime.hour + ':' + sTime.minute + ':' + sTime.second;
+        const endTime = eDate + ' ' + eTime.hour + ':' + eTime.minute + ':' + eTime.second;
+        console.log(startTIme, endTime);
+        const getStartTime = moment(startTIme).format("hh:mm:ss")
+        this.startDate().at(0).get('time')?.setValue(getStartTime);
+        const getEndTime = moment(endTime).format("hh:mm:ss")
+        this.endDate().at(0).get('time')?.setValue(getEndTime);
+        
+        console.log(this.ticketForm.value);
+        const startDate = moment(getStartDate) // moment(form.start[0].date);
+        const endDate = moment(getEndDate) // moment(form.end[0].date);
         if (endDate.isBefore(startDate)) {
           this.toastService.showError('Event end date must be greater than start date.', 'Error');
-        } else {
+        } 
+        else {
           this.loading = true;
           const formData = new FormData();
           for (var i = 0; i < this.setFiles.length; i++) {
