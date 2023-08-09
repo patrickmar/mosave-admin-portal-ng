@@ -30,7 +30,7 @@ export class AuthService {
   // get agent Data after login
   getUserData() {
     this.storageService.get(AuthConstants.AUTH).then(res => {
-      console.log(res);
+      //console.log(res);
       this.userData$.next(res);
     }) 
   }

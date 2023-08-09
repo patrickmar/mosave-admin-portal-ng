@@ -43,7 +43,6 @@ export class StatService {
   }
 
   getBestStat(array: Array<any>, total: number){
-    console.log(array)
     let result = Object.values(array.reduce((c:any, {accountNo, firstName, lastName, customerId, transAmount}: any) => {
       c[accountNo] = c[accountNo] || {accountNo, firstName, lastName, customerId, percent: 0, transAmount: 0};      
       c[accountNo].transAmount += Number(transAmount);
@@ -52,7 +51,6 @@ export class StatService {
     }, {}));
     //result.sort((a:any, b:any) =>  b - a);
     const data = result.sort((a:any, b:any) =>  b?.transAmount - a?.transAmount); 
-    console.log(data);
     return data;
   }
 
@@ -67,7 +65,6 @@ export class StatService {
       return c;
     }, {}));
     const data = result.sort((a:any, b:any) =>  b?.balance - a?.balance); 
-    console.log(data);
     return data;
   }
 
@@ -115,14 +112,12 @@ export class StatService {
   }
 
   getYesterdayTransactions(record: Array<object>) {
-    console.log(record);
     const yesterday =  moment().subtract(1, 'days').format('YYYY-MM-DD');
     const data =  record.filter((d: any) => d.transDate == yesterday);   
     return data;
   }
 
   getTransactionsByDays(record: Array<object>, dayNumber: number) {
-    console.log(record);
     const day =  moment().subtract(dayNumber - 1, 'days').format('YYYY-MM-DD');
     const data =  record.filter((d: any) => d.transDate == day);   
     return data;
@@ -193,19 +188,16 @@ export class StatService {
       months.push({startDate: startDate.startOf('month').format('YYYY-MM-DD'), endDate:startDate.endOf('month').format('YYYY-MM-DD')});
       startDate.add(1, 'month');
     }    
-    console.log(months);
     for (let i = 0; i < months.length; i++) {
       const element = months[i];
       const data = record.filter((m: any) => new Date(m.transDate) >= new Date(element?.startDate) && new Date(m.transDate) <= new Date(element?.endDate));
      monthslyTranx.push(data); 
     }
-    console.log(monthslyTranx);
   }
 
   getLast12MonthsTransaction(record: Array<object>){
     const last12Months = moment().subtract(12, 'months').startOf('month');
     let result = record.filter((o:any) => moment(o?.transDate, 'YYYY-MM-DD').isBetween(last12Months, moment()));
-    console.log(result);
     return result
   }
 
@@ -218,7 +210,6 @@ export class StatService {
       r[transType].sum[yearMonth] += Number(transAmount);
       return r
     }, {});
-    console.log(result);
     const data = Object.values(result).map(({ transType, sum }: any) => {
       let totalPerMonth = Object.entries(sum).map(([month, sum]) => ({ month: moment(month).format('MMMM YYYY'), totalMonthlyValue: Number(sum) }))
       return { transType, totalPerMonth }
@@ -318,7 +309,6 @@ getAverageByMonth(elements: Array<any>, selectedMonth?: string){
     return previous; 
   }, []);
   const data = result.reverse();
-  console.log(data);
   return data;  
 }
 
@@ -331,7 +321,6 @@ getTicketSoldByAmount(array: Array<any>, total: number){
     return c;
   }, {}));
   const data = result.sort((a:any, b:any) =>  b?.amount - a?.amount);
-  console.log(data);
   return data;
 }
 
@@ -347,7 +336,6 @@ getTicketSoldByCategory(array: Array<any>){
     return c;
   }, {}));
   const data = result.sort((a:any, b:any) =>  b?.amount - a?.amount);
-  console.log(data);
   return data;
 }
 
@@ -360,7 +348,6 @@ getTicketSoldByChannel(array: Array<any>, total: number){
     return c;
   }, {}));
   const data = result.sort((a:any, b:any) =>  b?.amount - a?.amount);
-  console.log(data);  
   return data;
 }
 
@@ -387,7 +374,6 @@ getTicketTrnxByDays(elements: Array<any>) {
     return previous;
   }, []);
   const data = result///.reverse();
-  console.log(data);
   return data;
 };
 

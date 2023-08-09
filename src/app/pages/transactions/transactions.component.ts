@@ -142,7 +142,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   ngAfterViewChecked() {
     if (this.maxCount == 30) {
-      console.log(Math.random());
+      //console.log(Math.random());
     }
   }
 
@@ -196,8 +196,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.dataService.filterMosaveTransactionsByDate(obj.type, obj.from, obj.to),
         this.dataService.getMosaveSavingTransactions()
       ]).subscribe((result: any) => {
-        console.log(result[0]);
-        console.log(result[1]);
         this.fetchTrnx(result, maxcount);
         this.ref.detectChanges();
         // this.isDtInitialized = true
@@ -223,7 +221,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.dataService.getMosaveSavingTransactions()
       ]).subscribe((result: any) => {
         this.fetchTrnx(result, maxcount);
-        console.log(this.allRecords)
         this.rerender(0);
       }), (error: any) => {
         console.log(error);
@@ -277,15 +274,12 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   filterTrxs(event: any) {
-    console.log(event);
     try {
       this.loading = true;
       this.dataService.filterMosaveTransactionsByDate(event.type, event.start.format('YYYY-MM-DD'), event.end.format('YYYY-MM-DD')).subscribe((result: any) => {
         this.loading = false;
-        console.log(result);
         if(result.error == false){
           const id: number = event.id - 1;
-          console.log(id)
           const newRecords: Array<any> = this.transformRecords(result.data)
           if(id == 0){
             this.allRecords = newRecords;
@@ -489,7 +483,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       id: this.modalContent2.id,
       tableName: this.modalContent2.tableName
     }
-    console.log(ev)
     $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
     // if (this.searchType === 'Custom Range') {
     //   this.applyfilter(ev);
@@ -538,7 +531,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   setCount(number: number, tableId: number) {
-    console.log(number);
     if (number > 5000) {
       this.toastService.showError('Your input should not be more than 5000', 'Error')
     } else {
@@ -559,7 +551,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
         // Destroy the table  first
         dtInstance.destroy();
         // Call the dtTrigger to rerender again
-        console.log(tableId)
         if(tableId == 0){
           this.dtTrigger.next('');
         } else if(tableId == 1){
