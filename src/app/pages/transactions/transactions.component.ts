@@ -130,13 +130,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.getTableHead();
     this.getTransactionType();
     var time = new Date().getTime();
-    this.dateRanges = [...this.statService.getDateRanges(),
-    ...[
-      {
-        timeline: 'Search Overall',
-        date: []
-      }]
-    ];
+    this.dateRanges = this.statService.getDateRanges();
     this.getOptions();
     this.getAllTrxs(this.maxCount);
   }
