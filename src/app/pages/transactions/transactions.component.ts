@@ -279,7 +279,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   filterTrxs(event: any) {
     try {
       this.loading = true;
-      this.dataService.filterMosaveTransactionsByDate(event.type, event.start.format('YYYY-MM-DD'), event.end.format('YYYY-MM-DD')).subscribe((result: any) => {
+      this.dataService.filterMosaveTransactionsByDate(event.type, event.start.format(), event.end.format()).subscribe((result: any) => {
         this.loading = false;
         if(result.error == false){
           const id: number = event.id - 1;
