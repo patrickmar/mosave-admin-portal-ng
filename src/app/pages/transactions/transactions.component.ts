@@ -114,6 +114,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
   searchType!: string;
+  filteredRecords!: any[];
 
   constructor(private dataService: DataService, private datePipe: DatePipe,
     private receiptService: ReceiptService, private modalService: NgbModal, private ref: ChangeDetectorRef,
@@ -193,8 +194,9 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     try {
       this.loading = true;
       forkJoin([
+        this.dataService.getMosaveTransactions(),
+        this.dataService.getMosaveSavingTransactions(),        
         this.dataService.filterMosaveTransactionsByDate(obj.type, obj.from, obj.to),
-        this.dataService.getMosaveSavingTransactions()
       ]).subscribe((result: any) => {
         this.fetchTrnx(result, maxcount);
         this.ref.detectChanges();
@@ -250,17 +252,18 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   fetchTrnx(result: Array<any>, maxcount: number) {
     this.loading = false;
     this.showComponent = true;
-    const newRecords: Array<any> = this.transformRecords(result[0].data)
+    const newRecords: Array<any> = this.transformRecords(result[0])
     this.allRecords = newRecords //.slice(0, this.maxCount);
     this.trnxRecords = newRecords;
     const newSavingsRecords = this.transformRecords(result[1]);
+    this.filteredRecords = this.transformRecords(result[2].data);
     //this.savingsRecords = newSavingsRecords;
-    this.savingsRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
-    this.savingsTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Savings');
+    this.savingsRecords = this.allRecords .filter((item: any) => item.transType === 'Savings');
+    this.savingsTrnxRecords = this.filteredRecords.filter((item: any) => item.transType === 'Savings');
     this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-    this.withTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-    this.commissionRecords = this.allRecords.filter((item: any) => item.transType === "commission");
-    this.commTrnxRecords = this.allRecords.filter((item: any) => item.transType === 'commission');
+    this.withTrnxRecords = this.filteredRecords.filter((item: any) => item.transType === 'Withdrawal');
+    this.commissionRecords = this.allRecords .filter((item: any) => item.transType === "commission");
+    this.commTrnxRecords = this.filteredRecords.filter((item: any) => item.transType === 'commission');
 
     this.getDailyTransactions();
     this.getMonthlyTransactions();
@@ -282,13 +285,13 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
           const id: number = event.id - 1;
           const newRecords: Array<any> = this.transformRecords(result.data)
           if(id == 0){
-            this.allRecords = newRecords;
+            this.filteredRecords = newRecords;
           }else if(id == 1){
-            this.savingsRecords = newRecords;
+            this.savingsTrnxRecords = newRecords;
           }else if(id == 2){
-            this.withdrawalRecords = newRecords;
+            this.withTrnxRecords = newRecords;
           }else if(id == 3){
-            this.commissionRecords = newRecords;
+            this.commTrnxRecords = newRecords;
           }
           this.toastService.showSuccess(result.message, 'Success')
           

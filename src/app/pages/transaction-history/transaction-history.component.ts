@@ -36,6 +36,7 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
   emptyTable = environment.emptyTable;
+  commissionRecords: any;
 
   constructor(private dataService: DataService,
     private authservice: AuthService,
@@ -123,11 +124,9 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
 
   getCustomerId() {
     this.customerId = this.route.snapshot.paramMap.get('sn');
-    console.log(this.customerId);
   }
   getCustomerDetails() {
     this.dataService.getCustomerProfile(this.customerId).subscribe((result: any) => {
-      console.log(result);
       this.customerInfo = result;
     }), (error: any) => {
       console.log(error);
@@ -138,20 +137,18 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
   }
 
   getCustomerTrxs() {
-    console.log(this.customerId);
     try {
       this.loading = true;
     forkJoin([
       this.dataService.getAllCustomersTnxs(this.customerId),
       this.dataService.getCustomersSavingsTnxs(this.customerId),
-      this.dataService.getCustomersWithdrawTnxs(this.customerId)
+      this.dataService.getCustomersWithdrawTnxs(this.customerId),
+      this.dataService.getCustomersCommissionTnxs(this.customerId)
     ]).subscribe((result: any) => {
-      console.log(result[0]);
-      console.log(result[1]);
-      console.log(result[2]);
-      this.allRecords = result[0];
-      this.savingsRecords = result[1];
-      this.withdrawalRecords = result[2];
+      this.allRecords = this.transformRecords(result[0]);
+      this.savingsRecords = this.transformRecords(result[1]);
+      this.withdrawalRecords = this.transformRecords(result[2]);
+      this.commissionRecords = this.transformRecords(result[3]);
       this.loading = false;
       this.showComponent = true;
       this.dtTrigger.next('');
@@ -167,21 +164,29 @@ export class TransactionHistoryComponent implements OnInit, OnDestroy {
 
   }
 
+  transformRecords (array: Array<any>) {
+    const newRecords: Array<any> = array.map((res: any) => {
+      if (res.transType == "S") {
+        var type = res.transType + "avings";
+      } else if (res.transType == "W") {
+        var type = res.transType + "ithdrawal";
+      } else {
+        var type = res.transType + "";
+      }
+      return { ...res, transType: type };
+    })
+    return newRecords;
+  }
+
   getCustomerTotalBalances() {
-    console.log(this.customerId);
     forkJoin([
       this.dataService.getCustomerTotalBalance(this.customerId),
       this.dataService.getCustomerTotalBalances(this.customerId),
     ]).subscribe((result: any) => {
-      console.log(result[0]);
-      console.log(result[1]);
       this.totalSum = result[0];
       this.savingsSum = result[1][0][0]?.savings_sum;
       this.withdrawalSum = result[1][1][0]?.withdraw_sum;
       this.commissionSum = result[1][2][0]?.commission_sum;
-      console.log(this.savingsSum);
-      console.log(this.withdrawalSum);
-      console.log(this.commissionSum);
     }), (error: any) => {
       console.log(error);
     }

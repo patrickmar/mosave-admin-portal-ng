@@ -161,8 +161,6 @@ export class DetailsComponent implements OnInit {
       //plans: new FormArray([]),
     });
 
-    console.log(this.customer);
-
     this.updateProfileForm = new FormGroup({
       email: new FormControl('', Validators.required),
       firstName: new FormControl('', Validators.required),
@@ -208,21 +206,16 @@ export class DetailsComponent implements OnInit {
 
   getUserDetails() {
     this.authservice.userData$.subscribe((response: any) => {
-      console.log(response);
       this.user = response;
-      console.log(this.user.sn);
     });
   }
 
   getCustomerId() {
     this.customerId = this.route.snapshot.paramMap.get('sn');
-    console.log(this.customerId);
   }
 
   getCustomerPlans() {
-    console.log(this.customerId);
     this.dataService.getCustomerSavingsPlans(this.customerId).subscribe((res: any) => {
-      console.log(res);
       //this.isLoading = false;
       this.userPlans = res;
     })
@@ -235,7 +228,6 @@ export class DetailsComponent implements OnInit {
         this.dataService.getCustomerProfile(this.customerId)
       ]).subscribe((res: any) => {
         this.customer = res[0][0];
-        console.log(this.customer);
         this.fullName = this.customer.firstName + ' ' + this.customer.lastName;
         this.loading2 = false;
         this.showComponent = true;
@@ -280,7 +272,6 @@ export class DetailsComponent implements OnInit {
 
   getAllBanks() {
     this.dataService.getAllBanks().subscribe((res: any) => {
-      console.log(res);
       if (res.status == true) {
         this.allBanks = res.data;
       } else {
@@ -292,14 +283,12 @@ export class DetailsComponent implements OnInit {
 
   getBankCode() {
     let bankCode = this.withdrawalForm.get("bank")?.get("bank_code")?.value;
-    console.log(bankCode);
     if (bankCode == '') {
       this.toastService.showError('Please select Bank', 'Error');
     } else {
       var match = this.allBanks.filter(function (obj: any) {
         return obj.code == bankCode;
       });
-      console.log(match[0]);
       this.withdrawalForm.get("bank")?.get("bankName")?.setValue(match[0].name);
       return match[0];
     }
@@ -309,20 +298,16 @@ export class DetailsComponent implements OnInit {
   verifyAccount(event: any) {
     let accountNo: string = event.target.value;
     // Ensure the input is more than 10 before carrying out the request
-    console.log(accountNo);
     if (accountNo.length == 10) {
       this.spinner = true;
       this.getBankCode();
       const bankCode = this.withdrawalForm.get("bank")?.get("bank_code")?.value // this.getBankCode();
-      console.log(bankCode);
       if (bankCode === "") {
         this.toastService.showError('Please select a bank', 'Error');
       } else {
         let value = 'account_number=' + accountNo + '&bank_code=' + bankCode;
-        console.log(value);
         try {
           this.dataService.verifyBankAccount(value).subscribe((res: any) => {
-            console.log(res);
             this.spinner = false;
             if (res.status == true) {
               this.error = false;
@@ -337,7 +322,6 @@ export class DetailsComponent implements OnInit {
           }, (error: any) => {
             this.spinner = false;
             this.error = true;
-            console.log(error);
             this.verifiedAcctName = error.error.message;
             this.withdrawalForm.get("bank")?.get("account_name")?.setValue("");
             this.toastService.showError(error.error.message, 'Error');
@@ -345,14 +329,8 @@ export class DetailsComponent implements OnInit {
         } catch (error) {
           console.log(error);
         }
-
-
       }
-
-
     }
-
-
   }
 
 
@@ -431,17 +409,13 @@ export class DetailsComponent implements OnInit {
   onOtpChange(otp: any) {
     this.otp = otp;
     this.otpLength = this.otp.length;
-    console.log(this.otp);
-    console.log(this.otpLength);
   }
 
   Withdrawal2() {
     this.getSelectedPlan(this.withdrawalForm);
-    console.log(this.withdrawalForm);
   }
 
   performTransaction(form: any, otp: string) {
-    console.log(form);
     if (form.source == "Savings") {
       this.getSelectedPlan(this.savingsForm);
       if (this.savingsForm.valid) {
@@ -469,18 +443,14 @@ export class DetailsComponent implements OnInit {
   addSavings(otp: string) {
     this.loading = true;
     this.getSelectedPlan(this.savingsForm);
-    console.log(this.savingsForm.value);
     const pinData = {
       pin: otp,
       agentid: this.user.sn,
     }
-    console.log(pinData);
     this.dataService.verifyTransactionPin(pinData).subscribe((result: any) => {
-      console.log(result);
       this.response = result;
       if (this.response.verified == 1) {
         this.dataService.savingsTransaction(this.savingsForm.value).subscribe((res: any) => {
-          console.log(res);
           this.response = res;
           this.loading = false;
           if (this.response.error == false) {
@@ -517,10 +487,8 @@ export class DetailsComponent implements OnInit {
     //   currency: "NGN"
     // }
     const payload = this.withdrawalForm.value;
-    console.log(payload);
     if (this.user.level == 3 || this.user.level == 4) {
       this.dataService.withdrawalwithoutOtp(payload).subscribe((res: any) => {
-        console.log(res);
         this.response = res;
         this.loading = false;
         if (this.response.error == false) {
@@ -543,13 +511,10 @@ export class DetailsComponent implements OnInit {
         pin: otp,
         agentid: this.user.sn,
       }
-      console.log(pinData);
       this.dataService.verifyTransactionPin(pinData).subscribe((result: any) => {
-        console.log(result);
         this.response = result;
         if (this.response.verified == 1) {
           this.dataService.withdrawalwithOtp(this.withdrawalForm.value).subscribe((res: any) => {
-            console.log(res);
             this.response = res;
             this.loading = false;
             if (this.response.error == false) {
@@ -580,9 +545,7 @@ export class DetailsComponent implements OnInit {
   }
 
   getCustomerTrxs() {
-    console.log(this.customerId);
     this.dataService.getAllCustomersTnxs(this.customerId).subscribe((result: any) => {
-      console.log(result);
       if (Array.isArray(result)) {
         //get savings record
         let savings = result.filter((item: any) => item.transType === "S");
@@ -614,20 +577,16 @@ export class DetailsComponent implements OnInit {
 
   getSavingPlans() {
     this.dataService.getAllSavingsPlans(this.customerId).subscribe((res: any) => {
-      console.log(res);
       if (res.length > 0) {
         // let assignPlan = this.addInfo.filter((x: any) => x.id === 1);
         // console.log(assignPlan);
         let assignPlan = this.addInfo.map((item: any, i: any) => Object.assign({}, item, res[i]));
-        console.log(assignPlan);
         this.plans = res.map((item: any, i: any) => Object.assign({}, item, assignPlan[i]));
-        console.log(this.plans);
       } else {
         let msg = 'No saving plans available for customer';
         //this.toastService.showSuccess(msg, 'Info');
         this.plans = res;
         this.plansInfo = msg;
-        console.log(this.plansInfo);
       }
     }, (error: any) => {
       console.log(error);
@@ -643,39 +602,29 @@ export class DetailsComponent implements OnInit {
     });
     form.get("planName")?.setValue(match[0].plan_name);
     form.get("planId")?.setValue(parseInt(planid));
-    console.log(match[0].plan_name);
-    console.log(parseInt(planid));
   }
 
   createPlan() {
     this.loading = true;
-    console.log(this.PlanForm.value);
     // get the sn of the selected plans
     const selectedPlans: any[] = [];
     // this.PlanForm.value.plans.map((value: any, index: number) => {
     if (this.PlanForm.value) {
       let planid = this.PlanForm.get("plans")?.value;
-      console.log(planid);
-      console.log(this.plans);
       var match = this.plans.filter(function (obj: any) {
         return obj.sn == planid;
       });
-      console.log(match);
       let amount = match[0].amount;
-      console.log(amount);
       selectedPlans?.push({ 'planid': planid, 'amount': amount });
     } else {
       this.toastService.showError('Please select a plan', 'Error');
     }
     // });
-    console.log(selectedPlans);
     var savingsParams = {
       savings_plan: selectedPlans,
       customerid: this.customerId
     }
-    console.log(savingsParams);
     this.dataService.postCustomerSavingsPlan(savingsParams).subscribe((result: any) => {
-      console.log(result);
       this.response = result;
       this.loading = false;
       if (this.response.error == false) {
@@ -703,16 +652,12 @@ export class DetailsComponent implements OnInit {
   }
 
   open(content: any, tableRow: any) {
-    console.log(content);
-    console.log(tableRow);
     //this.modalContent = content;
     this.modalContent = tableRow;
     this.modalService.open(content);
   }
 
   enterPin(content: any, values: any) {
-    console.log(content);
-    console.log(values);
     this.transactionValues = values;
     this.otp = values;
     this.modalService.open(content);
@@ -771,7 +716,6 @@ export class DetailsComponent implements OnInit {
 
   updateUser() {
     var values = this.updateProfileForm.value;
-    console.log(values);
     const updateUserData = {
       firstname: values.firstName,
       lastname: values.lastName,
@@ -792,10 +736,8 @@ export class DetailsComponent implements OnInit {
       // accountName: values.bankAccountName,
     }
 
-    console.log(updateUserData);
     this.loading = true;
     this.dataService.updateCustomerProfile(updateUserData).subscribe((result: any) => {
-      console.log(result);
       this.response = result;
       if (this.response.error == false) {
         this.loading = false;

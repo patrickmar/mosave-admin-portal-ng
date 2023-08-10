@@ -227,7 +227,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr app-transactions-table [records]="allRecords" *ngFor="let r of allRecords; let i = index;" [userId]="r?.userId"
+                <tr app-transactions-table [records]="filteredRecords" *ngFor="let r of filteredRecords; let i = index;" [userId]="r?.userId"
                   [customerId]="r?.customerId" [firstName]="r?.firstName" [lastName]="r?.lastName"
                   [fullName]="(r?.firstName?.concat(' ').concat(r?.lastName) | titlecase)" [plan_name]="r?.plan_name"
                   [transAmount]="r?.transAmount" [transref]="r?.transref" [transType]="r?.transType"
@@ -274,7 +274,7 @@
               </thead>
 
               <tbody>
-                <tr app-transactions-table [records]="savingsRecords" *ngFor="let s of savingsRecords; let i = index;"
+                <tr app-transactions-table [records]="savingsTrnxRecords" *ngFor="let s of savingsTrnxRecords; let i = index;"
                   [userId]="s?.userId" [customerId]="s?.customerId" [firstName]="s?.firstName" [lastName]="s?.lastName"
                   [fullName]="(s?.firstName?.concat(' ').concat(s?.lastName) | titlecase)" [plan_name]="s?.plan_name"
                   [transAmount]="s?.transAmount" [transref]="s?.transref" [transType]="s?.transType"
@@ -321,8 +321,8 @@
               </thead>
 
               <tbody>
-                <tr app-transactions-table [records]="withdrawalRecords"
-                  *ngFor="let w of withdrawalRecords; let i = index;" [userId]="w?.userId" [customerId]="w?.customerId"
+                <tr app-transactions-table [records]="withTrnxRecords"
+                  *ngFor="let w of withTrnxRecords; let i = index;" [userId]="w?.userId" [customerId]="w?.customerId"
                   [firstName]="w?.firstName" [lastName]="w?.lastName"
                   [fullName]="(w?.firstName?.concat(' ').concat(w?.lastName) | titlecase)" [plan_name]="w?.plan_name"
                   [transAmount]="w?.transAmount" [transref]="w?.transref" [transType]="w?.transType"
@@ -370,8 +370,8 @@
               </thead>
 
               <tbody>
-                <tr app-transactions-table [records]="commissionRecords"
-                  *ngFor="let c of commissionRecords; let i = index;" [userId]="c?.userId" [customerId]="c?.customerId"
+                <tr app-transactions-table [records]="commTrnxRecords"
+                  *ngFor="let c of commTrnxRecords; let i = index;" [userId]="c?.userId" [customerId]="c?.customerId"
                   [firstName]="c?.firstName" [lastName]="c?.lastName"
                   [fullName]="(c?.firstName?.concat(' ').concat(c?.lastName) | titlecase)" [plan_name]="c?.plan_name"
                   [transAmount]="c?.transAmount" [transref]="c?.transref" [transType]="c?.transType"

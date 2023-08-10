@@ -80,6 +80,11 @@
               Withdrawals
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" id="commission-tab" data-bs-toggle="tab" href="#commission" role="tab">
+              Commissions
+            </a>
+          </li>
         </ul>
         <!-- End Nav -->
       </div>
@@ -224,9 +229,9 @@
                 <td>{{record?.plan_name}}</td>
                 <td><span class="badge bg-soft-success text-success p-1"><i class="bi-check"></i> Success</span></td>
                 <td>
-                  <span *ngIf="record?.transType === 'S' ">{{'Savings' | titlecase}}</span>
-                  <span *ngIf="record?.transType === 'W' ">{{'Withdraw' | titlecase}}</span>
-                  <span *ngIf="record?.transType === 'commission' ">{{record?.transType | titlecase}}</span>
+                  <span [ngClass]="record?.transType === 'Savings'? 'text-success' : record?.transType === 'Withdraw' ? 'text-danger' : 'text-warning' "> 
+                    {{record?.transType | titlecase}}
+                  </span>
                 </td>
                 <td>{{record?.createdDate | date:'medium'}}</td>
                 <td>
@@ -266,12 +271,12 @@
               <tr *ngFor="let record of savingsRecords ; let i = index;">
                 <td><span>{{i + 1}}</span></td>
                 <td class="table-text-start">
-                  <a class="d-flex align-items-center" href="./">
+                  <a class="d-flex align-items-center" href="javascript:;">
                     <div class="avatar avatar-soft-info avatar-circle">
                       <span class="avatar-initials">S</span>
                     </div>
                     <div class="ms-3">
-                      <span class="d-block h5 text-inherit mb-0">{{record?.transref}} </span>
+                      <span class="d-block h5 text-inherit mb-0">{{record?.transref}}</span>
                     </div>
                   </a>
                 </td>
@@ -282,7 +287,7 @@
                     <i class="bi-check"></i> Success
                   </span>
                 </td>
-                <td><span *ngIf="record?.transType === 'S' ">{{'Savings' | titlecase}}</span></td>
+                <td><span class="text-success">{{'Savings' | titlecase}}</span></td>
                 <td> {{record?.createdDate | date:'medium'}}</td>
                 <td>
                   <button type="button" class="btn btn-primary btn-sm" (click)="viewReceipt(record)">
@@ -319,13 +324,12 @@
               <tr *ngFor="let record of withdrawalRecords; let i = index;">
                 <td><span>{{i + 1}}</span></td>
                 <td class="table-text-start">
-                  <a class="d-flex align-items-center" href="">
+                  <a class="d-flex align-items-center" href="javascript:;">
                     <div class="avatar avatar-soft-info avatar-circle">
                       <span class="avatar-initials">W</span>
                     </div>
                     <div class="ms-3">
-                      <span class="d-block h5 text-inherit mb-0">{{record?.firstName | titlecase}} {{record?.lastName |
-                        titlecase}}</span>
+                        <span class="d-block h5 text-inherit mb-0">{{record?.transref}}</span>
                     </div>
                   </a>
                 </td>
@@ -338,7 +342,63 @@
                   </span>
                 </td>
                 <td>
-                  <span *ngIf="record?.transType === 'W' ">{{'Withdraw' | titlecase}}</span>
+                  <span class="text-danger">{{record?.transType | titlecase}}</span>
+                </td>
+                <td> {{record?.createdDate | date:'medium'}}</td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-sm" (click)="viewReceipt(record)">
+                    <i class="bi-download me-1"></i> Download Receipt
+                  </button>
+                </td>
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+        <!-- End Table -->
+      </div>
+
+      <div class="tab-pane fade" id="commission" role="tabpanel" aria-labelledby="commission-tab">
+        <!-- Table -->
+        <div class="table-responsive">
+          <table
+            class="table table-borderless table-thead-bordered table-nowrap table-text-center table-align-middle card-table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">S/N</th>
+                <th scope="col" class="table-text-start">Transaction ID</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Plan</th>
+                <th scope="col">Status</th>
+                <th scope="col">TransType</th>
+                <th scope="col">Transaction Date</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let record of commissionRecords; let i = index;">
+                <td><span>{{i + 1}}</span></td>
+                <td class="table-text-start">
+                  <a class="d-flex align-items-center" href="javascript:;">
+                    <div class="avatar avatar-soft-info avatar-circle">
+                      <span class="avatar-initials">C</span>
+                    </div>
+                    <div class="ms-3">
+                        <span class="d-block h5 text-inherit mb-0">{{record?.transref}}</span>
+                    </div>
+                  </a>
+                </td>
+
+                <td class="text-left">{{record?.transAmount | currency: '₦'}}</td>
+                <td>{{record?.plan_name}}</td>
+                <td>
+                  <span class="badge bg-soft-success text-success p-1"> <i class="bi-check"></i>
+                    Success
+                  </span>
+                </td>
+                <td>
+                  <span class="text-warning">{{record?.transType | titlecase}}</span>
                 </td>
                 <td> {{record?.createdDate | date:'medium'}}</td>
                 <td>

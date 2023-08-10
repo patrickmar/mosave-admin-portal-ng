@@ -58,7 +58,6 @@ export class ReceiptService {
         const reader = new FileReader();
         reader.onloadend = () => {
           this.logoData = reader.result;
-          console.log(this.logoData);
         }
         reader.readAsDataURL(res);
       });
@@ -284,7 +283,6 @@ export class ReceiptService {
     }
 
     this.pdfObj = pdfMake.createPdf(DocDefinition);
-    //console.log(this.pdfObj);
   }
 
   getPdfName(response: any){
@@ -303,7 +301,6 @@ export class ReceiptService {
     } catch (e){
       const title = "Error";
       const message = "Unable to download receipt";
-      console.log(message);
       this.toastService.showError(message, title);
     }    
     
@@ -319,7 +316,6 @@ export class ReceiptService {
     } catch (e){
       const title = "Error";
       const message = "Unable to open receipt";
-      console.log(message);
       this.toastService.showError(message, title);
     }  
   }
@@ -337,7 +333,6 @@ export class ReceiptService {
     } catch (e){
       const title = "Error";
       const message = "Unable to print receipt";
-      console.log(message);
       this.toastService.showError(message, title);
     }  
   }

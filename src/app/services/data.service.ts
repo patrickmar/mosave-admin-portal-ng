@@ -70,9 +70,14 @@ export class DataService {
     return this.httpService.get('customersavingshistory/' + custid + '?' + this.time);
   }
 
+  //Get last 50 Customer commission Transactions
+  public getCustomersCommissionTnxs(custid: number): Observable<any> {
+    return this.httpService.get('customercommissionhistory/' + custid + '?' + this.time);
+  }
+
   //Get all Customer Transactions. The limit is 50
   public getAllCustomersTnxs(custid: number): Observable<any> {
-    return this.httpService.get('customertransactions/' + custid + '?' + this.time);
+    return this.httpService.get('customertransactions/' + custid + '?' + this.time); 
   }
 
   //Search Customer
