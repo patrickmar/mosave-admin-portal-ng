@@ -61,6 +61,11 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" [routerLink] = "['/profile']" fragment="bankInformationSection">
+                    <i class="bi-bank nav-icon"></i> Bank information
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" [routerLink] = "['/profile']" fragment="emailSection">
                     <i class="bi-at nav-icon"></i> Email
                   </a>
@@ -100,21 +105,36 @@
               <!-- End Profile Cover -->
 
               <!-- Avatar -->
+              
+        <div class="text-center">
               <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="editAvatarUploaderModal">
-                <img id="editAvatarImgModal" class="avatar-img" src="../../../assets/img/160x160/img1.jpg" alt="Image Description">
+                <ng-container *ngIf="setFiles.length == 0; else elseTemplate">
+                  <img class="avatar-img" id="editAvatarImgModal" [src]="profile?.img ? imagePath + profile?.img : '../../../assets/img/160x160/img1.jpg'"
+                    onerror="this.src='../../../assets/img/160x160/img1.jpg'" alt="{{profile?.firstName}}">
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <img id="avatarImg" class="avatar-img"
+                    [src]="setFiles.length > 0 ? setFiles[0].base64URL : './assets/img/160x160/img1.jpg' " alt="Image Description">
+                </ng-template>
 
-                <input type="file" class="js-file-attach avatar-uploader-input" id="editAvatarUploaderModal" data-hs-file-attach-options='{
-                            "textTarget": "#editAvatarImgModal",
-                            "mode": "image",
-                            "targetAttr": "src",
-                            "allowTypes": [".png", ".jpeg", ".jpg"]
-                         }'>
+                <input type="file" class="avatar-uploader-input" id="editAvatarUploaderModal" accept="image/*" (change)="onSelect($event)">
 
                 <span class="avatar-uploader-trigger">
                   <i class="bi-pencil-fill avatar-uploader-icon shadow-sm"></i>
                 </span>
               </label>
               <!-- End Avatar -->
+              
+
+              <ng-container *ngIf="setFiles.length > 0;">
+                <button type="button" class="btn btn-primary"  [disabled]="loading" (click)="updateImage()">Upload
+                  <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </button>
+              </ng-container>
+
+            </div>
 
               
             </div>
@@ -164,6 +184,37 @@
                     </div>
                   </div>
                   <!-- End Form -->
+                  <!-- Form -->
+                  <div class="row mb-4">
+
+                  <label for="dateOfBirthProfile" class="col-sm-3 col-form-label form-label">Date of Birth</label>
+                  <div class="col-sm-9">
+                          <input type="date" class="form-control" formControlName="birthdate" id="dateOfBirthProfile">
+                        </div>
+                      </div>
+                  <!-- End Form -->
+
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="genderProfile" class="col-sm-3 col-form-label form-label">Gender</label>
+                    <!-- Select -->
+                    <div class="col-sm-9 tom-select-custom mb-3">
+                      <select class="js-select form-select" id="genderProfile" formControlName="gender"
+                        data-hs-tom-select-options='{
+                      "placeholder": "Select Gender"
+                    }'>
+                        <option [value]="gender?.name"
+                          *ngFor="let gender of genders; let i = index;"
+                          attr.data-option-template='<span class="d-flex align-items-center">
+                        <span class="text-truncate">{{gender?.name}}</span></span>'>
+                          {{gender?.name}}
+                        </option>
+                      </select>
+                    </div>
+                    <!-- End Select -->
+                  </div>
+                  <!-- End Form -->
+
 
                  
 
@@ -197,6 +248,68 @@
 
                     <div class="col-sm-9">
                       <input type="text" class="form-control" formControlName="address" id="addressLine1Label" placeholder="Your address" aria-label="Your address" value="45 Roker Terrace, Latheronwheel">
+                    </div>
+                  </div>
+                  <!-- End Form -->
+
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">Save changes
+                      <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </button>
+                  </div>
+                </form>
+                <!-- End Form -->
+              </div>
+              <!-- End Body -->
+            </div>
+            <!-- End Card -->
+
+
+            <!-- Card -->
+            <div id="bankInformationSection" class="card">
+              <div class="card-header">
+                <h2 class="card-title h4">Bank information</h2>
+              </div>
+
+              <!-- Body -->
+              <div class="card-body">
+                <!-- Form -->
+                <form [formGroup]="profileForm" (ngSubmit)="update()">                 
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="role" class="col-sm-3 col-form-label form-label">Bank</label>
+
+                    <div class="col-sm-9 tom-select-custom mb-4">
+                      <select class="js-select form-select" autocomplete="off" id="bankLabel" formControlName="bankcode"
+                                  data-hs-tom-select-options='{
+                            "placeholder": "Select Bank"
+                          }'>
+                                  <option *ngFor="let b of allBanks; let i = index;" [value]="b?.code">{{b?.name}}</option>
+                              </select>
+                    </div>
+                    <!-- End Select -->
+                  </div>
+                  <!-- End Form -->
+
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="accountNo" class="col-sm-3 col-form-label form-label">Account Number</label>
+
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" (keyup)="verifyAccount($event)" formControlName="accountNo" id="accountNo">
+                      <small [ngClass]="error == true ? 'text-danger' : 'text-success' " *ngIf="verifiedAcctName">{{verifiedAcctName}}</small>
+                    </div>
+                  </div>
+                  <!-- End Form -->
+
+                  <!-- Form -->
+                  <div class="row mb-4">
+                    <label for="bvn" class="col-sm-3 col-form-label form-label">BVN</label>
+
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="bvn" id="bvn" placeholder="Your BVN">
                     </div>
                   </div>
                   <!-- End Form -->

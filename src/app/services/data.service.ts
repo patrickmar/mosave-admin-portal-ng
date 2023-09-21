@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { HttpService } from './http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
   time = new Date().getTime();
 
-  constructor(private httpService: HttpService, private http: HttpClient) { }
+  constructor(private httpService: HttpService, private http: HttpClient) {}
 
   readonly sampleTicket: string = './assets/json/tickets.json';
   readonly PageMenu: string = './assets/json/menu.json';
@@ -62,22 +62,30 @@ export class DataService {
 
   //Get last 50 Customer Withdraw Transactions
   public getCustomersWithdrawTnxs(custid: number): Observable<any> {
-    return this.httpService.get('customerwithdrawhistory/' + custid + '?' + this.time);
+    return this.httpService.get(
+      'customerwithdrawhistory/' + custid + '?' + this.time
+    );
   }
 
-  //Get last 50 Customer Savings Transactions 
+  //Get last 50 Customer Savings Transactions
   public getCustomersSavingsTnxs(custid: number): Observable<any> {
-    return this.httpService.get('customersavingshistory/' + custid + '?' + this.time);
+    return this.httpService.get(
+      'customersavingshistory/' + custid + '?' + this.time
+    );
   }
 
   //Get last 50 Customer commission Transactions
   public getCustomersCommissionTnxs(custid: number): Observable<any> {
-    return this.httpService.get('customercommissionhistory/' + custid + '?' + this.time);
+    return this.httpService.get(
+      'customercommissionhistory/' + custid + '?' + this.time
+    );
   }
 
   //Get all Customer Transactions. The limit is 50
   public getAllCustomersTnxs(custid: number): Observable<any> {
-    return this.httpService.get('customertransactions/' + custid + '?' + this.time); 
+    return this.httpService.get(
+      'customertransactions/' + custid + '?' + this.time
+    );
   }
 
   //Search Customer
@@ -87,12 +95,16 @@ export class DataService {
 
   //Get Total Wallet Balance
   public getCustomerTotalBalance(custid: number): Observable<any> {
-    return this.httpService.get('customertotalbalance/' + custid + '?' + this.time);
+    return this.httpService.get(
+      'customertotalbalance/' + custid + '?' + this.time
+    );
   }
 
   //Get customer sum Savings, commission and Withdrawal
   public getCustomerTotalBalances(custid: number): Observable<any> {
-    return this.httpService.get('customer/sumtrans/' + custid + '?' + this.time);
+    return this.httpService.get(
+      'customer/sumtrans/' + custid + '?' + this.time
+    );
   }
 
   //Get full customer profile
@@ -116,8 +128,14 @@ export class DataService {
   }
 
   // filter  all transactions
-  public filterMosaveTransactionsByDate(type: string, from: string, to:string): Observable<any> {
-    return this.httpService.get('transactions/filter/'+ type + '/'+ from + '/'+ to + '?' + this.time);
+  public filterMosaveTransactionsByDate(
+    type: string,
+    from: string,
+    to: string
+  ): Observable<any> {
+    return this.httpService.get(
+      'transactions/filter/' + type + '/' + from + '/' + to + '?' + this.time
+    );
   }
 
   // - Get all savings transactions
@@ -127,12 +145,16 @@ export class DataService {
 
   // Get request to display all savings plan
   public getCustomerSavingsPlans(customerId: any): Observable<any> {
-    return this.httpService.get('getcustomer_savingplans/' + customerId + '?' + this.time);
+    return this.httpService.get(
+      'getcustomer_savingplans/' + customerId + '?' + this.time
+    );
   }
 
   // Get request to display all savings plan
   public getAllSavingsPlans(customerId: any) {
-    return this.httpService.get('all/savings_plan/' + customerId + '?' + this.time);
+    return this.httpService.get(
+      'all/savings_plan/' + customerId + '?' + this.time
+    );
   }
 
   // send OTP to customer API
@@ -147,11 +169,15 @@ export class DataService {
 
   // Get Agent daily total savings balance
   public getAgentDailySavingsBalance(agentid: any): Observable<any> {
-    return this.httpService.get('agent/sumsavingstrans/' + agentid + '?' + this.time);
+    return this.httpService.get(
+      'agent/sumsavingstrans/' + agentid + '?' + this.time
+    );
   }
   // Get Agent daily total withdraw balance
   public getAgentDailyWithdrawalBalance(agentid: any): Observable<any> {
-    return this.httpService.get('agent/sumwithtrans/' + agentid + '?' + this.time);
+    return this.httpService.get(
+      'agent/sumwithtrans/' + agentid + '?' + this.time
+    );
   }
 
   // Get all merchants
@@ -180,7 +206,7 @@ export class DataService {
     return this.httpService.post('customer/register', signupData);
   }
 
-  // --POST  savings 
+  // --POST  savings
   savingsTransaction(data: any): Observable<any> {
     return this.httpService.post('/admin/savings', data);
   }
@@ -240,9 +266,24 @@ export class DataService {
     return this.httpService.post('agent/updatepics', imageData);
   }
 
+  // Update Customer Profile Picture API
+  updateCustomerPicture(imageData: any): Observable<any> {
+    return this.httpService.postWithImage('customer/updatepics', imageData);
+  }
+
   // Update agent profile  API
   updateAgentProfile(agentData: any): Observable<any> {
     return this.httpService.post('agent/update', agentData);
+  }
+
+  // Update Customer Profile Picture API
+  updateAdminPicture(imageData: any): Observable<any> {
+    return this.httpService.postWithImage('admin/updatepics', imageData);
+  }
+
+  // fetch admin profile
+  getAdminProfile(adminId: any): Observable<any> {
+    return this.httpService.get('admin/profile/' + adminId);
   }
 
   // create event ticket
@@ -280,7 +321,4 @@ export class DataService {
   fetchStatesByCountry(data: any) {
     return this.httpService.postExternal('states', data);
   }
-
-
-
 }

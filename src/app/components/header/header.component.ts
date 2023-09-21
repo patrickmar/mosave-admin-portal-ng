@@ -13,45 +13,52 @@ declare var HSFormSearch: any;
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
   logo = environment.logo;
   logo2 = environment.logo2;
   logo3 = environment.logo3;
   mini_logo = environment.mini_logo;
+  imagePath = environment.app.baseUrl + environment.app.imagePath;
   user: any;
+  profile: any;
   firstname!: string;
   isLoggedIn$!: Observable<boolean>;
   userRole: any;
   loading: boolean = false;
   searchResult: Array<any> = [];
   recentSearches: Array<any> = [];
-  noRecord: boolean = false;;
+  noRecord: boolean = false;
   avatar = environment.avatar;
   searchForm!: FormGroup;
   emptyTable = environment.emptyTable;
   roles = [
     {
       id: 1,
-      role: "Agent"
+      role: 'Agent',
     },
     {
       id: 2,
-      role: "Supervisor"
+      role: 'Supervisor',
     },
     {
       id: 3,
-      role: "Admin"
+      role: 'Admin',
     },
     {
       id: 4,
-      role: "SuperAdmin"
+      role: 'SuperAdmin',
     },
-  ]
+  ];
 
-  constructor(private authService: AuthService, private toastService: ToastService,
-    private dataService: DataService, private storageService: StorageService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private toastService: ToastService,
+    private dataService: DataService,
+    private storageService: StorageService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.getUserDetails();
@@ -59,8 +66,8 @@ export class HeaderComponent implements OnInit {
     this.jsInit();
     this.isLoggedIn$ = this.authService.isLoggedIn;
     this.searchForm = new FormGroup({
-      searchQuery: new FormControl('')
-    })
+      searchQuery: new FormControl(''),
+    });
   }
 
   jsInit() {
@@ -69,25 +76,29 @@ export class HeaderComponent implements OnInit {
       const HSFormSearchInstance = new HSFormSearch('.js-form-search');
       if (HSFormSearchInstance.collection.length) {
         HSFormSearchInstance.getItem(1).on('close', function (el: any) {
-          el.classList.remove('top-0')
-        })
+          el.classList.remove('top-0');
+        });
 
-        document.querySelector('.js-form-search-mobile-toggle')?.addEventListener('click', (e: any) => {
-          //const el = e.currentTarget as HTMLInputElement
-          let dataOptions = JSON.parse(e.currentTarget?.getAttribute('data-hs-form-search-options')),
-            $menu = document.querySelector(dataOptions.dropMenuElement);
-          $menu.classList.add('top-0')
-          $menu.style.left = 0
-        })
-      };
-    }
+        document
+          .querySelector('.js-form-search-mobile-toggle')
+          ?.addEventListener('click', (e: any) => {
+            //const el = e.currentTarget as HTMLInputElement
+            let dataOptions = JSON.parse(
+                e.currentTarget?.getAttribute('data-hs-form-search-options')
+              ),
+              $menu = document.querySelector(dataOptions.dropMenuElement);
+            $menu.classList.add('top-0');
+            $menu.style.left = 0;
+          });
+      }
+    };
   }
 
   openClose(open: any) {
     if (open) {
-      $('#clearSearchResultsIcon').css({ "display": "block" });;
+      $('#clearSearchResultsIcon').css({ display: 'block' });
     } else {
-      $("#clearSearchResultsIcon").css({ "display": "none" });
+      $('#clearSearchResultsIcon').css({ display: 'none' });
     }
   }
 
@@ -100,17 +111,33 @@ export class HeaderComponent implements OnInit {
       this.user = response;
       var titleCasePipe = new TitleCasePipe();
       this.firstname = titleCasePipe.transform(this.user?.firstname);
-      this.userRole = this.roles.filter((i: any) => i.id === Number(this.user.level));
+      this.userRole = this.roles.filter(
+        (i: any) => i.id === Number(this.user.level)
+      );
+      if (this.user.sn) {
+        this.getAdminProfile(this.user.sn);
+      }
     });
   }
 
+  getAdminProfile(sn: string) {
+    try {
+      this.loading = true;
+      this.dataService.getAdminProfile(sn).subscribe((res: any) => {
+        this.profile = res.data;
+      });
+    } catch (error) {
+      this.loading = false;
+      this.toastService.showError('Could not fetch profile', 'Error');
+    }
+  }
+
   getRecentSearches() {
-    this.storageService.get('search').then(resp => {
+    this.storageService.get('search').then((resp) => {
       if (resp != false) {
         this.recentSearches = resp;
       }
-
-    })
+    });
   }
 
   searchCustomer(event: any) {
@@ -123,30 +150,31 @@ export class HeaderComponent implements OnInit {
       try {
         this.loading = true;
         this.noRecord = false;
-        this.dataService.searchCustomer(query).subscribe((res: any) => {
-          this.loading = false;
-          if (res.customer.length > 0) {
-            this.searchResult = res.customer;
-          } else {
-            this.searchResult = [];
-            this.noRecord = true;
+        this.dataService.searchCustomer(query).subscribe(
+          (res: any) => {
+            this.loading = false;
+            if (res.customer.length > 0) {
+              this.searchResult = res.customer;
+            } else {
+              this.searchResult = [];
+              this.noRecord = true;
+            }
+
+            if (query.length > 3) {
+              this.storageService.get('search').then((resp) => {
+                const oldSearch = resp == false ? [] : resp;
+                const value = [query];
+                const allSearch = [...oldSearch, ...value];
+                this.storageService.store('search', allSearch);
+              });
+            }
+            query.length == 0;
+          },
+          (error: any) => {
+            this.loading = false;
+            this.toastService.showError('Error: Something went wrong', 'Error');
           }
-
-          if (query.length > 3) {
-            this.storageService.get('search').then(resp => {
-              const oldSearch = resp == false ? [] : resp;
-              const value = [query];
-              const allSearch = [...oldSearch, ...value];
-              this.storageService.store('search', allSearch);
-            });
-
-          }
-          query.length == 0;
-        }, (error: any) => {
-          this.loading = false;
-          this.toastService.showError('Error: Something went wrong', 'Error');
-        });
-
+        );
       } catch (error) {
         console.log(error);
         this.loading = false;
@@ -171,5 +199,4 @@ export class HeaderComponent implements OnInit {
   logoutAction() {
     this.authService.logout();
   }
-
 }

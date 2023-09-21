@@ -13,13 +13,31 @@
       <!-- Profile Header -->
       <div class="text-center mb-5">
         <!-- Avatar -->
-        <div class="avatar avatar-xxl avatar-circle profile-cover-avatar">
-          <img class="avatar-img"
-            [src]="customer?.img ? imagePath + customer?.img : '../../../assets/img/160x160/img1.jpg'"
-            onerror="this.src='../../../assets/img/160x160/img1.jpg'" alt="{{customer?.firstName}}">
-          <span class="avatar-status avatar-status-success"></span>
-        </div>
+        <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="avatarUploader">
+          <ng-container *ngIf="setFiles.length == 0; else elseTemplate">
+            <img class="avatar-img" [src]="customer?.img ? imagePath + customer?.img : '../../../assets/img/160x160/img1.jpg'"
+              onerror="this.src='../../../assets/img/160x160/img1.jpg'" alt="{{customer?.firstName}}">
+          </ng-container>
+          <ng-template #elseTemplate>
+            <img id="avatarImg" class="avatar-img"
+              [src]="setFiles.length > 0 ? setFiles[0].base64URL : './assets/img/160x160/img1.jpg' " alt="Image Description">
+          </ng-template>
+        
+          <input type="file" class=" avatar-uploader-input" accept="image/*" id="avatarUploader" (change)="onSelect($event)">
+        
+          <span class="avatar-uploader-trigger">
+            <i class="bi-pencil-fill avatar-uploader-icon shadow-sm"></i>
+          </span>
+        </label>
         <!-- End Avatar -->
+
+      <ng-container *ngIf="setFiles.length > 0;">
+      <button type="button" class="btn btn-primary"  [disabled]="loading" (click)="updateImage()">Upload
+        <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </button>
+    </ng-container>
 
         <!-- {{(customer.firstName?.concat(' ').concat(customer.lastName) | titlecase) }} -->
         <h1 class="page-header-title">{{(customer?.firstName?.concat(' ').concat(customer?.lastName) | titlecase) }}<i
