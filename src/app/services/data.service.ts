@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { HttpService } from './http.service';
 
 @Injectable({
@@ -290,6 +290,18 @@ export class DataService {
   createEventTicket(data: any): Observable<any> {
     //const api = 'create/eventticket';
     return this.httpService.postWithImage('create/eventticket', data);
+  }
+
+  createEventTicket2(data: any): Observable<any> {
+    //const api = 'create/eventticket';
+    return this.httpService.postWithImageOnMoticketCoUk('tickets', data);
+  }
+
+  createEventTickets(data: any): Observable<any> {
+    return forkJoin([
+      this.createEventTicket(data),
+      this.createEventTicket2(data),
+    ]);
   }
 
   // create merchant

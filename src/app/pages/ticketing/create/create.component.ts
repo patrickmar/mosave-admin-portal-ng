@@ -1,38 +1,84 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Injectable, OnInit } from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import * as moment from 'moment';
-import { NgbAlertModule, NgbCalendar, NgbDateAdapter, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbAlertModule,
+  NgbCalendar,
+  NgbDateAdapter,
+  NgbDatepickerModule,
+  NgbDateStruct,
+  NgbTimeAdapter,
+  NgbTimepickerConfig,
+  NgbTimeStruct,
+} from '@ng-bootstrap/ng-bootstrap';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { DataService } from 'src/app/services/data.service';
 import { StatService } from 'src/app/services/stat.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { forkJoin } from 'rxjs';
 declare var HSCore: any;
 declare var HSSideNav: any;
-declare var HSAddField: any;
 declare var HSBsDropdown: any;
-declare var HSQuantityCounter: any;
-// export interface LocalFile {
-//   file: LocalFile2[];
-//   base64URL: string;
-// }
 
-// export interface LocalFile2 {
-//   name: string;
-//   size: string;
-// }
+const pad = (i: number): string => (i < 10 ? `0${i}` : `${i}`);
+
+@Injectable()
+export class NgbTimeStringAdapter extends NgbTimeAdapter<string> {
+  fromModel(value: string | null): NgbTimeStruct | null {
+    if (!value) {
+      return null;
+    }
+    const split = value.split(':');
+    return {
+      hour: parseInt(split[0], 10),
+      minute: parseInt(split[1], 10),
+      second: parseInt(split[2], 10),
+    };
+  }
+
+  toModel(time: NgbTimeStruct | null): string | null {
+    return time != null
+      ? `${pad(time.hour)}:${pad(time.minute)}:${pad(time.second)}`
+      : null;
+  }
+}
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css']
+  styleUrls: ['./create.component.css'],
 })
-
 export class CreateComponent implements OnInit {
-  tableHead = ["Name", "Price", "Disc. Price", "Wallet Disc.", "Quantity", "Action"];
-  eventTypes = ["Festival", "Conference", "Seminar", "Executive Meeting", "Webinar", "Comedy", "Gala Night", "Musical show", "Trade Fair", "Others",]
+  time: NgbTimeStruct = { hour: 13, minute: 30, second: 0 };
+  // time = { hour: 13, minute: 30 };
+  tableHead = [
+    'Name',
+    'Price',
+    'Disc. Price',
+    'Wallet Disc.',
+    'Quantity',
+    'Action',
+  ];
+  eventTypes = [
+    'Festival',
+    'Conference',
+    'Seminar',
+    'Executive Meeting',
+    'Webinar',
+    'Comedy',
+    'Gala Night',
+    'Musical show',
+    'Trade Fair',
+    'Others',
+  ];
   ticketForm: FormGroup;
   model!: NgbDateStruct;
-  time = {hour: 13, minute: 30};
   meridian = true;
   showEndDate: boolean = false;
   loading: boolean = false;
@@ -42,31 +88,35 @@ export class CreateComponent implements OnInit {
   allMerchants!: Array<any>;
   setFiles: Array<any> = [];
   files: File[] = [];
-  bearers = [{ name: "MoLoyal", value: "account" }, { name: "Client", value: "subaccount" }]
+  bearers = [
+    { name: 'MoLoyal', value: 'account' },
+    { name: 'Client', value: 'subaccount' },
+  ];
+  currencies = [
+    { name: 'Naira', value: 'NGN' },
+    { name: 'Dollar', value: 'USD' },
+    { name: 'Pounds', value: 'PDS' },
+    { name: 'Euro', value: 'EUR' },
+  ];
   public loading2 = false;
   public showComponent = false;
-  readonly DELIMITER = '-';
+  year = Number(moment().format('YYYY'));
+  month = Number(moment().format('MM'));
+  day = Number(moment().format('DD'));
+  minDate: any = { year: this.year, month: this.month, day: this.day };
 
-  fromModel(value: string | null): NgbDateStruct | null {
-    if (value) {
-      const date = value.split(this.DELIMITER);
-      return {
-        day : parseInt(date[0], 10),
-        month : parseInt(date[1], 10),
-        year : parseInt(date[2], 10)
-      };
-    }
-    return null;
-  }
-
-  toModel(date: NgbDateStruct | null): string | null {
-    return date ? date.day + this.DELIMITER + date.month + this.DELIMITER + date.year : null;
-  }
-
-  constructor(private fb: FormBuilder, private dataService: DataService,
-    private toastService: ToastService, private statService: StatService, 
-    private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>) {
+  constructor(
+    private fb: FormBuilder,
+    private dataService: DataService,
+    private toastService: ToastService,
+    private statService: StatService,
+    private ngbCalendar: NgbCalendar,
+    config: NgbTimepickerConfig,
+    private dateAdapter: NgbDateAdapter<string>
+  ) {
     this.getAllMerchants();
+    // config.seconds = true;
+    config.spinners = false;
 
     this.ticketForm = this.fb.group({
       eventTitle: ['', [Validators.required, Validators.minLength(5)]],
@@ -75,6 +125,7 @@ export class CreateComponent implements OnInit {
       submerchantId: new FormControl(0, Validators.required),
       paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
       vendor: ['', [Validators.minLength(2)]],
+      currency: ['', [Validators.minLength(2)]],
       chargesBearer: ['', [Validators.required, Validators.minLength(2)]],
       eventType: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(2)]],
@@ -93,43 +144,25 @@ export class CreateComponent implements OnInit {
   }
 
   validations = {
-    eventTitle: [
-      { type: 'required', message: 'Title is required.' }
-    ],
-    name: [
-      { type: 'required', message: 'Name is required.' }
-    ],
-    price: [
-      { type: 'required', message: 'Price is required.' }
-    ],
-    qty: [
-      { type: 'required', message: 'Qty is required.' }
-    ],
+    eventTitle: [{ type: 'required', message: 'Title is required.' }],
+    name: [{ type: 'required', message: 'Name is required.' }],
+    price: [{ type: 'required', message: 'Price is required.' }],
+    qty: [{ type: 'required', message: 'Qty is required.' }],
     walletDiscount: [
-      { type: 'required', message: 'Wallet discount is required.' }
+      { type: 'required', message: 'Wallet discount is required.' },
     ],
-    venue: [
-      { type: 'required', message: 'Venue is required.' }
-    ],
-    description: [
-      { type: 'required', message: 'Description is required.' }
-    ],
-    chargesBearer: [
-      { type: 'required', message: 'Bearer is required.' }
-    ],
-    eventType: [
-      { type: 'required', message: 'Event type is required.' }
-    ],
-    merchantId: [
-      { type: 'required', message: 'Merchant Id is required.' }
-    ],
+    venue: [{ type: 'required', message: 'Venue is required.' }],
+    description: [{ type: 'required', message: 'Description is required.' }],
+    chargesBearer: [{ type: 'required', message: 'Bearer is required.' }],
+    eventType: [{ type: 'required', message: 'Event type is required.' }],
+    merchantId: [{ type: 'required', message: 'Merchant Id is required.' }],
+    currency: [{ type: 'required', message: 'Currency Id is required.' }],
     submerchantId: [
-      { type: 'required', message: 'Submerchant Id is required.' }
+      { type: 'required', message: 'Submerchant Id is required.' },
     ],
     paystackAcctId: [
-      { type: 'required', message: 'Paystack Account is required.' }
+      { type: 'required', message: 'Paystack Account is required.' },
     ],
-
   };
 
   ngOnInit(): void {
@@ -137,6 +170,23 @@ export class CreateComponent implements OnInit {
     // this.addTicket();
     this.addStartDate();
     this.addEndDate();
+
+    this.startDate()
+      .at(0)
+      .get('fakeTime')
+      ?.valueChanges.subscribe((selectedTime) => {
+        if (selectedTime != null) {
+          this.onStartTimeSelect(selectedTime);
+        }
+      });
+    this.endDate()
+      .at(0)
+      .get('fakeTime')
+      ?.valueChanges.subscribe((selectedTime) => {
+        if (selectedTime != null) {
+          this.onEndTimeSelect(selectedTime);
+        }
+      });
   }
 
   displayEndDate() {
@@ -144,8 +194,8 @@ export class CreateComponent implements OnInit {
       this.showEndDate = true;
     } else {
       this.showEndDate = false;
-      this.endDate().at(0).get('date')?.setValue("");
-      this.endDate().at(0).get('time')?.setValue("");
+      this.endDate().at(0).get('date')?.setValue('');
+      this.endDate().at(0).get('time')?.setValue('');
     }
   }
 
@@ -157,50 +207,57 @@ export class CreateComponent implements OnInit {
     }
   }
 
-
   ticketCategories(): FormArray {
-    return this.ticketForm.get("ticketCategories") as FormArray
+    return this.ticketForm.get('ticketCategories') as FormArray;
   }
 
   startDate(): FormArray {
-    return this.ticketForm.get("start") as FormArray
+    return this.ticketForm.get('start') as FormArray;
   }
 
   endDate(): FormArray {
-    return this.ticketForm.get("end") as FormArray
+    return this.ticketForm.get('end') as FormArray;
   }
 
   newCategory(): FormGroup {
     return this.fb.group({
       name: this.fb.control('', Validators.required),
-      price: this.fb.control('', Validators.compose([
-        Validators.maxLength(10),
-        Validators.minLength(2),
-        Validators.min(10),
-        Validators.required
-      ])),
-      qty: this.fb.control(10, Validators.compose([
-        Validators.maxLength(6),
-        Validators.minLength(1),
-        Validators.min(1),
-        Validators.max(this.maxQty)
-      ])),
-      walletDiscount: this.fb.control(0, Validators.compose([
-        Validators.min(0),
-        Validators.max(this.maxQty)
-      ])),
-      discountPrice: this.fb.control('', Validators.compose([
-        Validators.maxLength(10),
-        Validators.minLength(2),
-        Validators.min(10)
-      ])),
-    })
+      price: this.fb.control(
+        '',
+        Validators.compose([
+          Validators.maxLength(10),
+          Validators.minLength(2),
+          Validators.min(10),
+          Validators.required,
+        ])
+      ),
+      qty: this.fb.control(
+        10,
+        Validators.compose([
+          Validators.maxLength(6),
+          Validators.minLength(1),
+          Validators.min(1),
+          Validators.max(this.maxQty),
+        ])
+      ),
+      walletDiscount: this.fb.control(
+        0,
+        Validators.compose([Validators.min(0), Validators.max(this.maxQty)])
+      ),
+      discountPrice: this.fb.control(
+        '',
+        Validators.compose([
+          Validators.maxLength(10),
+          Validators.minLength(2),
+          Validators.min(10),
+        ])
+      ),
+    });
   }
 
   newDate(): FormGroup {
-    return this.fb.group({ date: '', time: '' })
+    return this.fb.group({ date: '', time: '', fakeTime: '' });
   }
-
 
   addTicket() {
     this.ticketCategories().push(this.newCategory());
@@ -214,7 +271,6 @@ export class CreateComponent implements OnInit {
     this.endDate().push(this.newDate());
   }
 
-
   removeTicket(i: number) {
     this.ticketCategories().removeAt(i);
   }
@@ -226,21 +282,24 @@ export class CreateComponent implements OnInit {
   updateMerchant(event: any) {
     const value = this.allMerchants.filter((obj) => {
       return obj.merchantId === event.target.value;
-    })
+    });
     this.ticketForm.get('merchantId')?.setValue(value[0].programId);
   }
 
   getAllMerchants() {
     try {
       this.loading2 = true;
-      this.dataService.getAllMerchants().subscribe((res: any) => {
-        this.allMerchants = res;
-        this.loading2 = false;
-        this.showComponent = true;
-      }, (error: any) => {
-        this.loading2 = false;
-        this.toastService.showError('Error fetching all merchants', 'Error');
-      })
+      this.dataService.getAllMerchants().subscribe(
+        (res: any) => {
+          this.allMerchants = res;
+          this.loading2 = false;
+          this.showComponent = true;
+        },
+        (error: any) => {
+          this.loading2 = false;
+          this.toastService.showError('Error fetching all merchants', 'Error');
+        }
+      );
     } catch (error) {
       console.log(error);
       this.loading2 = false;
@@ -249,20 +308,20 @@ export class CreateComponent implements OnInit {
   }
 
   handleMinus(e: any, index: number, name: string, minQty: number) {
-    let value = this.ticketForm.get("ticketCategories")?.value[index]?.[name];
+    let value = this.ticketForm.get('ticketCategories')?.value[index]?.[name];
     if (value === minQty) {
       e.preventDefault();
     } else {
-      const newValue = value - 1;
+      const newValue = value - 10;
       this.ticketCategories().at(index).get(name)?.setValue(newValue);
     }
   }
   handlePlus(e: any, index: number, name: string, maxQty: number) {
-    let value = this.ticketForm.get("ticketCategories")?.value[index]?.[name];
+    let value = this.ticketForm.get('ticketCategories')?.value[index]?.[name];
     if (value === maxQty) {
       e.preventDefault();
     } else {
-      const newValue = value + 1;
+      const newValue = value + 10;
       this.ticketCategories().at(index).get(name)?.setValue(newValue);
     }
   }
@@ -275,12 +334,12 @@ export class CreateComponent implements OnInit {
       array.push(binary.charCodeAt(i));
     }
     return new Blob([new Uint8Array(array)], {
-      type: 'image/png'
+      type: 'image/png',
     });
   }
 
   getBase64(file: any) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       //let baseURL = "";
       // Make new FileReader
       let reader = new FileReader();
@@ -293,7 +352,7 @@ export class CreateComponent implements OnInit {
         resolve(baseURL);
       };
     });
-  };
+  }
 
   compressImage(src: any, newX: number, newY: number) {
     return new Promise((res, rej) => {
@@ -307,9 +366,9 @@ export class CreateComponent implements OnInit {
         ctx?.drawImage(img, 0, 0, newX, newY);
         const data = ctx?.canvas.toDataURL();
         res(data);
-      }
-      img.onerror = error => rej(error);
-    })
+      };
+      img.onerror = (error) => rej(error);
+    });
   }
 
   onSelect(e: any) {
@@ -321,55 +380,79 @@ export class CreateComponent implements OnInit {
       for (let i = 0; i < file2.length; i++) {
         const doc = file2[i];
         if (!regex.exec(doc.name)) {
-          this.toastService.showError("Accepted file format is (.png, .jpg, .jpeg, .pdf)", 'Error');
+          this.toastService.showError(
+            'Accepted file format is (.png, .jpg, .jpeg, .pdf)',
+            'Error'
+          );
         } else if (doc.size > 1000000) {
-          this.toastService.showError("Maximum of 1MB file size is allowed", 'Error');
+          this.toastService.showError(
+            'Maximum of 1MB file size is allowed',
+            'Error'
+          );
         } else {
           // if we want to compress the image. newX is width, newY is height
           // this.compressImage(doc, 100, 100).then(compressed => {
           //   this.resizedBase64 = compressed;
           //   console.log(this.resizedBase64);
           // })
-          this.getBase64(doc).then((result: any) => {
-            doc["base64"] = result;
-            doe.push({ file: doc, base64URL: result });
-            this.setFiles = doe;
-          }).catch((err: any) => {
-          });
+          this.getBase64(doc)
+            .then((result: any) => {
+              doc['base64'] = result;
+              doe.push({ file: doc, base64URL: result });
+              this.setFiles = doe;
+            })
+            .catch((err: any) => {});
         }
       }
-
     } else if (e.rejectedFiles.length > 0) {
       for (let i = 0; i < e.rejectedFiles.length; i++) {
-        if (e.rejectedFiles[i].reason === "type") {
-          this.toastService.showError('Accepted file format is (.png, .jpg, .jpeg, .pdf)', 'Error');
-        } else if (e.rejectedFiles[i].reason === "size") {
-          this.toastService.showError('Maximum of ' + this.statService.getFilesize(this.maxFileSize, false) + ' file size is allowed', 'Error');
+        if (e.rejectedFiles[i].reason === 'type') {
+          this.toastService.showError(
+            'Accepted file format is (.png, .jpg, .jpeg, .pdf)',
+            'Error'
+          );
+        } else if (e.rejectedFiles[i].reason === 'size') {
+          this.toastService.showError(
+            'Maximum of ' +
+              this.statService.getFilesize(this.maxFileSize, false) +
+              ' file size is allowed',
+            'Error'
+          );
         } else {
-          this.toastService.showError('Unknown Error. Please try another file', 'Error')
+          this.toastService.showError(
+            'Unknown Error. Please try another file',
+            'Error'
+          );
         }
       }
     }
-
-    // const formData = new FormData();
-
-    // for (var i = 0; i < this.files.length; i++) {
-    //   formData.append("file[]", this.files[i]);
-    // }
-    // console.log(formData);
   }
 
-  onStartDateSelection(event: any, d: any){
-    console.log(event);
+  onStartDateSelection(event: any, d: any) {
+    const sDate = event.year + '-' + event.month + '-' + event.day;
+    const getStartDate = moment(sDate).format('YYYY-MM-DD');
+    this.startDate().at(0).get('date')?.setValue(getStartDate);
+    this.minDate = { year: event.year, month: event.month, day: event.day };
     d.close();
-       
-    //this.ticketForm.value.start[0].date
-    // this.ticketForm?.get("start")?.at(0)?.setValue(newDate)
-    //this.startDate().at(0).get('date')?.setValue(newDate);
   }
 
-  onEndDateSelection(event: any, d: any){
+  onEndDateSelection(event: any, d: any) {
+    const eDate = event.year + '-' + event.month + '-' + event.day;
+    const getEndDate = moment(eDate).format('YYYY-MM-DD');
+    this.endDate().at(0).get('date')?.setValue(getEndDate);
     d.close();
+  }
+
+  onStartTimeSelect(selectedTime: any) {
+    const startTime =
+      selectedTime.hour + ':' + selectedTime.minute + ':' + selectedTime.second;
+    this.startDate().at(0).get('time')?.setValue(startTime);
+  }
+
+  onEndTimeSelect(selectedTime: any) {
+    const endTime =
+      selectedTime.hour + ':' + selectedTime.minute + ':' + selectedTime.second;
+    this.endDate().at(0).get('time')?.setValue(endTime);
   }
 
   onRemove(item: any, e?: any) {
@@ -388,55 +471,58 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  // onSubmit2() {
+  // onSubmit() {
   //   const form = this.ticketForm.value;
+  //   console.log(form);
+  //   const startTIme = form.start[0].time;
+  //   const endTIme = form.end[0].time;
   //   const start = form.start[0].date;
   //   const end = form.end[0].date;
-  //   const startDate = moment(start.year+'-'+start.month+'-'+start.day).format("YYYY-MM-DD")
-  //   this.startDate().at(0).get('date')?.setValue(startDate);
-  //   const endDate = moment(end.year+'-'+end.month+'-'+end.day).format("YYYY-MM-DD")
-  //   this.endDate().at(0).get('date')?.setValue(endDate);
-  //   console.log(this.ticketForm.value);
+  //   const startDate = moment(start); // moment(form.start[0].date);
+  //   const endDate = moment(end); // moment(form.end[0].date);
+  //   console.log(startDate);
+  //   console.log(startTIme);
+  //   console.log(endDate);
+  //   console.log(endTIme);
+  //   if (endDate.isBefore(startDate)) {
+  //     this.toastService.showError(
+  //       'Event end date must be greater than start date.',
+  //       'Error'
+  //     );
+  //   }
   // }
-  
+
   async onSubmit() {
     const form = this.ticketForm.value;
     console.log(form);
-    console.log(this.ticketForm.valid);
     if (this.ticketForm.valid) {
       if (this.setFiles.length == 0) {
         this.toastService.showError('Banner can not be empty', 'Error');
       } else {
         const start = form.start[0].date;
         const end = form.end[0].date;
-        const sTime = form.start[0].time;
-        const eTime = form.end[0].time;
-        const sDate = start.year + '-' + start.month + '-' + start.day;
-        const eDate = end.year + '-' + end.month + '-' + end.day;
-        const getStartDate = moment(sDate).format("YYYY-MM-DD")
-        this.startDate().at(0).get('date')?.setValue(getStartDate);
-        const getEndDate = moment(eDate).format("YYYY-MM-DD")
-        this.endDate().at(0).get('date')?.setValue(getEndDate);
-        const startTIme = sDate + ' ' +sTime.hour + ':' + sTime.minute + ':' + sTime.second;
-        const endTime = eDate + ' ' + eTime.hour + ':' + eTime.minute + ':' + eTime.second;
-        const getStartTime = moment(startTIme).format("hh:mm:ss")
-        this.startDate().at(0).get('time')?.setValue(getStartTime);
-        const getEndTime = moment(endTime).format("hh:mm:ss")
-        this.endDate().at(0).get('time')?.setValue(getEndTime);
-        const startDate = moment(getStartDate) // moment(form.start[0].date);
-        const endDate = moment(getEndDate) // moment(form.end[0].date);
+        const startDate = moment(start);
+        const endDate = moment(end);
         if (endDate.isBefore(startDate)) {
-          this.toastService.showError('Event end date must be greater than start date.', 'Error');
-        } 
-        else {
+          this.toastService.showError(
+            'Event end date must be greater than start date.',
+            'Error'
+          );
+        } else {
           this.loading = true;
           const formData = new FormData();
+          const formData2 = new FormData();
           for (var i = 0; i < this.setFiles.length; i++) {
-            const fileName = new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';
+            const fileName =
+              new Date().getTime() +
+              '' +
+              Math.floor(Math.random() * 10000) +
+              '.png';
             const response = await fetch(this.setFiles[i].file.base64);
             const blob = await response.blob();
             // const blob2 = this.dataURItoBlob4(this.setFiles[i].file.base64);
-            formData.append("banner[]", blob, fileName);
+            formData.append('banner[]', blob, fileName);
+            formData2.append('banner', blob, fileName);
           }
           //remove array from the form object
           //  const  {ticketCategories, start, end, ...newForm} = form;
@@ -444,45 +530,69 @@ export class CreateComponent implements OnInit {
           //  console.log(form);
 
           Object.keys(form).forEach((key) => {
-            Array.isArray(form[key]) ?
-              form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value)) }) : formData.append(key, form[key])
+            Array.isArray(form[key])
+              ? form[key].forEach((value: any) => {
+                  formData.append(key + '[]', JSON.stringify(value));
+                })
+              : formData.append(key, form[key]);
           });
-          // formData.forEach((value, key) => {
-          //   console.log(key + ": " + value);
-          // });
+
+          Object.keys(form).forEach((key) => {
+            Array.isArray(form[key])
+              ? form[key].forEach((value: any) => {
+                  formData2.append(key + '[]', JSON.stringify(value));
+                })
+              : formData2.append(key, form[key]);
+          });
+
+          formData2.forEach((value, key) => {
+            console.log(key + ': ' + value);
+          });
 
           try {
-            this.dataService.createEventTicket(formData).subscribe((res: any) => {
-              console.log(res);
-              this.loading = false;
-              if (res.error == false) {
-                this.ticketForm.reset();
-                this.ticketCategories().controls.length = 1;
-                // this.removeAll(this.setFiles)
-                // this.removeAll(this.files);  
-                this.setFiles.length = 0;
-                this.files.length = 0;
-                this.toastService.showSuccess(res?.message, 'Success');
-              } else {
-                this.toastService.showError(res?.message, 'Error');
+            forkJoin([
+              this.dataService.createEventTicket(formData),
+              this.dataService.createEventTicket2(formData2),
+            ]).subscribe(
+              (res: any) => {
+                console.log(res);
+                console.log(res[0]);
+                console.log(res[1]);
+                this.loading = false;
+                if (res[0].error == false || res[1].error == false) {
+                  this.ticketForm.reset();
+                  this.ticketCategories().controls.length = 1;
+                  // this.removeAll(this.setFiles)
+                  // this.removeAll(this.files);
+                  this.setFiles.length = 0;
+                  this.files.length = 0;
+                  this.toastService.showSuccess(res[0]?.message, 'Success');
+                } else {
+                  this.toastService.showError(res?.message, 'Error');
+                }
+              },
+              (error: any) => {
+                this.loading = false;
+                console.log(error);
+                this.toastService.showError(
+                  'Ticket could not be created. Please try again.',
+                  'Error'
+                );
               }
-            }, (error: any) => {
-              this.loading = false;
-              console.log(error);
-              this.toastService.showError('Ticket could not be created. Please try again.', 'Error');
-            })
+            );
           } catch (error) {
             this.loading = false;
             console.log(error);
-            this.toastService.showError('Could not create ticket. Please try again later.', 'Error');
+            this.toastService.showError(
+              'Could not create ticket. Please try again later.',
+              'Error'
+            );
           }
         }
-
       }
     } else {
       this.toastService.showError('Please fill all input fields', 'Error');
     }
-
   }
 
   getFilesize(size: number) {
@@ -492,41 +602,18 @@ export class CreateComponent implements OnInit {
   jsInit2() {
     (function () {
       window.onload = function () {
-
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
+        new HSSideNav('.js-navbar-vertical-aside').init();
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
+        HSBsDropdown.init();
 
         // INITIALIZATION OF SELECT
         // =======================================================
-        HSCore.components.HSTomSelect.init('.js-select')
-
-        // INITIALIZATION OF  QUANTITY COUNTER
-        // =======================================================
-
-        //new HSQuantityCounter('.js-quantity-counter-input');
-
-        // INITIALIZATION OF  DATE PICKER
-        // =======================================================
-
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel');
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel2');
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel3');
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel4');
-
-        // INITIALIZATION OF DROPZONE
-        // =======================================================
-        HSCore.components.HSDropzone.init('.js-dropzone');
-
-        // INITIALIZATION OF QUILLJS EDITOR
-        // =======================================================
-        // HSCore.components.HSQuill.init('.js-quill')
-      }
-    })()
+        HSCore.components.HSTomSelect.init('.js-select');
+      };
+    })();
   }
-
 }

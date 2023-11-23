@@ -1,5 +1,19 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, ElementRef, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ChangeDetectionStrategy, AfterViewChecked, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  ElementRef,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ChangeDetectionStrategy,
+  AfterViewChecked,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbCalendar, NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
@@ -15,20 +29,21 @@ declare var HSBsDropdown: any;
 declare var HsNavScroller: any;
 
 type IFilter = {
-  [key: string]: string,
-  start: string
-  end: string
-  type: string
-}
+  [key: string]: string;
+  start: string;
+  end: string;
+  type: string;
+};
 
 @Component({
   selector: 'app-transactions',
   // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './transactions.component.html',
-  styleUrls: ['./transactions.component.css']
+  styleUrls: ['./transactions.component.css'],
 })
-export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
-
+export class TransactionsComponent
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
+{
   @ViewChildren(DataTableDirective) dtElements!: QueryList<DataTableDirective>;
   //@ViewChild(DataTableDirective) dtElement!: DataTableDirective; // new
   dtOptions: DataTables.Settings | any = {};
@@ -38,7 +53,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   dtTrigger2: Subject<any> = new Subject<any>();
   dtTrigger3: Subject<any> = new Subject<any>();
   dtTrigger4: Subject<any> = new Subject<any>();
-  isDtInitialized: boolean = false
+  isDtInitialized: boolean = false;
 
   public loading = false;
   public showComponent = false;
@@ -73,7 +88,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   thisMonthCommission!: any;
   thisMonthSavings!: any;
-  thisMonthWithdrawal!: any
+  thisMonthWithdrawal!: any;
 
   savingsSumMonthly!: number;
   withdrawalSumMonthly!: number;
@@ -97,7 +112,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   commissionSumWeekly!: number;
 
   r!: any;
-  tableHead!: { id: number; name: string; }[];
+  tableHead!: { id: number; name: string }[];
   savingsTrnxRecords: any;
   withTrnxRecords: any;
   commTrnxRecords: any;
@@ -105,10 +120,22 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   bestSavers!: Array<any>;
   emptyTable = environment.emptyTable;
-  table = ['datatable', 'savingsDatatable', 'withdrawalsDatatable', 'commissionsDatatable']
+  table = [
+    'datatable',
+    'savingsDatatable',
+    'withdrawalsDatatable',
+    'commissionsDatatable',
+  ];
   //ranges = [moment().format('MMM D'), moment().format('MMM D, YYYY')]
   //ranges = [moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
-  ranges = [moment().subtract(3, 'month').startOf('month').startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
+  ranges = [
+    moment()
+      .subtract(2, 'month')
+      .startOf('month')
+      .startOf('day')
+      .format('MMM D, YYYY'),
+    moment().endOf('day').format('MMM D, YYYY'),
+  ];
   dateRanges!: Array<any>;
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate;
@@ -116,10 +143,19 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   searchType!: string;
   filteredRecords!: any[];
 
-  constructor(private dataService: DataService, private datePipe: DatePipe,
-    private receiptService: ReceiptService, private modalService: NgbModal, private ref: ChangeDetectorRef,
-    private ngZone: NgZone, private route: ActivatedRoute,
-    private statService: StatService, calendar: NgbCalendar, private toastService: ToastService, private router: Router) {
+  constructor(
+    private dataService: DataService,
+    private datePipe: DatePipe,
+    private receiptService: ReceiptService,
+    private modalService: NgbModal,
+    private ref: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private route: ActivatedRoute,
+    private statService: StatService,
+    calendar: NgbCalendar,
+    private toastService: ToastService,
+    private router: Router
+  ) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -154,19 +190,20 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.dtTrigger2.unsubscribe();
     this.dtTrigger3.unsubscribe();
     this.dtTrigger4.unsubscribe();
-
   }
 
   getTransactionType() {
     this.transactionType = this.route.snapshot.paramMap.get('type');
   }
 
-
-  filter(event: any, tableid: number, tableName: string,) {
+  filter(event: any, tableid: number, tableName: string) {
     var value = event.target.value;
-    $("#datatableSearch" + tableid).on("keyup", () => {
+    $('#datatableSearch' + tableid).on('keyup', () => {
       if (value === 'null') value = '';
-      $("#" + tableName).DataTable().search(value).draw();
+      $('#' + tableName)
+        .DataTable()
+        .search(value)
+        .draw();
     });
   }
 
@@ -175,37 +212,55 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   // }
 
   downloadAll(tableName: string, name: string) {
-    const table = "#" + tableName;
-    $(table).DataTable().button('.buttons-' + name).trigger();
+    const table = '#' + tableName;
+    $(table)
+      .DataTable()
+      .button('.buttons-' + name)
+      .trigger();
   }
 
   getAllTrxs(maxcount: number) {
     const obj = {
       type: 'all',
-      from: moment().subtract(3, 'month').startOf('month').startOf('day').format(),
-      to: moment().endOf('day').format() 
-    }
+      from: moment()
+        .subtract(2, 'month')
+        .startOf('month')
+        .startOf('day')
+        .format(),
+      to: moment().endOf('day').format(),
+    };
     try {
       this.loading = true;
       forkJoin([
         this.dataService.getMosaveTransactions(),
-        this.dataService.getMosaveSavingTransactions(),        
-        this.dataService.filterMosaveTransactionsByDate(obj.type, obj.from, obj.to),
+        this.dataService.getMosaveSavingTransactions(),
+        this.dataService.filterMosaveTransactionsByDate(
+          obj.type,
+          obj.from,
+          obj.to
+        ),
       ]).subscribe((result: any) => {
         this.fetchTrnx(result, maxcount);
         this.ref.detectChanges();
         // this.isDtInitialized = true
         // this.dtTrigger.next('');
         this.rerender(0);
-      }), (error: any) => {
-        console.log(error);
-        this.loading = false;
-        this.toastService.showError('Error fetching transaction info', 'Error');
-      }
+      }),
+        (error: any) => {
+          console.log(error);
+          this.loading = false;
+          this.toastService.showError(
+            'Error fetching transaction info',
+            'Error'
+          );
+        };
     } catch (error) {
       console.log(error);
       this.loading = false;
-      this.toastService.showError('Error fetching data. Please refresh this page', 'Error');
+      this.toastService.showError(
+        'Error fetching data. Please refresh this page',
+        'Error'
+      );
     }
   }
 
@@ -214,50 +269,69 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       this.loading = true;
       forkJoin([
         this.dataService.getMosaveTransactions(),
-        this.dataService.getMosaveSavingTransactions()
+        this.dataService.getMosaveSavingTransactions(),
       ]).subscribe((result: any) => {
         this.fetchTrnx(result, maxcount);
         this.rerender(0);
-      }), (error: any) => {
-        console.log(error);
-        this.loading = false;
-        this.toastService.showError('Error fetching transaction info', 'Error');
-      }
+      }),
+        (error: any) => {
+          console.log(error);
+          this.loading = false;
+          this.toastService.showError(
+            'Error fetching transaction info',
+            'Error'
+          );
+        };
     } catch (error) {
       this.loading = false;
-      this.toastService.showError('Error fetching data. Please refresh this page', 'Error');
+      this.toastService.showError(
+        'Error fetching data. Please refresh this page',
+        'Error'
+      );
     }
   }
 
-  transformRecords (array: Array<any>) {
+  transformRecords(array: Array<any>) {
     const newRecords: Array<any> = array.map((res: any) => {
-      if (res.transType == "S") {
-        var type = res.transType + "avings";
-      } else if (res.transType == "W") {
-        var type = res.transType + "ithdrawal";
+      if (res.transType == 'S') {
+        var type = res.transType + 'avings';
+      } else if (res.transType == 'W') {
+        var type = res.transType + 'ithdrawal';
       } else {
-        var type = res.transType + "";
+        var type = res.transType + '';
       }
       return { ...res, transType: type };
-    })
+    });
     return newRecords;
   }
 
   fetchTrnx(result: Array<any>, maxcount: number) {
     this.loading = false;
     this.showComponent = true;
-    const newRecords: Array<any> = this.transformRecords(result[0])
-    this.allRecords = newRecords //.slice(0, this.maxCount);
+    const newRecords: Array<any> = this.transformRecords(result[0]);
+    this.allRecords = newRecords; //.slice(0, this.maxCount);
     this.trnxRecords = newRecords;
     const newSavingsRecords = this.transformRecords(result[1]);
     this.filteredRecords = this.transformRecords(result[2].data);
     //this.savingsRecords = newSavingsRecords;
-    this.savingsRecords = this.allRecords .filter((item: any) => item.transType === 'Savings');
-    this.savingsTrnxRecords = this.filteredRecords.filter((item: any) => item.transType === 'Savings');
-    this.withdrawalRecords = this.allRecords.filter((item: any) => item.transType === 'Withdrawal');
-    this.withTrnxRecords = this.filteredRecords.filter((item: any) => item.transType === 'Withdrawal');
-    this.commissionRecords = this.allRecords .filter((item: any) => item.transType === "commission");
-    this.commTrnxRecords = this.filteredRecords.filter((item: any) => item.transType === 'commission');
+    this.savingsRecords = this.allRecords.filter(
+      (item: any) => item.transType === 'Savings'
+    );
+    this.savingsTrnxRecords = this.filteredRecords.filter(
+      (item: any) => item.transType === 'Savings'
+    );
+    this.withdrawalRecords = this.allRecords.filter(
+      (item: any) => item.transType === 'Withdrawal'
+    );
+    this.withTrnxRecords = this.filteredRecords.filter(
+      (item: any) => item.transType === 'Withdrawal'
+    );
+    this.commissionRecords = this.allRecords.filter(
+      (item: any) => item.transType === 'commission'
+    );
+    this.commTrnxRecords = this.filteredRecords.filter(
+      (item: any) => item.transType === 'commission'
+    );
 
     this.getDailyTransactions();
     this.getMonthlyTransactions();
@@ -267,106 +341,189 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.calculateDailyTransactions();
     this.calculateMonthlyTransactions();
     this.calculateWeeklyTransactions();
-    this.bestSavers = this.statService.getBestStat(this.savingsRecords, this.savingsSum);
+    this.bestSavers = this.statService.getBestStat(
+      this.savingsRecords,
+      this.savingsSum
+    );
   }
 
   filterTrxs(event: any) {
     try {
       this.loading = true;
-      this.dataService.filterMosaveTransactionsByDate(event.type, event.start.format(), event.end.format()).subscribe((result: any) => {
-        this.loading = false;
-        if(result.error == false){
-          const id: number = event.id - 1;
-          const newRecords: Array<any> = this.transformRecords(result.data)
-          if(id == 0){
-            this.filteredRecords = newRecords;
-          }else if(id == 1){
-            this.savingsTrnxRecords = newRecords;
-          }else if(id == 2){
-            this.withTrnxRecords = newRecords;
-          }else if(id == 3){
-            this.commTrnxRecords = newRecords;
+      this.dataService
+        .filterMosaveTransactionsByDate(
+          event.type,
+          event.start.format(),
+          event.end.format()
+        )
+        .subscribe((result: any) => {
+          this.loading = false;
+          if (result.error == false) {
+            const id: number = event.id - 1;
+            const newRecords: Array<any> = this.transformRecords(result.data);
+            if (id == 0) {
+              this.filteredRecords = newRecords;
+            } else if (id == 1) {
+              this.savingsTrnxRecords = newRecords;
+            } else if (id == 2) {
+              this.withTrnxRecords = newRecords;
+            } else if (id == 3) {
+              this.commTrnxRecords = newRecords;
+            }
+            this.toastService.showSuccess(result.message, 'Success');
+
+            // Destroy the existing table and rerender the table again
+            if (this.dtElements.length > 0) {
+              this.rerender(id);
+            }
+          } else {
+            this.toastService.showError(result.message, 'Error');
           }
-          this.toastService.showSuccess(result.message, 'Success')
-          
-          // Destroy the existing table and rerender the table again
-          if(this.dtElements.length > 0){
-            this.rerender(id)            
-          }          
-        }else {
-          this.toastService.showError(result.message, 'Error')
-        }
-        
-      }), (error: any) => {
-        console.log(error);
-        this.loading = false;
-        this.toastService.showError('Error fetching transaction info', 'Error');
-      }
+        }),
+        (error: any) => {
+          console.log(error);
+          this.loading = false;
+          this.toastService.showError(
+            'Error fetching transaction info',
+            'Error'
+          );
+        };
     } catch (error) {
       this.loading = false;
-      this.toastService.showError('Error fetching data. Please refresh this page', 'Error');
+      this.toastService.showError(
+        'Error fetching data. Please refresh this page',
+        'Error'
+      );
     }
   }
 
   calculateAllTransactions() {
     //calculate the total savings
-    this.savingsSum = this.savingsRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.savingsSum = this.savingsRecords.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total withdrawals
-    this.withdrawalSum = this.withdrawalRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.withdrawalSum = this.withdrawalRecords.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total commissions
-    this.commissionSum = this.commissionRecords.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.commissionSum = this.commissionRecords.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
   }
 
   getDailyTransactions() {
     //Filter Today's transactions for savings, withdrawal and commission
-    const day = this.datePipe.transform(new Date().setDate(new Date().getDate()), 'yyyy-MM-dd');
-    this.thisDaySavings = this.savingsRecords.filter((x: any) => x.transDate == day);
-    this.thisDayWithdrawals = this.withdrawalRecords.filter((x: any) => x.transDate == day);
-    this.thisDayCommissions = this.commissionRecords.filter((x: any) => x.transDate == day);
+    const day = this.datePipe.transform(
+      new Date().setDate(new Date().getDate()),
+      'yyyy-MM-dd'
+    );
+    this.thisDaySavings = this.savingsRecords.filter(
+      (x: any) => x.transDate == day
+    );
+    this.thisDayWithdrawals = this.withdrawalRecords.filter(
+      (x: any) => x.transDate == day
+    );
+    this.thisDayCommissions = this.commissionRecords.filter(
+      (x: any) => x.transDate == day
+    );
   }
 
   getMonthlyTransactions() {
     const startOfMonth = moment().startOf('month').format();
     const endOfMonth = moment().endOf('month').format();
-    this.thisMonthSavings = this.savingsRecords.filter((m: any) => new Date(m.transDate + " " + m.time) >= new Date(startOfMonth) && new Date(m.transDate + " " + m.time) <= new Date(endOfMonth));
-    this.thisMonthWithdrawal = this.withdrawalRecords.filter((m: any) => new Date(m.transDate + " " + m.time) >= new Date(startOfMonth) && new Date(m.transDate + " " + m.time) <= new Date(endOfMonth));
-    this.thisMonthCommission = this.commissionRecords.filter((m: any) => new Date(m.transDate + " " + m.time) >= new Date(startOfMonth) && new Date(m.transDate + " " + m.time) <= new Date(endOfMonth));
+    this.thisMonthSavings = this.savingsRecords.filter(
+      (m: any) =>
+        new Date(m.transDate + ' ' + m.time) >= new Date(startOfMonth) &&
+        new Date(m.transDate + ' ' + m.time) <= new Date(endOfMonth)
+    );
+    this.thisMonthWithdrawal = this.withdrawalRecords.filter(
+      (m: any) =>
+        new Date(m.transDate + ' ' + m.time) >= new Date(startOfMonth) &&
+        new Date(m.transDate + ' ' + m.time) <= new Date(endOfMonth)
+    );
+    this.thisMonthCommission = this.commissionRecords.filter(
+      (m: any) =>
+        new Date(m.transDate + ' ' + m.time) >= new Date(startOfMonth) &&
+        new Date(m.transDate + ' ' + m.time) <= new Date(endOfMonth)
+    );
   }
 
   getWeeklyTransactions() {
     const startOfWeek = moment().startOf('week').format();
     const endOfWeek = moment().endOf('week').format();
-    this.thisWeekSavings = this.savingsRecords.filter((m: any) => new Date(m.transDate + " " + m.time) >= new Date(startOfWeek) && new Date(m.transDate + " " + m.time) <= new Date(endOfWeek));
-    this.thisWeekWithdrawals = this.withdrawalRecords.filter((m: any) => new Date(m.transDate + " " + m.time) >= new Date(startOfWeek) && new Date(m.transDate + " " + m.time) <= new Date(endOfWeek));
-    this.thisWeekCommissions = this.commissionRecords.filter((m: any) => new Date(m.transDate + " " + m.time) >= new Date(startOfWeek) && new Date(m.transDate + " " + m.time) <= new Date(endOfWeek));
+    this.thisWeekSavings = this.savingsRecords.filter(
+      (m: any) =>
+        new Date(m.transDate + ' ' + m.time) >= new Date(startOfWeek) &&
+        new Date(m.transDate + ' ' + m.time) <= new Date(endOfWeek)
+    );
+    this.thisWeekWithdrawals = this.withdrawalRecords.filter(
+      (m: any) =>
+        new Date(m.transDate + ' ' + m.time) >= new Date(startOfWeek) &&
+        new Date(m.transDate + ' ' + m.time) <= new Date(endOfWeek)
+    );
+    this.thisWeekCommissions = this.commissionRecords.filter(
+      (m: any) =>
+        new Date(m.transDate + ' ' + m.time) >= new Date(startOfWeek) &&
+        new Date(m.transDate + ' ' + m.time) <= new Date(endOfWeek)
+    );
   }
 
   calculateDailyTransactions() {
     //calculate the total savings per day
-    this.savingsSumDaily = this.thisDaySavings.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.savingsSumDaily = this.thisDaySavings.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total withdrawals per day
-    this.withdrawalSumDaily = this.thisDayWithdrawals.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.withdrawalSumDaily = this.thisDayWithdrawals.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total commissions per day
-    this.commissionSumDaily = this.thisDayCommissions.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.commissionSumDaily = this.thisDayCommissions.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
   }
-
 
   calculateMonthlyTransactions() {
     //calculate the total savings per month
-    this.savingsSumMonthly = this.thisMonthSavings.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.savingsSumMonthly = this.thisMonthSavings.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total withdrawals per month
-    this.withdrawalSumMonthly = this.thisMonthWithdrawal.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.withdrawalSumMonthly = this.thisMonthWithdrawal.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total commissions per month
-    this.commissionSumMonthly = this.thisMonthCommission.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.commissionSumMonthly = this.thisMonthCommission.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
   }
 
   calculateWeeklyTransactions() {
     //calculate the total savings per week
-    this.savingsSumWeekly = this.thisWeekSavings.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.savingsSumWeekly = this.thisWeekSavings.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total withdrawal per week
-    this.withdrawalSumWeekly = this.thisWeekWithdrawals.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.withdrawalSumWeekly = this.thisWeekWithdrawals.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
     //calculate the total commissions per week
-    this.commissionSumWeekly = this.thisWeekCommissions.reduce((sum: any, current: any) => sum + Number(current.transAmount), 0);
+    this.commissionSumWeekly = this.thisWeekCommissions.reduce(
+      (sum: any, current: any) => sum + Number(current.transAmount),
+      0
+    );
   }
 
   printReceipt(customerTrxs: any) {
@@ -383,8 +540,11 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   showColumn(ev: any, tableName: string) {
-    if (typeof (ev.value.target.checked) === 'boolean') {
-      $("#" + tableName).DataTable().columns(ev.id).visible(ev.value.target.checked)
+    if (typeof ev.value.target.checked === 'boolean') {
+      $('#' + tableName)
+        .DataTable()
+        .columns(ev.id)
+        .visible(ev.value.target.checked);
     }
   }
 
@@ -392,78 +552,98 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     this.tableHead = [
       {
         id: 1,
-        name: "Reference"
+        name: 'Reference',
       },
       {
         id: 2,
-        name: "Customer"
+        name: 'Customer',
       },
       {
         id: 3,
-        name: "Amount"
+        name: 'Amount',
       },
       {
         id: 4,
-        name: "Plan"
+        name: 'Plan',
       },
       {
         id: 5,
-        name: "Transaction Type"
+        name: 'Transaction Type',
       },
       {
         id: 6,
-        name: "Date"
+        name: 'Date',
       },
       {
         id: 7,
-        name: "Performed By"
+        name: 'Performed By',
       },
       {
         id: 8,
-        name: "Actions"
-      }
+        name: 'Actions',
+      },
     ];
   }
 
   filterDataByDate(ev: any, content: any) {
     if (ev.timeline === 'Custom Range') {
-      this.searchType = "Custom Range"
+      this.searchType = 'Custom Range';
       this.modalContent2 = ev;
       this.modalService.open(content);
     } else if (ev.timeline === 'Search Overall') {
-      this.searchType = "Search Overall"
+      this.searchType = 'Search Overall';
       this.modalContent2 = ev;
       this.modalService.open(content);
     } else {
       const format = ev.timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
-      $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
+      $(
+        '#js-daterangepicker-predefined' +
+          ev.id +
+          ' .js-daterangepicker-preview-' +
+          ev.id
+      ).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
       //this.applyfilter(ev);
-      const obj = { ...ev, ...{ type: ev.tableName === "datatable" ? 'all' :
-      ev.tableName === "savingsDatatable" ? 'S' : ev.tableName === "withdrawalsDatatable" ? 'W' : 'commission' } }
+      const obj = {
+        ...ev,
+        ...{
+          type:
+            ev.tableName === 'datatable'
+              ? 'all'
+              : ev.tableName === 'savingsDatatable'
+              ? 'S'
+              : ev.tableName === 'withdrawalsDatatable'
+              ? 'W'
+              : 'commission',
+        },
+      };
       this.filterTrxs(obj);
     }
   }
 
   applyfilter(event: any) {
-    $.fn.dataTable.ext.search.push((settings: any, data: any, dataIndex: any) => {
-      const min = event.start;
-      const max = event.end;
-      const startDate = new Date(data[6]);
-      if (min == null && max == null) {
-        return true;
+    $.fn.dataTable.ext.search.push(
+      (settings: any, data: any, dataIndex: any) => {
+        const min = event.start;
+        const max = event.end;
+        const startDate = new Date(data[6]);
+        if (min == null && max == null) {
+          return true;
+        }
+        if (min == null && startDate <= max) {
+          return true;
+        }
+        if (max == null && startDate >= min) {
+          return true;
+        }
+        if (startDate <= max && startDate >= min) {
+          return true;
+        }
+        return false;
       }
-      if (min == null && startDate <= max) {
-        return true;
-      }
-      if (max == null && startDate >= min) {
-        return true;
-      }
-      if (startDate <= max && startDate >= min) {
-        return true;
-      }
-      return false;
-    });
-    $("#" + event.tableName).DataTable().draw();
+    );
+    $('#' + event.tableName)
+      .DataTable()
+      .draw();
     $.fn.dataTable.ext.search.pop();
   }
 
@@ -478,17 +658,33 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       end: moment(toDate).endOf('day'),
       timeline: this.modalContent2.timeline,
       id: this.modalContent2.id,
-      tableName: this.modalContent2.tableName
-    }
-    $('#js-daterangepicker-predefined' + ev.id + ' .js-daterangepicker-preview-' + ev.id).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
+      tableName: this.modalContent2.tableName,
+    };
+    $(
+      '#js-daterangepicker-predefined' +
+        ev.id +
+        ' .js-daterangepicker-preview-' +
+        ev.id
+    ).html(ev.start.format(format) + ' - ' + ev.end.format('MMM D, YYYY'));
     // if (this.searchType === 'Custom Range') {
     //   this.applyfilter(ev);
     //   this.modalService.dismissAll('save changes');
     // } else {
-      const obj = { ...ev, ...{ type: ev.tableName === "datatable" ? 'all' :
-      ev.tableName === "savingsDatatable" ? 'S' : ev.tableName === "withdrawalsDatatable" ? 'W' : 'commission' } }
-      this.filterTrxs(obj);
-      this.modalService.dismissAll('save changes');
+    const obj = {
+      ...ev,
+      ...{
+        type:
+          ev.tableName === 'datatable'
+            ? 'all'
+            : ev.tableName === 'savingsDatatable'
+            ? 'S'
+            : ev.tableName === 'withdrawalsDatatable'
+            ? 'W'
+            : 'commission',
+      },
+    };
+    this.filterTrxs(obj);
+    this.modalService.dismissAll('save changes');
     // }
   }
 
@@ -505,7 +701,11 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   isHovered(date: NgbDate) {
     return (
-      this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
+      this.fromDate &&
+      !this.toDate &&
+      this.hoveredDate &&
+      date.after(this.fromDate) &&
+      date.before(this.hoveredDate)
     );
   }
 
@@ -517,7 +717,8 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
     return (
       date.equals(this.fromDate) ||
       (this.toDate && date.equals(this.toDate)) ||
-      this.isInside(date) || this.isHovered(date)
+      this.isInside(date) ||
+      this.isHovered(date)
     );
   }
 
@@ -529,7 +730,10 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   setCount(number: number, tableId: number) {
     if (number > 5000) {
-      this.toastService.showError('Your input should not be more than 5000', 'Error')
+      this.toastService.showError(
+        'Your input should not be more than 5000',
+        'Error'
+      );
     } else {
       this.clearCache();
       this.maxCount = number;
@@ -544,22 +748,24 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
 
   rerender(tableId: number) {
     if (this.isDtInitialized) {
-      this.dtElements.get(tableId)?.dtInstance.then((dtInstance: DataTables.Api) => {
-        // Destroy the table  first
-        dtInstance.destroy();
-        // Call the dtTrigger to rerender again
-        if(tableId == 0){
-          this.dtTrigger.next('');
-        } else if(tableId == 1){
-          this.dtTrigger2.next('');
-        } else if(tableId == 2){
-          this.dtTrigger3.next('');
-        } else if(tableId == 3){
-          this.dtTrigger4.next('');
-        }              
-      });
+      this.dtElements
+        .get(tableId)
+        ?.dtInstance.then((dtInstance: DataTables.Api) => {
+          // Destroy the table  first
+          dtInstance.destroy();
+          // Call the dtTrigger to rerender again
+          if (tableId == 0) {
+            this.dtTrigger.next('');
+          } else if (tableId == 1) {
+            this.dtTrigger2.next('');
+          } else if (tableId == 2) {
+            this.dtTrigger3.next('');
+          } else if (tableId == 3) {
+            this.dtTrigger4.next('');
+          }
+        });
     } else {
-      this.isDtInitialized = true
+      this.isDtInitialized = true;
       this.dtTrigger.next('');
       this.dtTrigger2.next('');
       this.dtTrigger3.next('');
@@ -593,43 +799,43 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
         zeroRecords: `<div class="text-center p-4">
             <img class="mb-3" src="${this.emptyTable}" alt="Image Description" style="width: 10rem;">
           <p class="mb-0">No data to show</p>
-          </div>`
+          </div>`,
       },
       buttons: [
         {
           extend: 'copy',
-          className: 'd-none'
+          className: 'd-none',
         },
         {
           extend: 'print',
-          className: 'd-none'
+          className: 'd-none',
         },
         {
           extend: 'excel',
           className: 'd-none',
           filename: 'MoSave_report_' + new Date().getTime(),
           exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7]
-          }
+            columns: [1, 2, 3, 4, 5, 6, 7],
+          },
         },
         {
           extend: 'csv',
           className: 'd-none',
           filename: 'MoSave_report_' + new Date().getTime(),
           exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7]
-          }
+            columns: [1, 2, 3, 4, 5, 6, 7],
+          },
         },
         {
           extend: 'pdf',
           className: 'd-none',
           filename: 'MoSave_report_' + new Date().getTime(),
           exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7]
+            columns: [1, 2, 3, 4, 5, 6, 7],
           },
-          orientation: 'landscape'
+          orientation: 'landscape',
         },
-      ]
+      ],
     };
   }
 
@@ -638,13 +844,13 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
       window.onload = () => {
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
+        HSBsDropdown.init();
 
         // INITIALIZATION OF NAV SCROLLER
         // =======================================================
-        new HsNavScroller('.js-nav-scroller')
-      }
-    })()
+        new HsNavScroller('.js-nav-scroller');
+      };
+    })();
   }
 
   // onChange(startDate: any, endDate: any) {
@@ -688,7 +894,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   //   }
   // }
 
-
   // filter2(event: any, id: number) {
   //   var value = event.target.value;
   //   this.dtElements.forEach((dtElement: DataTableDirective, index: number) => {
@@ -727,7 +932,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   //   });
   // }
 
-
   // displayToConsole(): void {
   //   this.dtElements.forEach((dtElement: DataTableDirective, index: number) => {
   //     dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -735,5 +939,4 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit, 
   //     });
   //   });
   // }
-
 }
