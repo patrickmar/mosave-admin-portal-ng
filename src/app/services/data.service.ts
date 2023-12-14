@@ -286,6 +286,11 @@ export class DataService {
     return this.httpService.get('admin/profile/' + adminId);
   }
 
+  // fetch customer lifecycle
+  customerLifecycle(): Observable<any> {
+    return this.httpService.get('customer/lifecycle');
+  }
+
   // create event ticket
   createEventTicket(data: any): Observable<any> {
     //const api = 'create/eventticket';

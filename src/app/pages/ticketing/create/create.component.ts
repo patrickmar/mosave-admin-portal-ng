@@ -95,7 +95,7 @@ export class CreateComponent implements OnInit {
   currencies = [
     { name: 'Naira', value: 'NGN' },
     { name: 'Dollar', value: 'USD' },
-    { name: 'Pounds', value: 'PDS' },
+    { name: 'Pounds', value: 'GBP' },
     { name: 'Euro', value: 'EUR' },
   ];
   public loading2 = false;

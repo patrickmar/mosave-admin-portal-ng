@@ -40,7 +40,7 @@
     </ng-container>
 
         <!-- {{(customer.firstName?.concat(' ').concat(customer.lastName) | titlecase) }} -->
-        <h1 class="page-header-title">{{(customer?.firstName?.concat(' ').concat(customer?.lastName) | titlecase) }}<i
+        <h1 class="page-header-title">{{(customer?.firstName?.concat(' ')?.concat(customer?.lastName) | titlecase) }}<i
             class="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top"
             ngbTooltip="Active User"></i></h1>
 
@@ -240,7 +240,7 @@
                 <div class="card">
                   <!-- Header -->
                   <div class="card-header card-header-content-between">
-                    <h4 class="card-header-title">Activity stream</h4>
+                    <h4 class="card-header-title">Customer Activity</h4>
 
                     <!-- Dropdown -->
                     <div class="dropdown">
@@ -256,7 +256,7 @@
                           <i class="bi-share-fill dropdown-item-icon"></i> Share Profile
                         </a>
                         <a class="dropdown-item disabled" href="javascript:;">
-                          <i class="bi-info-circle dropdown-item-icon"></i> Suggest edits
+                          <i class="bi-info-circle dropdown-item-icon"></i> Contact Customer
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -276,6 +276,48 @@
                   <div class="card-body card-body-height" style="height: 30rem;">
                     <!-- Step -->
                     <ul class="step step-icon-xs mb-0">
+                      <!-- Step Item -->
+                      <li class="step-item">
+                        <div class="step-content-wrapper">
+                          <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+                          <ng-container *ngIf="customerTrxs.length > 0; else elseAgentTemplate">  
+                          <div class="step-content">
+                            <h5 class="step-title">
+                              <a class="text-dark" href="javascript:;">{{(customer?.firstName?.concat(' ')?.concat(customer?.lastName) | titlecase)}} saves {{customerTrxs.slice(-1)[0].transAmount}} to {{customerTrxs.slice(-1)[0].plan_name}} plan</a>
+                            </h5>
+
+                            <p class="fs-5 mb-1">Agent with ID {{customerTrxs.slice(-1)[0].agentId}} performs the transaction</p>
+
+                            <span class="text-muted small text-uppercase">{{customerTrxs.slice(-1)[0].transDate | date: 'd MMMM, yyyy.' }}</span>
+                          </div>
+                          </ng-container>
+                        </div>
+                      </li>
+                      <!-- End Step Item -->
+
+
+
+                      <!-- Step Item -->
+                      <li class="step-item">
+                        <div class="step-content-wrapper">
+                          <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+                          <ng-container *ngIf="customerTrxs.length > 0; else elseAgentTemplate">                       
+                          <div class="step-content">
+                            <h5 class="step-title">
+                              <a class="text-dark" href="javascript:;">{{(customer?.firstName?.concat(' ')?.concat(customer?.lastName) | titlecase)}} starts saving</a>
+                            </h5>
+
+                            <p class="fs-5 mb-1">Agent with ID {{customerTrxs.slice(-1)[0].agentId}} collects the money</p>
+
+                            <span class="text-muted small text-uppercase">{{customerTrxs.slice(-1)[0].transDate | date: 'd MMMM, yyyy.' }}</span>
+                          </div>
+                        </ng-container>
+                        <ng-template #elseAgentTemplate>
+                          <p class="fs-5 mb-1"> No Transaction performed yet</p>
+                        </ng-template>
+                        </div>
+                      </li>
+                      <!-- End Step Item -->
 
                       <!-- Step Item -->
                       <li class="step-item">
@@ -284,72 +326,14 @@
 
                           <div class="step-content">
                             <h5 class="step-title">
-                              <a class="text-dark" href="javascript:;">Customer plan completed </a>
+                              <a class="text-dark" href="javascript:;">{{(customer?.firstName?.concat(' ')?.concat(customer?.lastName) | titlecase)}} subscribed to a {{customerTrxs.slice(-1)[0].plan_name}} plan</a>
                             </h5>
 
-                            <p class="fs-5 mb-1">Marked as <span
+                            <p class="fs-5 mb-1">Status <span
                                 class="badge bg-soft-success text-success rounded-pill"><span
-                                  class="legend-indicator bg-success"></span>"Completed"</span></p>
+                                  class="legend-indicator bg-success"></span>"Success"</span></p>
 
-                            <span class="text-muted small text-uppercase">Today</span>
-                          </div>
-                        </div>
-                      </li>
-                      <!-- End Step Item -->
-
-                      <!-- Step Item -->
-                      <li class="step-item">
-                        <div class="step-content-wrapper">
-                          <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
-
-                          <div class="step-content">
-                            <h5 class="step-title">
-                              <a class="text-dark" href="javascript:;">MoCustomer saves 200.00 to starter plan</a>
-                            </h5>
-
-                            <p class="fs-5 mb-1">Agent Dele performs the transaction</p>
-
-                            <span class="text-muted small text-uppercase">May 10</span>
-                          </div>
-                        </div>
-                      </li>
-                      <!-- End Step Item -->
-
-
-
-                      <!-- Step Item -->
-                      <li class="step-item">
-                        <div class="step-content-wrapper">
-                          <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
-
-                          <div class="step-content">
-                            <h5 class="step-title">
-                              <a class="text-dark" href="javascript:;">MoCustomer starts saving</a>
-                            </h5>
-
-                            <p class="fs-5 mb-1">Agent Sola collects the money</p>
-
-                            <span class="text-muted small text-uppercase">May 10</span>
-                          </div>
-                        </div>
-                      </li>
-                      <!-- End Step Item -->
-
-                      <!-- Step Item -->
-                      <li class="step-item">
-                        <div class="step-content-wrapper">
-                          <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
-
-                          <div class="step-content">
-                            <h5 class="step-title">
-                              <a class="text-dark" href="javascript:;">MoCustomer subscribed to a starter plan</a>
-                            </h5>
-
-                            <p class="fs-5 mb-1">Marked as <span
-                                class="badge bg-soft-primary text-primary rounded-pill"><span
-                                  class="legend-indicator bg-primary"></span>"In progress"</span></p>
-
-                            <span class="text-muted small text-uppercase">Apr 29</span>
+                            <span class="text-muted small text-uppercase">Date Unknown</span>
                           </div>
                         </div>
                       </li>
@@ -365,10 +349,9 @@
                               <a class="text-dark" href="javascript:;">Onboarding</a>
                             </h5>
 
-                            <p class="fs-5 mb-1">The customer registers on moloyal <i
-                                class="tio-verified text-primary"></i> badge</p>
+                            <p class="fs-5 mb-1">The customer registers on moloyal</p>
 
-                            <span class="text-muted small text-uppercase">Apr 06</span>
+                            <span class="text-muted small text-uppercase">{{customer?.dateCreated | date: 'd MMMM, yyyy.'}}</span>
                           </div>
                         </div>
                       </li>
@@ -383,15 +366,12 @@
 
                           <div class="step-content">
                             <h5 class="step-title">
-                              <a class="text-dark" href="javascript:;">Project status updated</a>
+                              <a class="text-dark" href="javascript:;">Nil</a>
                             </h5>
 
-                            <p class="fs-5 mb-1">Updated <a class="text-uppercase" href="javascript:;"><i
-                                  class="bi-journal-bookmark-fill"></i> Fr-3</a> as <span
-                                class="badge bg-soft-secondary text-secondary rounded-pill"><span
-                                  class="legend-indicator bg-secondary"></span>"To do"</span></p>
+                            <p class="fs-5 mb-1">Nil</p>
 
-                            <span class="text-muted small text-uppercase">Feb 10</span>
+                            <span class="text-muted small text-uppercase">Date Unknown</span>
                           </div>
                         </div>
                       </li>
@@ -731,7 +711,7 @@
                     </thead>
 
                     <tbody>
-                      <ng-container *ngIf="customerTrxs != undefined && customerTrxs.length > 0 else elseTemplate">                      
+                      <ng-container *ngIf="customerTrxs != undefined && customerTrxs.length > 0 else elseTransactionTemplate">                      
                       <tr *ngFor="let t of customerTrxs | slice:0:maxCount; let i = index;">
                         <td><a type="button" (click)="open(content, t)">{{t?.transref}}</a></td>
                         <td>
@@ -755,7 +735,7 @@
                         </td>
                       </tr>
                     </ng-container>
-                      <ng-template #elseTemplate>
+                      <ng-template #elseTransactionTemplate>
                         <tr>
                           <td valign="top" colspan="8" class="dataTables_empty">
                             <div class="text-center p-4">

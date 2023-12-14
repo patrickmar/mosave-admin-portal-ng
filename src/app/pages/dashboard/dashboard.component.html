@@ -812,7 +812,7 @@
                   <span class="legend-indicator bg-success"></span>Active
                 </td> -->
                 <td>{{data?.date_registered | dateAgo}}</td>
-                <td>{{(data?.agent_firstname.concat(' ').concat(data?.agent_lastname) | titlecase)}}</td>
+                <td>{{(data?.agent_firstname?.concat(' ')?.concat(data?.agent_lastname) | titlecase)}}</td>
                 
               </tr>
 
