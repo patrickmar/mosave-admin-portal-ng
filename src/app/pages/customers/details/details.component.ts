@@ -8,8 +8,6 @@ import { ReceiptService } from 'src/app/services/receipt.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { createPopper } from '@popperjs/core';
-import { transcode } from 'buffer';
 import { TitleCasePipe } from '@angular/common';
 import { StatService } from 'src/app/services/stat.service';
 import { FunctionsService } from 'src/app/services/functions.service';
@@ -842,7 +840,6 @@ export class DetailsComponent implements OnInit {
 
   async updateImage() {
     if (this.setFiles.length > 0) {
-      console.log(this.setFiles);
       const formData = new FormData();
       const fileName =
         new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';

@@ -47,7 +47,6 @@ export class HttpService {
     const headers = new HttpHeaders();
     const options = { headers: headers, withCredentials: false };
     const url = environment.app1.baseUrl + environment.app1.path + serviceName;
-    console.log(url);
     return this.http.post(url, data, options).pipe(finalize(() => {}));
   }
 

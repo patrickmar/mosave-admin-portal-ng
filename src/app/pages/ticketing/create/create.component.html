@@ -297,7 +297,6 @@
                                             <div class="col-sm-6">
                                                 <!-- NgbDatePicker -->
                                                     <ngb-timepicker formControlName="fakeTime" [meridian]="meridian" ></ngb-timepicker>
-
                                                 <!-- End NgbDatePicker -->
                                             </div>
                                             <!-- End Col -->
@@ -391,7 +390,7 @@
                                     </th>
                                     <th class="table-column-ps-0">
                                         <div class="input-group input-group-merge" style="min-width: 7rem;">
-                                            <div class="input-group-prepend input-group-text p-2">₦</div>
+                                            <div class="input-group-prepend input-group-text p-2">{{selectedCurrency}}</div>
                                             <input type="number" class="form-control ps-5" formControlName="price"
                                                 placeholder="2000">
                                         </div>
@@ -407,7 +406,7 @@
                                     </th>
                                     <th class="table-column-ps-0">
                                         <div class="input-group input-group-merge" style="min-width: 7rem;">
-                                            <div class="input-group-prepend input-group-text p-2">₦</div>
+                                            <div class="input-group-prepend input-group-text p-2">{{selectedCurrency}}</div>
                                             <input type="number" class="form-control ps-5"
                                                 formControlName="discountPrice" placeholder="1500">
                                         </div>
@@ -568,14 +567,14 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="bearerLabel" class="form-label">Currency <i
+                            <label for="currencyLabel" class="form-label">Currency <i
                                     class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
                                     data-bs-placement="top" ngbTooltip="Currency of the ticket"></i></label>
 
                             <!-- Select -->
                             <div class="tom-select-custom">
-                                <select class="form-select" autocomplete="off" id="bearerLabel" formControlName="currency">
-                                    <option [ngValue]="item.value" *ngFor="let item of currencies">{{item.name}}</option>
+                                <select class="form-select" autocomplete="off" (change)="onChangeCurrency($event)" id="currencyLabel" formControlName="currency">
+                                    <option [value]="item.value" *ngFor="let item of currencies">{{item.name}}</option>
                                 </select>
                             </div>
                             <!-- End Select -->

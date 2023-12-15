@@ -135,7 +135,6 @@ export class ViewProgramComponent implements OnInit, OnDestroy {
     try {
       this.loading = true;
       api.subscribe((res: any) => {
-        console.log(res)
         this.records = res;
         this.loading = false;
         this.showComponent = true;
@@ -159,7 +158,6 @@ export class ViewProgramComponent implements OnInit, OnDestroy {
 
   download(name: string) {
     var table = '#datatable';
-    console.log(name);
     $(table).DataTable().button('.buttons-' + name).trigger();
   }
 

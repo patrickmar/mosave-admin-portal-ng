@@ -14,7 +14,7 @@ declare var HSBsDropdown: any;
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.css']
+  styleUrls: ['./customers.component.css'],
 })
 export class CustomersComponent implements OnInit, OnDestroy {
   customer: any;
@@ -35,7 +35,10 @@ export class CustomersComponent implements OnInit, OnDestroy {
   emptyTable = environment.emptyTable;
   public loading = false;
   public showComponent = false;
-  ranges = [moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'), moment().endOf('day').format('MMM D, YYYY')]
+  ranges = [
+    moment(this.statService.lanchDate).startOf('day').format('MMM D, YYYY'),
+    moment().endOf('day').format('MMM D, YYYY'),
+  ];
   dateRanges!: Array<any>;
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
@@ -46,20 +49,36 @@ export class CustomersComponent implements OnInit, OnDestroy {
 
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
-  downloadOptions = [{
-    name: 'copy', src: './assets/svg/illustrations/copy-icon.svg'
-  }, {
-    name: 'print', src: './assets/svg/illustrations/print-icon.svg'
-  }, {
-    name: 'excel', src: './assets/svg/brands/excel-icon.svg'
-  }, {
-    name: 'csv', src: './assets/svg/components/placeholder-csv-format.svg'
-  }, {
-    name: 'pdf', src: './assets/svg/brands/pdf-icon.svg'
-  }]
+  downloadOptions = [
+    {
+      name: 'copy',
+      src: './assets/svg/illustrations/copy-icon.svg',
+    },
+    {
+      name: 'print',
+      src: './assets/svg/illustrations/print-icon.svg',
+    },
+    {
+      name: 'excel',
+      src: './assets/svg/brands/excel-icon.svg',
+    },
+    {
+      name: 'csv',
+      src: './assets/svg/components/placeholder-csv-format.svg',
+    },
+    {
+      name: 'pdf',
+      src: './assets/svg/brands/pdf-icon.svg',
+    },
+  ];
 
-  constructor(private dataService: DataService, private authservice: AuthService, private statService: StatService,
-    public calendar: NgbCalendar, private modalService: NgbModal) {
+  constructor(
+    private dataService: DataService,
+    private authservice: AuthService,
+    private statService: StatService,
+    public calendar: NgbCalendar,
+    private modalService: NgbModal
+  ) {
     // this.jsOnload();
     // this.getUserDetails();
     // this.getAllCustomers();
@@ -68,7 +87,6 @@ export class CustomersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.jsOnload();
     this.dateRanges = this.statService.getDateRanges();
     this.getUserDetails();
@@ -93,7 +111,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
           next: 'Next',
           previous: 'Prev',
           first: '<i class="bi bi-skip-backward"></i>',
-          last: '<i class="bi bi-skip-forward"></i>'
+          last: '<i class="bi bi-skip-forward"></i>',
         },
       },
       lengthMenu: [10, 15, 20],
@@ -101,11 +119,11 @@ export class CustomersComponent implements OnInit, OnDestroy {
       buttons: [
         {
           extend: 'copy',
-          className: 'd-none'
+          className: 'd-none',
         },
         {
           extend: 'print',
-          className: 'd-none'
+          className: 'd-none',
         },
         {
           extend: 'excel',
@@ -114,8 +132,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
             return 'MoSave_Customers_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7]
-          }
+            columns: [1, 2, 3, 4, 5, 6, 7],
+          },
         },
         {
           extend: 'csv',
@@ -124,8 +142,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
             return 'MoSave_Customers_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7]
-          }
+            columns: [1, 2, 3, 4, 5, 6, 7],
+          },
         },
         {
           extend: 'pdf',
@@ -134,8 +152,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
             return 'MoSave_Customers_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7]
-          }
+            columns: [1, 2, 3, 4, 5, 6, 7],
+          },
         },
       ],
       info: true,
@@ -158,47 +176,50 @@ export class CustomersComponent implements OnInit, OnDestroy {
       this.loading = true;
       forkJoin([
         this.dataService.getAllcustomers(),
-        this.dataService.getTotalActiveCustomers()
-      ])
-        .subscribe((data: any) => {
-          const newRecords = data[0].map((res: any) => {
-            const allPlans = res?.plans?.map((p: any) => p.plan_name).join(', ');
-            return { ...res, allPlans: allPlans };
-          });
-          this.customer = newRecords;
-          this.activeCustomers = data[1];
-          this.inactiveCustomers = Number(data[0].length) - Number(data[1]);
-          this.loading = false;
-          this.showComponent = true;
-          this.getNewCustomers();
-          if (this.customer?.length > 0) {
-            this.customerExist = true;
-          } else {
-            this.customerExist = false;
-          }
-          this.dtTrigger.next('');
-        }), ((error: any) => {
+        this.dataService.getTotalActiveCustomers(),
+      ]).subscribe((data: any) => {
+        const newRecords = data[0].map((res: any) => {
+          const allPlans = res?.plans?.map((p: any) => p.plan_name).join(', ');
+          return { ...res, allPlans: allPlans };
+        });
+        this.customer = newRecords;
+        this.activeCustomers = data[1];
+        this.inactiveCustomers = Number(data[0].length) - Number(data[1]);
+        this.loading = false;
+        this.showComponent = true;
+        this.getNewCustomers();
+        if (this.customer?.length > 0) {
+          this.customerExist = true;
+        } else {
+          this.customerExist = false;
+        }
+        this.dtTrigger.next('');
+      }),
+        (error: any) => {
           console.log(error);
           this.loading = false;
-        })
+        };
     } catch (error) {
       this.loading = false;
     }
   }
 
-  parseInt(value: string){
+  parseInt(value: string) {
     return parseInt(value);
   }
   getNewCustomers() {
     const startOfWeek = moment().startOf('week').format();
     const endOfWeek = moment().endOf('week').format();
-    var newCustomers = this.customer.filter((m: any) => new Date(m.date_registered) >= new Date(startOfWeek) && new Date(m.date_registered) <= new Date(endOfWeek));
+    var newCustomers = this.customer.filter(
+      (m: any) =>
+        new Date(m.date_registered) >= new Date(startOfWeek) &&
+        new Date(m.date_registered) <= new Date(endOfWeek)
+    );
     this.newCustomers = newCustomers.length;
   }
 
   filterTable(event: any) {
     // Get the search value
-    console.log(event.target.value);
     let userInput: string = event.target.value;
     if (userInput.length >= 2) {
       this.searchTerm = userInput;
@@ -208,7 +229,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
 
   filter() {
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.draw();      
+      dtInstance.draw();
     });
   }
 
@@ -217,14 +238,17 @@ export class CustomersComponent implements OnInit, OnDestroy {
   }
 
   export(name: string) {
-    var table = "#" + 'datatable';
-    $(table).DataTable().button('.buttons-' + name).trigger();
+    var table = '#' + 'datatable';
+    $(table)
+      .DataTable()
+      .button('.buttons-' + name)
+      .trigger();
   }
 
   rerender(event: any) {
     const value = event.target.value;
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      $(".input").on("keyup", function () {
+      $('.input').on('keyup', function () {
         if (dtInstance.search() !== value) {
           dtInstance.search(value).draw();
         }
@@ -242,14 +266,16 @@ export class CustomersComponent implements OnInit, OnDestroy {
       end: moment(end).endOf('day'),
       timeline: timeline,
       id: 1,
-      tableName: 'datatable'
-    }
+      tableName: 'datatable',
+    };
     if (timeline === 'Custom Range') {
       this.modalContent = ev;
       this.modalService.open(content);
     } else {
       const format = timeline === 'All' ? 'MMM D, YYYY' : 'MMM D';
-      $('#daterangepicker-predefined .daterangepicker-preview').html(start.format(format) + ' - ' + end.format(format));
+      $('#daterangepicker-predefined .daterangepicker-preview').html(
+        start.format(format) + ' - ' + end.format(format)
+      );
       this.dateFilter(ev);
     }
   }
@@ -267,7 +293,11 @@ export class CustomersComponent implements OnInit, OnDestroy {
 
   isHovered(date: NgbDate) {
     return (
-      this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
+      this.fromDate &&
+      !this.toDate &&
+      this.hoveredDate &&
+      date.after(this.fromDate) &&
+      date.before(this.hoveredDate)
     );
   }
 
@@ -279,7 +309,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
     return (
       date.equals(this.fromDate) ||
       (this.toDate && date.equals(this.toDate)) ||
-      this.isInside(date) || this.isHovered(date)
+      this.isInside(date) ||
+      this.isHovered(date)
     );
   }
 
@@ -292,9 +323,11 @@ export class CustomersComponent implements OnInit, OnDestroy {
     const ev = {
       start: moment(fromDate).startOf('day'),
       end: moment(toDate).endOf('day'),
-      tableName: this.modalContent.tableName
-    }
-    $('#daterangepicker-predefined .daterangepicker-preview').html(ev.start.format(format) + ' - ' + ev.end.format(format));
+      tableName: this.modalContent.tableName,
+    };
+    $('#daterangepicker-predefined .daterangepicker-preview').html(
+      ev.start.format(format) + ' - ' + ev.end.format(format)
+    );
     this.dateFilter(ev);
     this.modalService.dismissAll('save changes');
   }
@@ -303,47 +336,53 @@ export class CustomersComponent implements OnInit, OnDestroy {
     if (value === 'Any' || value === '') value = '';
     if (value2 === 'Any' || value2 === '') value2 = '';
     this.hideDropdown();
-    $("#datatable").DataTable().search(value && value2, true, true, false).draw();
+    $('#datatable')
+      .DataTable()
+      .search(value && value2, true, true, false)
+      .draw();
   }
 
-  resetFilter(){
+  resetFilter() {
     $('.acctType').val('Any');
     $('.gender').val('Any');
-    $("#datatable").DataTable().search('', true, false, false).draw();
+    $('#datatable').DataTable().search('', true, false, false).draw();
   }
 
-  hideDropdown(){
-    $(".userdropdown").removeClass('show')
-    $(".dropdown-toggle").removeClass('show')
+  hideDropdown() {
+    $('.userdropdown').removeClass('show');
+    $('.dropdown-toggle').removeClass('show');
   }
 
   dateFilter(event: any) {
-    $.fn.dataTable.ext.search.push((settings: any, data: any, dataIndex: any) => {
-      const min = event.start;
-      const max = event.end;
-      const startDate = new Date(data[4]);
-      if (min == null && max == null) {
-        return true;
+    $.fn.dataTable.ext.search.push(
+      (settings: any, data: any, dataIndex: any) => {
+        const min = event.start;
+        const max = event.end;
+        const startDate = new Date(data[4]);
+        if (min == null && max == null) {
+          return true;
+        }
+        if (min == null && startDate <= max) {
+          return true;
+        }
+        if (max == null && startDate >= min) {
+          return true;
+        }
+        if (startDate <= max && startDate >= min) {
+          return true;
+        }
+        return false;
       }
-      if (min == null && startDate <= max) {
-        return true;
-      }
-      if (max == null && startDate >= min) {
-        return true;
-      }
-      if (startDate <= max && startDate >= min) {
-        return true;
-      }
-      return false;
-    });
-    $("#" + event.tableName).DataTable().draw();
+    );
+    $('#' + event.tableName)
+      .DataTable()
+      .draw();
     $.fn.dataTable.ext.search.pop();
   }
 
   jsOnload() {
     (function () {
       window.onload = function () {
-        
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init();
@@ -351,9 +390,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init('.js-select');
-
-      }
-    })()
+      };
+    })();
   }
-
 }

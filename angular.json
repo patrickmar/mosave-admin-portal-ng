@@ -28,15 +28,13 @@
               "src/_redirects"
             ],
             "styles": [
-              "./src/assets/vendor/bootstrap-icons/font/bootstrap-icons.css",
-              "./src/assets/vendor/daterangepicker/daterangepicker.css",              
+              "./src/assets/vendor/bootstrap-icons/font/bootstrap-icons.css",              
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",  
               "node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css",
               "node_modules/datatables.net-select-dt/css/select.dataTables.css",
               "./node_modules/quill/dist/quill.core.css",
               "./node_modules/quill/dist/quill.bubble.css",
               "./node_modules/quill/dist/quill.snow.css",
-              "./src/assets/vendor/chart.js/dist/Chart.min.css",
               "./src/assets/css/theme.min.css",
               "src/styles.css"
             ],
@@ -49,16 +47,9 @@
 
               "./src/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js",            
               "./src/assets/vendor/hs-toggle-password/dist/js/hs-toggle-password.js",
-              "./src/assets/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js",
-              "./src/assets/vendor/appear/dist/appear.min.js",
-              "./src/assets/vendor/imask/dist/imask.min.js",              
+              "./src/assets/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js",          
               "./src/assets/vendor/datatables/media/js/jquery.dataTables.min.js",
               "node_modules/datatables.net/js/jquery.dataTables.js",
-
-              "./src/assets/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js",
-              "./src/assets/vendor/fslightbox/index.js",
-
-              "./src/assets/vendor/flatpickr/dist/flatpickr.min.js",
 
               "node_modules/jszip/dist/jszip.js",
               "node_modules/datatables.net-buttons/js/dataTables.buttons.js",
@@ -67,13 +58,8 @@
               "node_modules/datatables.net-buttons/js/buttons.html5.js",
               "node_modules/datatables.net-buttons/js/buttons.print.js",
               "node_modules/datatables.net-select/js/dataTables.select.js", 
-              "./node_modules/quill/dist/quill.min.js",           
-              
-              "./src/assets/vendor/jszip/dist/jszip.min.js",
+              "./node_modules/quill/dist/quill.min.js",
               "./src/assets/vendor/pdfmake/build/vfs_fonts.js",
-              
-              
-              "./src/assets/vendor/daterangepicker/daterangepicker.js",
               "./src/assets/vendor/jsvectormap/dist/js/jsvectormap.min.js",
               "./src/assets/vendor/jsvectormap/dist/maps/world.js",
 
@@ -81,10 +67,6 @@
               "./src/assets/vendor/hs-scrollspy/dist/hs-scrollspy.min.js",
               "./src/assets/vendor/swiper/swiper-bundle.min.js",
               "./src/assets/vendor/tom-select/dist/js/tom-select.complete.min.js",
-              
-              "./src/assets/vendor/dropzone/dist/min/dropzone.min.js",
-
-              "./src/assets/vendor/clipboard/dist/clipboard.min.js",
 
               "./src/assets/js/theme.min.js"
             ]

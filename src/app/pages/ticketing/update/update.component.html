@@ -268,30 +268,17 @@
                                 <div class="row mb-4" *ngFor="let s of startDate().controls; let id=index">
                                     <ng-container [formGroupName]="id">
                                         <div class="col-sm-6 mb-2 mb-sm-0">
-                                            <!-- <input type="text" formControlName="date" class="flatpickr-custom form-control"> -->
-                                            <!-- Flatpickr -->
-                                            <input type="text" formControlName="date" id="eventDateRangeLabel"
-                                                class="flatpickr-custom form-control mb-2" placeholder="Select date"
-                                                data-hs-flatpickr-options='{
-                                                         "dateFormat": "m-d-Y",
-                                                         "mode": "single",
-                                                         "minDate": "today"
-                                                       }'>
-                                            <!-- End Flatpickr -->
+                                            <!-- NgbDatePicker -->
+                                            <input type="text" #startDate="ngbDatepicker" ngbDatepicker formControlName="fakeDate" [startDate]="{year: year, month: month, day: day}"
+                                            class="form-control mb-2" placeholder="Select date" [minDate]="{year: year, month: month, day: day}" (focus)="startDate.toggle()" (autoClose)="true" (dateSelect)="onStartDateSelection($event, startDate)">
+                                        <!-- End NgbDatePicker -->
                                         </div>
                                         <!-- End Col -->
 
                                         <div class="col-sm-6">
-                                            <!-- Flatpickr moment().subtract(18, "years") -->
-                                            <input type="text" formControlName="time" id="eventDateRangeLabel2"
-                                                class="flatpickr-custom form-control mb-2" placeholder="Select time"
-                                                data-hs-flatpickr-options='{
-                                                "noCalendar": true,
-                                                "dateFormat": "H:i",
-                                                "time_24hr": false,
-                                                "enableTime": "true"
-                                              }'>
-                                            <!-- End Flatpickr -->
+                                            <!-- NgbTimepicker-->
+                                            <ngb-timepicker formControlName="fakeTime" [meridian]="meridian"></ngb-timepicker>
+                                            <!-- End NgbTimepicker -->
                                         </div>
                                         <!-- End Col -->
 
@@ -309,29 +296,17 @@
                                     <div class="row mb-4" *ngFor="let e of endDate().controls; let ix=index">
                                         <ng-container [formGroupName]="ix">
                                             <div class="col-sm-6 mb-2 mb-sm-0">
-                                                <!-- Flatpickr -->
-                                                <input type="text" formControlName="date" id="eventDateRangeLabel3"
-                                                    class="flatpickr-custom form-control mb-2" placeholder="Select date"
-                                                    data-hs-flatpickr-options='{
-                                                                             "dateFormat": "m-d-Y",
-                                                                             "mode": "single",
-                                                                             "minDate": "today"
-                                                                           }'>
-                                                <!-- End Flatpickr -->
+                                                <!-- NgbDatePicker -->
+                                                <input type="text" #endDate="ngbDatepicker" ngbDatepicker formControlName="fakeDate"
+                                                    class="form-control mb-2" placeholder="Select date" [minDate]="minDate" (focus)="endDate.toggle()" (autoClose)="true" (dateSelect)="onEndDateSelection($event, endDate)">
+                                                <!-- End NgbDatePicker -->
                                             </div>
                                             <!-- End Col -->
 
                                             <div class="col-sm-6">
-                                                <!-- Flatpickr -->
-                                                <input type="text" formControlName="time" id="eventDateRangeLabel4"
-                                                    class="flatpickr-custom form-control mb-2" placeholder="Select time"
-                                                    data-hs-flatpickr-options='{
-                                                                    "noCalendar": true,
-                                                                    "dateFormat": "H:i",
-                                                                    "time_24hr": false,
-                                                                    "enableTime": "true"
-                                                                  }'>
-                                                <!-- End Flatpickr -->
+                                                <!-- NgbTimepicker -->
+                                                <ngb-timepicker formControlName="fakeTime" [meridian]="meridian" ></ngb-timepicker>
+                                                <!-- End NgbTimepicker -->
                                             </div>
                                             <!-- End Col -->
                                         </ng-container>
@@ -416,14 +391,14 @@
                                     </th>
                                     <th class="table-column-ps-0">
                                         <div class="input-group input-group-merge" style="min-width: 7rem;">
-                                            <div class="input-group-prepend input-group-text p-2">₦</div>
+                                            <div class="input-group-prepend input-group-text p-2">{{selectedCurrency}}</div>
                                             <input type="text" class="form-control ps-5" formControlName="price"
                                                 placeholder="2000">
                                         </div>
                                     </th>
                                     <th class="table-column-ps-0">
                                         <div class="input-group input-group-merge" style="min-width: 7rem;">
-                                            <div class="input-group-prepend input-group-text p-2">₦</div>
+                                            <div class="input-group-prepend input-group-text p-2">{{selectedCurrency}}</div>
                                             <input type="text" class="form-control ps-5" formControlName="discountPrice"
                                                 placeholder="1500">
                                         </div>
@@ -575,6 +550,20 @@
                             </div>
                             <!-- End Select -->
                         </div>
+
+                        <div class="mb-4">
+                            <label for="currencyLabel" class="form-label">Currency <i
+                                    class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" ngbTooltip="Currency of the ticket"></i></label>
+
+                            <!-- Select -->
+                            <div class="tom-select-custom">
+                                <select class="form-select" autocomplete="off" (change)="onChangeCurrency($event)" id="currencyLabel" formControlName="currency">
+                                    <option [value]="item.value" *ngFor="let item of currencies">{{item.name}}</option>
+                                </select>
+                            </div>
+                            <!-- End Select -->
+                        </div>
                         <!-- End Form -->
 
 
@@ -682,9 +671,9 @@
             </div>
             <!-- End Col -->
         </div>
-        <!-- End Row -->
+        <!-- End Row || !ticketForm.valid -->
 
-        <button type="submit" class="btn btn-primary" [disabled]="loading || !ticketForm.valid">Update
+        <button type="submit" class="btn btn-primary" [disabled]="loading">Update
             <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="loading">
                 <span class="visually-hidden">Loading...</span>
             </div>

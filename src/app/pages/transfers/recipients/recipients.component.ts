@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import * as moment from 'moment';
@@ -11,10 +17,9 @@ declare var $: any;
 @Component({
   selector: 'app-recipients',
   templateUrl: './recipients.component.html',
-  styleUrls: ['./recipients.component.css']
+  styleUrls: ['./recipients.component.css'],
 })
 export class RecipientsComponent implements OnInit, OnDestroy {
-
   @ViewChild(DataTableDirective)
   dtElements!: QueryList<DataTableDirective>;
   datatableElement: any = DataTableDirective;
@@ -39,10 +44,13 @@ export class RecipientsComponent implements OnInit, OnDestroy {
   public loading = false;
   public showComponent = false;
 
-  constructor(private dataService: DataService, private toastService: ToastService,
-    private route: Router) {
+  constructor(
+    private dataService: DataService,
+    private toastService: ToastService,
+    private route: Router
+  ) {
     //this.jsInit();
-    //this.jsInit2(); 
+    //this.jsInit2();
   }
 
   ngOnInit(): void {
@@ -64,16 +72,15 @@ export class RecipientsComponent implements OnInit, OnDestroy {
           extend: 'copy',
           className: 'd-none',
           exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5]
-          }
+            columns: [0, 1, 2, 3, 4, 5],
+          },
         },
         {
           extend: 'print',
           className: 'd-none',
           exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5]
+            columns: [0, 1, 2, 3, 4, 5],
           },
-
         },
         {
           extend: 'excel',
@@ -82,7 +89,7 @@ export class RecipientsComponent implements OnInit, OnDestroy {
             return 'MoSave_' + this.page + '_report_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5]
+            columns: [0, 1, 2, 3, 4, 5],
           },
           // customize: function (pdf: any) { // or use customizeData
           //   this.addExtraColumn(pdf);
@@ -95,8 +102,8 @@ export class RecipientsComponent implements OnInit, OnDestroy {
             return 'MoSave_' + this.page + '_report_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5]
-          }
+            columns: [0, 1, 2, 3, 4, 5],
+          },
         },
         {
           extend: 'pdf',
@@ -105,8 +112,8 @@ export class RecipientsComponent implements OnInit, OnDestroy {
             return 'MoSave_' + this.page + '_report_' + new Date().getTime();
           },
           exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5]
-          }
+            columns: [0, 1, 2, 3, 4, 5],
+          },
         },
       ],
       info: true,
@@ -123,32 +130,32 @@ export class RecipientsComponent implements OnInit, OnDestroy {
 
   getAllTransfers() {
     const config = {
-      perPage: 1000 + ''
-    }
+      perPage: 1000 + '',
+    };
     let params = decodeURIComponent(new URLSearchParams(config).toString());
-    console.log(params);
     try {
       this.loading = true;
-      this.dataService.getTransferRecipients(params).subscribe((res: any) => {
-        console.log(res);
-        this.loading = false;
-        this.showComponent = true;
-        if (res?.status == true) {
-          this.recipientRecords = res.data;
-          this.dtTrigger.next('');
-        } else {
-          this.toastService.showError(res?.message, 'Error');
+      this.dataService.getTransferRecipients(params).subscribe(
+        (res: any) => {
+          this.loading = false;
+          this.showComponent = true;
+          if (res?.status == true) {
+            this.recipientRecords = res.data;
+            this.dtTrigger.next('');
+          } else {
+            this.toastService.showError(res?.message, 'Error');
+          }
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastService.showError('Error fetching data', 'Error');
         }
-      }, (error: any)=>{        
-        this.loading = false;
-        this.toastService.showError('Error fetching data', 'Error');
-      });
+      );
     } catch (error: any) {
       console.log(error);
       this.loading = false;
       this.toastService.showError(error?.message, 'Error');
     }
-
   }
 
   viewRecord(id: string) {
@@ -159,18 +166,22 @@ export class RecipientsComponent implements OnInit, OnDestroy {
 
   download(name: string) {
     var table = '#datatable';
-    console.log(name);
-    $(table).DataTable().button('.buttons-' + name).trigger();
+    $(table)
+      .DataTable()
+      .button('.buttons-' + name)
+      .trigger();
   }
 
-  filter(event: any, tableid: number, tableName: string,) {
+  filter(event: any, tableid: number, tableName: string) {
     var value = event.target.value;
     if (value.length > 0) {
-      $("#datatableSearch" + tableid).on("keyup", () => {
+      $('#datatableSearch' + tableid).on('keyup', () => {
         if (value === null) value = '';
-        $("#" + tableName).DataTable().search(value).draw();
+        $('#' + tableName)
+          .DataTable()
+          .search(value)
+          .draw();
       });
     }
   }
-
 }

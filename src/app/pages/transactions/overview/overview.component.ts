@@ -254,7 +254,6 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   filterDataByDate(item: any) {
-    console.log(item);
     const { timeline, date } = item;
     const format = 'MMM YYYY';
     $(
@@ -283,8 +282,8 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
         this.dataService.getMosaveSavingTransactions(),
         this.dataService.getAllcustomers(),
       ]).subscribe((result: any) => {
-        console.log(result[0]);
-        console.log(result[2]);
+        // console.log(result[0]);
+        // console.log(result[2]);
         this.loading = false;
         this.showComponent = true;
         this.users = result[2];
@@ -315,7 +314,6 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   getTrnxValues(result: Array<any>, start?: Date, end?: Date) {
-    console.log(result);
     const mapTransactionType = (transType: string): string => {
       if (transType === 'S') return 'Savings';
       if (transType === 'W') return 'Withdrawal';
@@ -409,14 +407,11 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     const savingsVolumeSum = this.calculateVolumeSum(savingsVolume);
     const withdrawalVolumeSum = this.calculateVolumeSum(withdrawalsVolume);
     const commissionVolumeSum = this.calculateVolumeSum(commissionsVolume);
-
     this.tnxVolumeSum =
       savingsVolumeSum + withdrawalVolumeSum + commissionVolumeSum;
 
     const data = [savings, withdrawals, commissions];
     const data2 = [savingsVolume, withdrawalsVolume, commissionsVolume];
-    console.log(data);
-    console.log(data2);
     const gradient = [this.gradient, this.gradient2, this.gradient3];
     const gradient2 = [this.gradient11, this.gradient12, this.gradient13];
     const datasets = this.getDataSet(
@@ -425,7 +420,6 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
       gradient,
       dataset
     );
-    console.log(datasets);
     const datasets2 = this.getDataSet(
       this.lineChartLabels[1],
       data2,
@@ -450,10 +444,6 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   dataSetConfig(label: string, data: any, bgColor: any, color: string) {
-    console.log(label);
-    console.log(data);
-    console.log(bgColor);
-    console.log(color);
     return {
       data: data,
       label: label,
@@ -499,16 +489,11 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     );
     const lab = userRecord.map((element: any) => element?.month);
     const users = userRecord.map((element: any) => element?.users);
-    console.log(users);
     const data = [users];
     const dataSum = data[0].reduce((acc: any, cur: any) => acc + (cur || 0), 0);
-    console.log(dataSum);
     this.userVolume = dataSum;
     const grad3 = [this.gradient21];
-    console.log(grad3);
     const datasets = this.getDataSet(this.lineChartLabels[2], data, grad3, []);
-    console.log(datasets);
-
     this.lineChartData[2] = {
       labels: lab,
       datasets: datasets,
@@ -538,11 +523,8 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
     const calculateSum = (array: Array<number>): number =>
       array.reduce((acc, cur) => acc + (cur || 0), 0);
     const maleSum = calculateSum(male);
-    console.log(maleSum);
     const femaleSum = calculateSum(female);
-    console.log(femaleSum);
     const unspecifiedSum = calculateSum(unspecified);
-    console.log(unspecifiedSum);
     this.genderVolume = maleSum + femaleSum + unspecifiedSum;
     const gradient = [this.gradient31, this.gradient32, this.gradient33];
     const datasets3 = this.getDataSet(
@@ -562,8 +544,6 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   downloadGraph(chartId: number) {
-    console.log(chartId);
-    console.log(this.charts);
     const fileName =
       this.charts.get(chartId)?.type +
       'chart' +
@@ -579,7 +559,6 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   switchGraph(id: number, tab: string) {
-    //console.log(this.charts);
     const gradient1 = [
       [this.gradient, this.gradient2, this.gradient3],
       [this.gradient11, this.gradient12, this.gradient13],

@@ -93,11 +93,12 @@ export class CreateComponent implements OnInit {
     { name: 'Client', value: 'subaccount' },
   ];
   currencies = [
-    { name: 'Naira', value: 'NGN' },
-    { name: 'Dollar', value: 'USD' },
-    { name: 'Pounds', value: 'GBP' },
-    { name: 'Euro', value: 'EUR' },
+    { name: 'Naira', value: 'NGN', symbol: '₦' },
+    { name: 'Dollar', value: 'USD', symbol: '$' },
+    { name: 'Pounds', value: 'GBP', symbol: '£' },
+    { name: 'Euro', value: 'EUR', symbol: '€' },
   ];
+  selectedCurrency: any = this.currencies[0].symbol;
   public loading2 = false;
   public showComponent = false;
   year = Number(moment().format('YYYY'));
@@ -125,7 +126,10 @@ export class CreateComponent implements OnInit {
       submerchantId: new FormControl(0, Validators.required),
       paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
       vendor: ['', [Validators.minLength(2)]],
-      currency: ['', [Validators.minLength(2)]],
+      currency: [
+        this.currencies[0].value,
+        [Validators.required, Validators.minLength(2)],
+      ],
       chargesBearer: ['', [Validators.required, Validators.minLength(2)]],
       eventType: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(2)]],
@@ -143,6 +147,13 @@ export class CreateComponent implements OnInit {
     return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
   }
 
+  onChangeCurrency(e: any) {
+    const selectedCurrency = this.currencies.filter(
+      (c) => c.value === e.target.value
+    );
+    this.selectedCurrency = selectedCurrency[0].symbol;
+  }
+
   validations = {
     eventTitle: [{ type: 'required', message: 'Title is required.' }],
     name: [{ type: 'required', message: 'Name is required.' }],
@@ -156,7 +167,7 @@ export class CreateComponent implements OnInit {
     chargesBearer: [{ type: 'required', message: 'Bearer is required.' }],
     eventType: [{ type: 'required', message: 'Event type is required.' }],
     merchantId: [{ type: 'required', message: 'Merchant Id is required.' }],
-    currency: [{ type: 'required', message: 'Currency Id is required.' }],
+    currency: [{ type: 'required', message: 'Currency is required.' }],
     submerchantId: [
       { type: 'required', message: 'Submerchant Id is required.' },
     ],
@@ -327,7 +338,6 @@ export class CreateComponent implements OnInit {
   }
 
   dataURItoBlob4(dataURI: any) {
-    console.log(dataURI);
     const binary = atob(dataURI.split(',')[1]);
     const array = [];
     for (let i = 0; i < binary.length; i++) {
@@ -471,27 +481,6 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  // onSubmit() {
-  //   const form = this.ticketForm.value;
-  //   console.log(form);
-  //   const startTIme = form.start[0].time;
-  //   const endTIme = form.end[0].time;
-  //   const start = form.start[0].date;
-  //   const end = form.end[0].date;
-  //   const startDate = moment(start); // moment(form.start[0].date);
-  //   const endDate = moment(end); // moment(form.end[0].date);
-  //   console.log(startDate);
-  //   console.log(startTIme);
-  //   console.log(endDate);
-  //   console.log(endTIme);
-  //   if (endDate.isBefore(startDate)) {
-  //     this.toastService.showError(
-  //       'Event end date must be greater than start date.',
-  //       'Error'
-  //     );
-  //   }
-  // }
-
   async onSubmit() {
     const form = this.ticketForm.value;
     console.log(form);
@@ -555,9 +544,6 @@ export class CreateComponent implements OnInit {
               this.dataService.createEventTicket2(formData2),
             ]).subscribe(
               (res: any) => {
-                console.log(res);
-                console.log(res[0]);
-                console.log(res[1]);
                 this.loading = false;
                 if (res[0].error == false || res[1].error == false) {
                   this.ticketForm.reset();

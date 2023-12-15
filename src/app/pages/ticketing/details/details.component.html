@@ -22,7 +22,7 @@
 
           <!-- Input Group -->
           <div class="input-group">
-            <input id="referralCode" type="text" class="form-control" #inputTarget readonly value="https://moloyal.com/test/motickets/ticket.php?e={{ticketId}}">
+            <input id="referralCode" type="text" class="form-control" #inputTarget readonly value="{{url+ticketId}}">
             <div class="input-group-append">
               <a class="js-clipboard btn btn-white" type="button" [ngxClipboard]="inputTarget" 
               (cbOnSuccess)="isCopied = true"

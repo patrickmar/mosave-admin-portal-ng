@@ -1,7 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbCalendar,
+  NgbDateAdapter,
+  NgbModal,
+  NgbTimepickerConfig,
+} from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { DataService } from 'src/app/services/data.service';
 import { StatService } from 'src/app/services/stat.service';
@@ -18,12 +29,29 @@ declare var HSCore: any;
 @Component({
   selector: 'app-update',
   templateUrl: './update.component.html',
-  styleUrls: ['./update.component.css']
+  styleUrls: ['./update.component.css'],
 })
 export class UpdateComponent implements OnInit {
-
-  tableHead = ["Name", "Price", "Disc. Price", "Wallet Disc.", "Quantity", "Action"];
-  eventTypes = ["Festival", "Conference", "Seminar", "Executive Meeting", "Webinar", "Comedy", "Gala Night", "Musical show", "Trade Fair", "Others",]
+  tableHead = [
+    'Name',
+    'Price',
+    'Disc. Price',
+    'Wallet Disc.',
+    'Quantity',
+    'Action',
+  ];
+  eventTypes = [
+    'Festival',
+    'Conference',
+    'Seminar',
+    'Executive Meeting',
+    'Webinar',
+    'Comedy',
+    'Gala Night',
+    'Musical show',
+    'Trade Fair',
+    'Others',
+  ];
   ticketForm!: FormGroup;
   showEndDate: boolean = false;
   maxQty = 10000;
@@ -35,19 +63,45 @@ export class UpdateComponent implements OnInit {
   setFiles: Array<any> = [];
   files: File[] = [];
   modalContent!: object | any;
-  bearers = [{ name: "MoLoyal", value: "account" }, { name: "Client", value: "subaccount" }]
+  bearers = [
+    { name: 'MoLoyal', value: 'account' },
+    { name: 'Client', value: 'subaccount' },
+  ];
   loading!: boolean;
   public loading2 = false;
   public showComponent = false;
-  path = environment.app.baseUrl + environment.app.path + environment.app.allImagesPath;
+  path =
+    environment.app.baseUrl +
+    environment.app.path +
+    environment.app.allImagesPath;
   banners: any;
   maxFileSize: number = 1000000;
+  currencies = [
+    { name: 'Naira', value: 'NGN', symbol: '₦' },
+    { name: 'Dollar', value: 'USD', symbol: '$' },
+    { name: 'Pounds', value: 'GBP', symbol: '£' },
+    { name: 'Euro', value: 'EUR', symbol: '€' },
+  ];
+  selectedCurrency: any = this.currencies[0].symbol;
+  year = Number(moment().format('YYYY'));
+  month = Number(moment().format('MM'));
+  day = Number(moment().format('DD'));
+  minDate: any = { year: this.year, month: this.month, day: this.day };
+  meridian = true;
 
-  constructor(private fb: FormBuilder, private dataService: DataService,
-    private route: ActivatedRoute, private toastService: ToastService,
-    private modalService: NgbModal, private statService: StatService) {
+  constructor(
+    private fb: FormBuilder,
+    private dataService: DataService,
+    private route: ActivatedRoute,
+    private toastService: ToastService,
+    private modalService: NgbModal,
+    private statService: StatService,
+    private ngbCalendar: NgbCalendar,
+    config: NgbTimepickerConfig,
+    private dateAdapter: NgbDateAdapter<string>
+  ) {
     this.getAllMerchants();
-
+    config.spinners = false;
     this.ticketForm = this.fb.group({
       eventTitle: ['', [Validators.required, Validators.minLength(5)]],
       venue: ['', [Validators.required, Validators.minLength(5)]],
@@ -55,10 +109,11 @@ export class UpdateComponent implements OnInit {
       merchantId: new FormControl('', Validators.required),
       paystackAcctId: ['', [Validators.required, Validators.minLength(5)]],
       vendor: ['', [Validators.minLength(5)]],
-      chargesBearer: ['', [Validators.required, Validators.minLength(5)]],
-      eventType: ['', [Validators.required, Validators.minLength(5)]],
+      currency: ['', [Validators.required, Validators.minLength(2)]],
+      chargesBearer: ['', [Validators.required, Validators.minLength(2)]],
+      eventType: ['', [Validators.required, Validators.minLength(2)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
-      tags: ['', [Validators.minLength(5)]],
+      tags: ['', [Validators.minLength(2)]],
       seatCapacity: new FormControl('', Validators.required),
       enableEvent: new FormControl(false),
       enableSeat: new FormControl(false),
@@ -70,43 +125,25 @@ export class UpdateComponent implements OnInit {
   }
 
   validations = {
-    eventTitle: [
-      { type: 'required', message: 'Title is required.' }
-    ],
-    name: [
-      { type: 'required', message: 'Name is required.' }
-    ],
-    price: [
-      { type: 'required', message: 'Price is required.' }
-    ],
-    qty: [
-      { type: 'required', message: 'Qty is required.' }
-    ],
+    eventTitle: [{ type: 'required', message: 'Title is required.' }],
+    name: [{ type: 'required', message: 'Name is required.' }],
+    price: [{ type: 'required', message: 'Price is required.' }],
+    qty: [{ type: 'required', message: 'Qty is required.' }],
     walletDiscount: [
-      { type: 'required', message: 'Wallet discount is required.' }
+      { type: 'required', message: 'Wallet discount is required.' },
     ],
-    venue: [
-      { type: 'required', message: 'Venue is required.' }
-    ],
-    description: [
-      { type: 'required', message: 'Description is required.' }
-    ],
-    chargesBearer: [
-      { type: 'required', message: 'Bearer is required.' }
-    ],
-    eventType: [
-      { type: 'required', message: 'Event type is required.' }
-    ],
-    merchantId: [
-      { type: 'required', message: 'Merchant Id is required.' }
-    ],
+    venue: [{ type: 'required', message: 'Venue is required.' }],
+    description: [{ type: 'required', message: 'Description is required.' }],
+    chargesBearer: [{ type: 'required', message: 'Bearer is required.' }],
+    eventType: [{ type: 'required', message: 'Event type is required.' }],
+    merchantId: [{ type: 'required', message: 'Merchant Id is required.' }],
+    currency: [{ type: 'required', message: 'Currency is required.' }],
     submerchantId: [
-      { type: 'required', message: 'Submerchant Id is required.' }
+      { type: 'required', message: 'Submerchant Id is required.' },
     ],
     paystackAcctId: [
-      { type: 'required', message: 'Paystack Account is required.' }
+      { type: 'required', message: 'Paystack Account is required.' },
     ],
-
   };
 
   ngOnInit(): void {
@@ -116,7 +153,22 @@ export class UpdateComponent implements OnInit {
     // this.addEndDate();
     //this.getAllTickets();
     // this.getTicketId();
-
+    this.startDate()
+      .at(0)
+      .get('fakeTime')
+      ?.valueChanges.subscribe((selectedTime) => {
+        if (selectedTime != null) {
+          this.onStartTimeSelect(selectedTime);
+        }
+      });
+    this.endDate()
+      .at(0)
+      .get('fakeTime')
+      ?.valueChanges.subscribe((selectedTime) => {
+        if (selectedTime != null) {
+          this.onEndTimeSelect(selectedTime);
+        }
+      });
   }
 
   displayEndDate() {
@@ -124,8 +176,8 @@ export class UpdateComponent implements OnInit {
       this.showEndDate = true;
     } else {
       this.showEndDate = false;
-      this.endDate().at(0).get('date')?.setValue("");
-      this.endDate().at(0).get('time')?.setValue("");
+      this.endDate().at(0).get('date')?.setValue('');
+      this.endDate().at(0).get('time')?.setValue('');
     }
   }
 
@@ -140,81 +192,114 @@ export class UpdateComponent implements OnInit {
   getTicket() {
     try {
       this.loading2 = true;
-      this.dataService.getAllTickets().subscribe((res: any) => {
-        console.log(res);
-        const filter = res.data.filter((val: any) => {
-          return val.sn == this.getTicketId();
-        });
-        this.data = filter[0];
-        const data = this.data;
-        this.banners = this.data.imgs;
-        this.loading2 = false;
-        this.showComponent = true;
-        const ticketForm = {
-          eventTitle: data?.title,
-          venue: data?.venue,
-          submerchantId: data?.submerchantId,
-          merchantId: data?.merchantId,
-          paystackAcctId: data?.Paystack_Acct,
-          vendor: data?.vendor,
-          chargesBearer: data?.paystack_bearer,
-          eventType: data?.event_cat,
-          description: data?.des,
-          tags: data?.tags,
-          seatCapacity: Number(data?.seat_capacity),
-          enableEvent: data?.status === "Active" ? true : false,
-          enableSeat: data?.enableseat === "1" ? true : false,
-        };
-
-        this.ticketForm.patchValue(ticketForm);
-        if (Array.isArray(this.data?.ticketCategories) && this.data?.ticketCategories?.length > 0) {
-          this.data?.ticketCategories?.map((item: any) => {
-            const ticket = this.fb.group({
-              name: item?.name,
-              price: item?.price,
-              qty: item?.quantity,
-              discountPrice: item?.discount_price,
-              walletDiscount: item?.wallet_discount,
-            });
-            this.ticketCategories().push(ticket);
+      this.dataService.getAllTickets().subscribe(
+        (res: any) => {
+          const filter = res.data.filter((val: any) => {
+            return val.sn == this.getTicketId();
           });
-        }
+          this.data = filter[0];
+          const data = this.data;
+          this.banners = this.data.imgs;
+          this.loading2 = false;
+          this.showComponent = true;
+          const ticketForm = {
+            eventTitle: data?.title,
+            venue: data?.venue,
+            submerchantId: data?.submerchantId,
+            merchantId: data?.merchantId,
+            paystackAcctId: data?.Paystack_Acct,
+            vendor: data?.vendor,
+            currency: data?.currency,
+            chargesBearer: data?.paystack_bearer,
+            eventType: data?.event_cat,
+            description: data?.des,
+            tags: data?.tags,
+            seatCapacity: Number(data?.seat_capacity),
+            enableEvent: data?.status === 'Active' ? true : false,
+            enableSeat: data?.enableseat === '1' ? true : false,
+          };
 
-        const start = [{ date: data?.from_date, time: data?.from_time }]
-        const end = [{ date: data?.to_date, time: data?.to_time }]
-        console.log(start);
-        console.log(end);
-
-        if (Array.isArray(start) && start?.length > 0) {
-          start?.map((item: any) => {
-            const start = this.fb.group({
-              date: item?.date,
-              time: item?.time
+          this.ticketForm.patchValue(ticketForm);
+          if (
+            Array.isArray(this.data?.ticketCategories) &&
+            this.data?.ticketCategories?.length > 0
+          ) {
+            this.data?.ticketCategories?.map((item: any) => {
+              const ticket = this.fb.group({
+                name: item?.name,
+                price: item?.price,
+                qty: item?.quantity,
+                discountPrice: item?.discount_price,
+                walletDiscount: item?.wallet_discount,
+              });
+              this.ticketCategories().push(ticket);
             });
-            this.startDate().push(start);
-          });
-        } else {
-          this.addStartDate();
-        }
+          }
 
-        if (Array.isArray(end) && end?.length > 0) {
-          end?.map((item: any) => {
-            const end = this.fb.group({
-              date: item?.date,
-              time: item?.time
+          const start = [{ date: data?.from_date, time: data?.from_time }];
+          const end = [{ date: data?.to_date, time: data?.to_time }];
+
+          if (Array.isArray(start) && start?.length > 0) {
+            start?.map((item: any) => {
+              const time = moment(`${item?.date}  ${item?.time}`).format(
+                'HH:mm:ss'
+              );
+              const timeParts = time.split(':');
+              const start = this.fb.group({
+                date: item?.date,
+                time: item?.time,
+                fakeDate: {
+                  year: Number(moment(item?.date).format('YYYY')),
+                  month: Number(moment(item?.date).format('MM')),
+                  day: Number(moment(item?.date).format('DD')),
+                },
+                fakeTime: {
+                  hour: Number(timeParts[0]),
+                  minute: Number(timeParts[1]),
+                  second: Number(timeParts[2]),
+                },
+              });
+              this.startDate().push(start);
             });
-            this.endDate().push(end);
-          });
-        } else {
-          this.addEndDate();
-        }
-        this.showEndDate = this.ticketForm.value.end[0].date !== '' ? true : false;
-        this.showSeat = this.ticketForm.value.enableSeat == true ? true : false;
+          } else {
+            this.addStartDate();
+          }
 
-      }, (error: any) => {
-        this.loading2 = false;
-        this.toastService.showError('Error fetching ticket details', 'Error');
-      });
+          if (Array.isArray(end) && end?.length > 0) {
+            end?.map((item: any) => {
+              const time = moment(`${item?.date}  ${item?.time}`).format(
+                'HH:mm:ss'
+              );
+              const timeParts = time.split(':');
+              const end = this.fb.group({
+                date: item?.date,
+                time: item?.time,
+                fakeDate: {
+                  year: Number(moment(item?.date).format('YYYY')), //2020,
+                  month: Number(moment(item?.date).format('MM')),
+                  day: Number(moment(item?.date).format('DD')),
+                },
+                fakeTime: {
+                  hour: Number(timeParts[0]),
+                  minute: Number(timeParts[1]),
+                  second: Number(timeParts[2]),
+                },
+              });
+              this.endDate().push(end);
+            });
+          } else {
+            this.addEndDate();
+          }
+          this.showEndDate =
+            this.ticketForm.value.end[0].date !== '' ? true : false;
+          this.showSeat =
+            this.ticketForm.value.enableSeat == true ? true : false;
+        },
+        (error: any) => {
+          this.loading2 = false;
+          this.toastService.showError('Error fetching ticket details', 'Error');
+        }
+      );
     } catch (error) {
       console.log(error);
       this.loading2 = false;
@@ -231,63 +316,84 @@ export class UpdateComponent implements OnInit {
     try {
       this.dataService.getAllMerchants().subscribe((res: any) => {
         this.allMerchants = res;
-      })
+      });
     } catch (error) {
       console.log(error);
       this.toastService.showError('Could not fetch all Merchants', 'Error');
     }
   }
 
-
   ticketCategories(): FormArray {
-    return this.ticketForm?.get("ticketCategories") as FormArray
+    return this.ticketForm?.get('ticketCategories') as FormArray;
   }
 
   startDate(): FormArray {
-    return this.ticketForm?.get("start") as FormArray
+    return this.ticketForm?.get('start') as FormArray;
   }
 
   endDate(): FormArray {
-    return this.ticketForm?.get("end") as FormArray
+    return this.ticketForm?.get('end') as FormArray;
   }
 
   newCategory(): FormGroup {
     return this.fb.group({
       name: this.fb.control('', Validators.required),
-      price: this.fb.control('', Validators.compose([
-        Validators.maxLength(10),
-        Validators.minLength(2),
-        Validators.min(10),
-        Validators.required
-      ])),
-      qty: this.fb.control(10, Validators.compose([
-        Validators.maxLength(6),
-        Validators.minLength(1),
-        Validators.min(1),
-        Validators.max(this.maxQty)
-      ])),
-      walletDiscount: this.fb.control(0, Validators.compose([
-        Validators.min(0),
-        Validators.max(this.maxQty)
-      ])),
-      discountPrice: this.fb.control('', Validators.compose([
-        Validators.maxLength(10),
-        Validators.minLength(2),
-        Validators.min(10)
-      ])),
-    })
+      price: this.fb.control(
+        '',
+        Validators.compose([
+          Validators.maxLength(10),
+          Validators.minLength(2),
+          Validators.min(10),
+          Validators.required,
+        ])
+      ),
+      qty: this.fb.control(
+        10,
+        Validators.compose([
+          Validators.maxLength(6),
+          Validators.minLength(1),
+          Validators.min(1),
+          Validators.max(this.maxQty),
+        ])
+      ),
+      walletDiscount: this.fb.control(
+        0,
+        Validators.compose([Validators.min(0), Validators.max(this.maxQty)])
+      ),
+      discountPrice: this.fb.control(
+        '',
+        Validators.compose([
+          Validators.maxLength(10),
+          Validators.minLength(2),
+          Validators.min(10),
+        ])
+      ),
+    });
   }
 
   newDate(): FormGroup {
-    return this.fb.group({ date: '', time: '' })
+    return this.fb.group({
+      date: this.fb.control('', Validators.required),
+      time: this.fb.control('', Validators.required),
+      fakeDate: this.fb.control(
+        { year: 0, month: 0, day: 0 },
+        Validators.required
+      ),
+      fakeTime: this.fb.control(
+        { hour: 0, minute: 0, second: 0 },
+        Validators.required
+      ),
+    });
   }
-
 
   addTicket() {
     if (this.ticketCategories().controls?.length <= this.maxCategory) {
       this.ticketCategories().push(this.newCategory());
     } else {
-      this.toastService.showError('You can\'t add more than ' + this.maxCategory, 'Error')
+      this.toastService.showError(
+        "You can't add more than " + this.maxCategory,
+        'Error'
+      );
     }
   }
 
@@ -299,7 +405,6 @@ export class UpdateComponent implements OnInit {
     this.endDate()?.push(this.newDate());
   }
 
-
   removeTicket(i: number) {
     this.ticketCategories().removeAt(i);
   }
@@ -308,10 +413,15 @@ export class UpdateComponent implements OnInit {
     this.endDate().removeAt(i);
   }
 
-
+  onChangeCurrency(e: any) {
+    const selectedCurrency = this.currencies.filter(
+      (c) => c.value === e.target.value
+    );
+    this.selectedCurrency = selectedCurrency[0].symbol;
+  }
 
   handleMinus(e: any, index: number, name: string, minQty: number) {
-    let value = this.ticketForm.get("ticketCategories")?.value[index]?.[name];
+    let value = this.ticketForm.get('ticketCategories')?.value[index]?.[name];
     if (value === minQty) {
       e.preventDefault();
     } else {
@@ -320,7 +430,7 @@ export class UpdateComponent implements OnInit {
     }
   }
   handlePlus(e: any, index: number, name: string, maxQty: number) {
-    let value = this.ticketForm.get("ticketCategories")?.value[index]?.[name];
+    let value = this.ticketForm.get('ticketCategories')?.value[index]?.[name];
     if (value === maxQty) {
       e.preventDefault();
     } else {
@@ -332,7 +442,7 @@ export class UpdateComponent implements OnInit {
   updateMerchant(event: any) {
     const value = this.allMerchants.filter((obj) => {
       return obj.merchantId === event.target.value;
-    })
+    });
     this.ticketForm.get('merchantId')?.setValue(value[0].programId);
   }
 
@@ -345,62 +455,74 @@ export class UpdateComponent implements OnInit {
 
   async onSubmit() {
     const form = this.ticketForm.value;
-    console.log(form);
     if (this.ticketForm.valid) {
       const startDate = moment(this.ticketForm.value.start[0].date);
       const endDate = moment(this.ticketForm.value.end[0].date);
       if (endDate.isBefore(startDate)) {
-        this.toastService.showError('Event end date must be greater than start date.', 'Error');
+        this.toastService.showError(
+          'Event end date must be greater than start date.',
+          'Error'
+        );
       } else {
         this.loading = true;
         const formData = new FormData();
         const eventId = String(this.getTicketId());
-        formData.append("eventid", eventId);
-        console.log(this.setFiles);
-        console.log(this.files);
+        formData.append('eventid', eventId);
         if (this.setFiles.length > 0) {
           for (var i = 0; i < this.setFiles.length; i++) {
-            const fileName = new Date().getTime() + '' + Math.floor(Math.random() * 10000) + '.png';
+            const fileName =
+              new Date().getTime() +
+              '' +
+              Math.floor(Math.random() * 10000) +
+              '.png';
             const response = await fetch(this.setFiles[i].file.base64);
             const blob = await response.blob();
-            formData.append("banner[]", blob, fileName);
+            formData.append('banner[]', blob, fileName);
           }
         }
 
         Object.keys(form).forEach((key) => {
-          Array.isArray(form[key]) ?
-            form[key].forEach((value: any) => { formData.append(key + '[]', JSON.stringify(value)) }) : formData.append(key, form[key])
+          Array.isArray(form[key])
+            ? form[key].forEach((value: any) => {
+                formData.append(key + '[]', JSON.stringify(value));
+              })
+            : formData.append(key, form[key]);
         });
         // formData.forEach((value, key) => {
         //   console.log(key + ": " + value);
         // });
 
         try {
-          this.dataService.updateEventTicket(formData).subscribe((res: any) => {
-            console.log(res);
-            this.loading = false;
-            if (res.error == false) {
-              this.ticketCategories().controls.length = 0;
-              this.startDate().controls.length = 0;
-              this.endDate().controls.length = 0;
-              this.setFiles.length = 0;
-              this.files.length = 0;
-              if (this.ticketCategories().controls?.length == 0) {
-                this.getTicket();
+          this.dataService.updateEventTicket(formData).subscribe(
+            (res: any) => {
+              this.loading = false;
+              if (res.error == false) {
+                this.ticketCategories().controls.length = 0;
+                this.startDate().controls.length = 0;
+                this.endDate().controls.length = 0;
+                this.setFiles.length = 0;
+                this.files.length = 0;
+                if (this.ticketCategories().controls?.length == 0) {
+                  this.getTicket();
+                }
+                this.toastService.showSuccess(res?.message, 'Success');
+              } else {
+                this.toastService.showError(res?.message, 'Error');
               }
-              this.toastService.showSuccess(res?.message, 'Success');
-            } else {
-              this.toastService.showError(res?.message, 'Error');
+            },
+            (error: any) => {
+              this.loading = false;
+              console.log(error);
+              this.toastService.showError(error?.message, 'Error');
             }
-          }, (error: any) => {
-            this.loading = false;
-            console.log(error);
-            this.toastService.showError(error?.message, 'Error');
-          })
+          );
         } catch (error) {
           this.loading = false;
           console.log(error);
-          this.toastService.showError('Could not create ticket. Please try again later', 'Error');
+          this.toastService.showError(
+            'Could not create ticket. Please try again later',
+            'Error'
+          );
         }
       }
     } else {
@@ -414,29 +536,28 @@ export class UpdateComponent implements OnInit {
   }
 
   deleteImage(item: any) {
-    console.log(item);
     const value = {
       sn: item?.sn,
-      eventid: item?.eventId
-    }
+      eventid: item?.eventId,
+    };
     this.loading = true;
     try {
       this.dataService.deleteEventTicketImg(value).subscribe((res: any) => {
-        console.log(res);
         this.loading = false;
         this.toastService.showSuccess(res?.message, 'Success');
         this.modalService.dismissAll('Delete completed');
         const banners = this.data.imgs.filter((obj: any) => {
           return obj.sn !== item.sn;
         });
-        console.log(banners);
         this.banners = banners;
-      })
+      });
     } catch (error) {
       this.loading = false;
-      this.toastService.showError('Could not delete banner. Please check your internet and try again.', 'Error');
+      this.toastService.showError(
+        'Could not delete banner. Please check your internet and try again.',
+        'Error'
+      );
     }
-
   }
 
   onRemove(item: any, e?: any) {
@@ -461,37 +582,52 @@ export class UpdateComponent implements OnInit {
       for (let i = 0; i < file2.length; i++) {
         const doc = file2[i];
         if (!regex.exec(doc.name)) {
-          this.toastService.showError("Accepted file format is (.png, .jpg, .jpeg, .pdf)", 'Error');
+          this.toastService.showError(
+            'Accepted file format is (.png, .jpg, .jpeg, .pdf)',
+            'Error'
+          );
         } else if (doc.size > 1000000) {
-          this.toastService.showError("Maximum of 1MB file size is allowed", 'Error');
+          this.toastService.showError(
+            'Maximum of 1MB file size is allowed',
+            'Error'
+          );
         } else {
           // if we want to compress the image. newX is width, newY is height
           // this.compressImage(doc, 100, 100).then(compressed => {
           //   this.resizedBase64 = compressed;
           //   console.log(this.resizedBase64);
           // })
-          this.getBase64(doc).then((result: any) => {
-            doc["base64"] = result;
-            doe.push({ file: doc, base64URL: result });
-            this.setFiles = doe;
-          }).catch((err: any) => {
-          });
+          this.getBase64(doc)
+            .then((result: any) => {
+              doc['base64'] = result;
+              doe.push({ file: doc, base64URL: result });
+              this.setFiles = doe;
+            })
+            .catch((err: any) => {});
         }
       }
-
     } else if (e.rejectedFiles.length > 0) {
       for (let i = 0; i < e.rejectedFiles.length; i++) {
-        if (e.rejectedFiles[i].reason === "type") {
-          this.toastService.showError('Accepted file format is (.png, .jpg, .jpeg, .pdf)', 'Error');
-        } else if (e.rejectedFiles[i].reason === "size") {
-          this.toastService.showError('Maximum of ' + this.statService.getFilesize(this.maxFileSize, false) + ' file size is allowed', 'Error');
+        if (e.rejectedFiles[i].reason === 'type') {
+          this.toastService.showError(
+            'Accepted file format is (.png, .jpg, .jpeg, .pdf)',
+            'Error'
+          );
+        } else if (e.rejectedFiles[i].reason === 'size') {
+          this.toastService.showError(
+            'Maximum of ' +
+              this.statService.getFilesize(this.maxFileSize, false) +
+              ' file size is allowed',
+            'Error'
+          );
         } else {
-          this.toastService.showError('Unknown Error. Please try another file', 'Error')
+          this.toastService.showError(
+            'Unknown Error. Please try another file',
+            'Error'
+          );
         }
       }
     }
-
-
 
     // const formData = new FormData();
 
@@ -502,7 +638,7 @@ export class UpdateComponent implements OnInit {
   }
 
   getBase64(file: any) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       //let baseURL = "";
       // Make new FileReader
       let reader = new FileReader();
@@ -515,51 +651,50 @@ export class UpdateComponent implements OnInit {
         resolve(baseURL);
       };
     });
-  };
+  }
+
+  onStartDateSelection(event: any, d: any) {
+    const sDate = event.year + '-' + event.month + '-' + event.day;
+    const getStartDate = moment(sDate).format('YYYY-MM-DD');
+    this.startDate().at(0).get('date')?.setValue(getStartDate);
+    this.minDate = { year: event.year, month: event.month, day: event.day };
+    d.close();
+  }
+
+  onEndDateSelection(event: any, d: any) {
+    const eDate = event.year + '-' + event.month + '-' + event.day;
+    const getEndDate = moment(eDate).format('YYYY-MM-DD');
+    this.endDate().at(0).get('date')?.setValue(getEndDate);
+    d.close();
+  }
+
+  onStartTimeSelect(selectedTime: any) {
+    const startTime =
+      selectedTime.hour + ':' + selectedTime.minute + ':' + selectedTime.second;
+    this.startDate().at(0).get('time')?.setValue(startTime);
+  }
+
+  onEndTimeSelect(selectedTime: any) {
+    const endTime =
+      selectedTime.hour + ':' + selectedTime.minute + ':' + selectedTime.second;
+    this.endDate().at(0).get('time')?.setValue(endTime);
+  }
 
   jsInit2() {
     (function () {
       window.onload = function () {
-
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
-
+        new HSSideNav('.js-navbar-vertical-aside').init();
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
-
+        HSBsDropdown.init();
 
         // INITIALIZATION OF SELECT
         // =======================================================
-        HSCore.components.HSTomSelect.init('.js-select')
-
-        // INITIALIZATION OF  QUANTITY COUNTER
-        // =======================================================
-
-        //new HSQuantityCounter('.js-quantity-counter-input');
-
-        // INITIALIZATION OF  DATE PICKER
-        // =======================================================
-
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel');
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel2');
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel3');
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel4');
-
-
-        // INITIALIZATION OF DROPZONE
-        // =======================================================
-        HSCore.components.HSDropzone.init('.js-dropzone')
-
-
-        // INITIALIZATION OF QUILLJS EDITOR
-        // =======================================================
-        HSCore.components.HSQuill.init('.js-quill')
-      }
-    })()
+        HSCore.components.HSTomSelect.init('.js-select');
+      };
+    })();
   }
-
-
 }
