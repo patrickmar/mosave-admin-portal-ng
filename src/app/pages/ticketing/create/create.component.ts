@@ -237,7 +237,7 @@ export class CreateComponent implements OnInit {
         '',
         Validators.compose([
           Validators.maxLength(10),
-          Validators.minLength(2),
+          
           Validators.min(10),
           Validators.required,
         ])
@@ -259,7 +259,7 @@ export class CreateComponent implements OnInit {
         '',
         Validators.compose([
           Validators.maxLength(10),
-          Validators.minLength(2),
+         
           Validators.min(10),
         ])
       ),
@@ -541,7 +541,7 @@ export class CreateComponent implements OnInit {
           try {
             forkJoin([
               this.dataService.createEventTicket(formData),
-              this.dataService.createEventTicket2(formData2),
+              // this.dataService.createEventTicket2(formData2),
             ]).subscribe(
               (res: any) => {
                 this.loading = false;
