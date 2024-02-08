@@ -17,7 +17,7 @@ import {
   NgbTimepickerConfig,
   NgbTimeStruct,
 } from '@ng-bootstrap/ng-bootstrap';
-
+import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { DataService } from 'src/app/services/data.service';
 import { StatService } from 'src/app/services/stat.service';
 import { ToastService } from 'src/app/services/toast.service';
