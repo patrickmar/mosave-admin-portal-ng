@@ -10,7 +10,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgbModalModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxLoadingModule, ngxLoadingAnimationTypes } from "ngx-loading";
-import { QuillModule } from 'ngx-quill';
+
 
 import { DatePipe, DecimalPipe, JsonPipe, TitleCasePipe } from '@angular/common';
 import { UserDataResolver } from './resolvers/userData.resolvers';
@@ -171,16 +171,7 @@ const appLoader = {
     BrowserAnimationsModule,
     NgChartsModule,
     ClipboardModule,
-    QuillModule.forRoot({
-      modules: {
-        toolbar: [
-          ["bold", "italic", "underline", "strike", "link",  "blockquote", "code", {"list": "bullet"}],
-          [{ 'script': 'sub'}, { 'script': 'super' }],
-          ['image']
-        ],        
-      },
-      placeholder: "Type your description..."
-    }),
+   
     ToastrModule.forRoot(),
     RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'}),
     NgxLoadingModule.forRoot(appLoader),
