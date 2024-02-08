@@ -73,7 +73,14 @@
           },
           "configurations": {
             "production": {
-              
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -96,12 +103,7 @@
             },
             "development": {
               "buildOptimizer": false,
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
+              
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
