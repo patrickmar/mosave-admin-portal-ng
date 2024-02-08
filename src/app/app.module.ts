@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { QuillModule } from 'ngx-quill';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataTablesModule } from 'angular-datatables';
@@ -171,7 +172,16 @@ const appLoader = {
     BrowserAnimationsModule,
     NgChartsModule,
     ClipboardModule,
-   
+    QuillModule.forRoot({
+      modules: {
+        toolbar: [
+          ["bold", "italic", "underline", "strike", "link",  "blockquote", "code", {"list": "bullet"}],
+          [{ 'script': 'sub'}, { 'script': 'super' }],
+          ['image']
+        ],        
+      },
+      placeholder: "Type your description..."
+    }),
     ToastrModule.forRoot(),
     RouterModule.forRoot(appRoutes, {enableTracing: false, anchorScrolling: 'enabled', onSameUrlNavigation: 'reload'}),
     NgxLoadingModule.forRoot(appLoader),
