@@ -62,7 +62,9 @@ export class CreateComponent implements OnInit {
     'Price',
     'Disc. Price',
     'Wallet Disc.',
+    
     'Quantity',
+    'Num. of People',
     'Action',
   ];
   eventTypes = [
@@ -159,6 +161,7 @@ export class CreateComponent implements OnInit {
     name: [{ type: 'required', message: 'Name is required.' }],
     price: [{ type: 'required', message: 'Price is required.' }],
     qty: [{ type: 'required', message: 'Qty is required.' }],
+   numOfPeople: [{ type: 'required', message: 'No of people/ticket is required.' }],
     walletDiscount: [
       { type: 'required', message: 'Wallet discount is required.' },
     ],
@@ -237,8 +240,8 @@ export class CreateComponent implements OnInit {
         '',
         Validators.compose([
           Validators.maxLength(10),
-          
-          Validators.min(10),
+          Validators.minLength(1),
+          Validators.min(1),
           Validators.required,
         ])
       ),
@@ -251,16 +254,27 @@ export class CreateComponent implements OnInit {
           Validators.max(this.maxQty),
         ])
       ),
+      numOfPeople: this.fb.control(
+        1,
+        Validators.compose([
+          Validators.maxLength(6),
+          Validators.minLength(1),
+          Validators.min(1),
+         
+        ])
+      ),
       walletDiscount: this.fb.control(
         0,
-        Validators.compose([Validators.min(0), Validators.max(this.maxQty)])
+        Validators.compose([
+          Validators.min(0), 
+          Validators.max(this.maxQty)])
       ),
       discountPrice: this.fb.control(
         '',
         Validators.compose([
           Validators.maxLength(10),
-         
-          Validators.min(10),
+          Validators.minLength(1),
+          Validators.min(1),
         ])
       ),
     });

@@ -321,13 +321,13 @@
 
 
                 <!-- Card -->
-                <div class="card mb-3 mb-lg-5">
-                    <!-- Header -->
+                <!-- <div class="card mb-3 mb-lg-5">
+                   
                     <div class="card-header card-header-content-sm-between">
                         <h4 class="card-header-title mb-2 mb-sm-0">Ticket Category</h4>
 
                         <div class="d-sm-flex align-items-center gap-2">
-                            <!-- Datatable Info -->
+                          
                             <div id="datatableCounterInfo" class="mb-2 mb-sm-0" style="display: none;">
                                 <div class="d-flex align-items-center">
                                     <span class="fs-5 me-3">
@@ -339,7 +339,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <!-- End Datatable Info -->
+                           
 
                             <a class="js-create-fieldsss btn btn-ghost-secondary btn-sm" type="button"
                                 (click)="addTicket()">
@@ -347,9 +347,7 @@
                             </a>
                         </div>
                     </div>
-                    <!-- End Header -->
-
-                    <!-- Table -->
+                   
                     <div class="table-responsive datatable-custom">
                         <table id="datatables" formArrayName="ticketCategories"
                             class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
@@ -414,7 +412,7 @@
                                     <th class="table-column-ps-0">
                                         <div class="input-group input-group-merge" style="min-width: 7rem;">
                                             <div class="input-group-prepend input-group-text p-2">%</div>
-                                            <!-- Quantity -->
+                                           
                                             <div class="quantity-counter" style="border: none; padding: 0.5rem 1.5rem;">
                                                 <div class="row align-items-center">
                                                     <div class="col">
@@ -422,7 +420,7 @@
                                                             type="number" formControlName="walletDiscount">
 
                                                     </div>
-                                                    <!-- End Col -->
+                                                  
 
                                                     <div class="col-auto">
                                                         <a class="btn btn-white btn-xs btn-icon rounded-circle"
@@ -436,11 +434,11 @@
                                                             <i class="bi-plus"></i>
                                                         </a>
                                                     </div>
-                                                    <!-- End Col -->
+                                                   
                                                 </div>
-                                                <!-- End Row -->
+                                               
                                             </div>
-                                            <!-- End Quantity -->
+                                           
                                         </div>
                                         <div class="error-container">
                                             <ng-container *ngFor="let validation of validations.walletDiscount">
@@ -453,7 +451,7 @@
                                         </div>
                                     </th>
                                     <th class="table-column-ps-0">
-                                        <!-- Quantity -->
+                                       
                                         <div class="quantity-counter">
                                             <div class="row align-items-center">
                                                 <div class="col">
@@ -470,8 +468,7 @@
                                                         </ng-container>
                                                     </div>
                                                 </div>
-                                                <!-- End Col -->
-
+                                               
                                                 <div class="col-auto">
                                                     <a class="btn btn-white btn-xs btn-icon rounded-circle"
                                                         type="button" (click)="handleMinus($event, i, 'qty', 1)">
@@ -482,11 +479,11 @@
                                                         <i class="bi-plus"></i>
                                                     </a>
                                                 </div>
-                                                <!-- End Col -->
+                                               
                                             </div>
-                                            <!-- End Row -->
+                                          
                                         </div>
-                                        <!-- End Quantity -->
+                                        
                                     </th>
                                     <th class="table-column-ps-0">
                                         <div class="btn-group" role="group" aria-label="Edit group">
@@ -499,18 +496,18 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- End Table -->
+                   
 
-                    <!-- Footer -->
+                  
                     <div class="card-footer">
                         <a class="js-create-field btn btn-sm btn-ghost-secondary" type="button" (click)="addTicket()">
                             <i class="bi-plus"></i> Add Category
                         </a>
                     </div>
-                    <!-- End Footer -->
+                   
 
-                </div>
-                <!-- End Card -->
+                </div> -->
+               
 
             </div>
             <!-- End Col -->
@@ -682,6 +679,242 @@
                     <!-- Body -->
                 </div>
                 <!-- End Card -->
+            </div>
+
+            <div class="col-lg-12">
+                &nbsp;
+            </div>
+            <div class="col-lg-12">
+            <div class="card mb-3 mb-lg-5">
+                <!-- Header -->
+                <div class="card-header card-header-content-sm-between">
+                    <h4 class="card-header-title mb-2 mb-sm-0">Ticket Category</h4>
+
+                    <div class="d-sm-flex align-items-center gap-2">
+                        <!-- Datatable Info -->
+                        <div id="datatableCounterInfo" class="mb-2 mb-sm-0" style="display: none;">
+                            <div class="d-flex align-items-center">
+                                <span class="fs-5 me-3">
+                                    <span id="datatableCounter">0</span>
+                                    Selected
+                                </span>
+                                <a class="btn btn-outline-danger btn-sm" href="javascript:;">
+                                    <i class="bi-trash text-danger"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                        <!-- End Datatable Info -->
+
+                        <a class="js-create-fieldsss btn btn-ghost-secondary btn-sm" type="button"
+                            (click)="addTicket()">
+                            <i class="bi-plus"></i> Add Category
+                        </a>
+                    </div>
+                </div>
+                <!-- End Header -->
+
+                <!-- Table -->
+                <div class="table-responsive datatable-custom">
+                    <table id="datatables" formArrayName="ticketCategories"
+                        class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="table-column-pe-0">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="datatableCheckAll">
+                                        <label class="form-check-label" for="datatableCheckAll"></label>
+                                    </div>
+                                </th>
+                                <th *ngFor="let t of tableHead; let i = index;" class="table-column-ps-0">{{t}}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let cat of ticketCategories().controls; let i=index" [formGroupName]="i">
+                                <td class="table-column-pe-0">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="productVariationsCheck1">
+                                        <label class="form-check-label" for="productVariationsCheck1"></label>
+                                    </div>
+                                </td>
+                                <th class="table-column-ps-0">
+                                    <input type="text" class="form-control" formControlName="name"
+                                        placeholder="Regular" style="min-width: 6rem;">
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let validation of validations.name">
+                                            <div class="error-message"
+                                                *ngIf="ticketCategories().at(i).get('name')?.hasError(validation.type) 
+                                                && (ticketCategories().at(i).get('name')?.dirty || ticketCategories().at(i).get('name')?.touched)">
+                                                <small class="text-danger">{{ validation.message }}</small>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </th>
+                                <th class="table-column-ps-0">
+                                    <div class="input-group input-group-merge" style="min-width: 7rem;">
+                                        <div class="input-group-prepend input-group-text p-2">{{selectedCurrency}}</div>
+                                        <input type="number" class="form-control ps-5" formControlName="price"
+                                            placeholder="2000">
+                                    </div>
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let validation of validations.price">
+                                            <div class="error-message"
+                                                *ngIf="ticketCategories().at(i).get('price')?.hasError(validation.type) 
+                                            && (ticketCategories().at(i).get('price')?.dirty || ticketCategories().at(i).get('price')?.touched)">
+                                                <small class="text-danger">{{ validation.message }}</small>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </th>
+                                <th class="table-column-ps-0">
+                                    <div class="input-group input-group-merge" style="min-width: 7rem;">
+                                        <div class="input-group-prepend input-group-text p-2">{{selectedCurrency}}</div>
+                                        <input type="number" class="form-control ps-5"
+                                            formControlName="discountPrice" placeholder="1500">
+                                    </div>
+                                </th>
+                                <th class="table-column-ps-0">
+                                    <div class="input-group input-group-merge" style="min-width: 7rem;">
+                                        <div class="input-group-prepend input-group-text p-2">%</div>
+                                        <!-- Quantity -->
+                                        <div class="quantity-counter" style="border: none; padding: 0.5rem 1.5rem;">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <input class="form-control form-control-quantity-counter"
+                                                        type="number" formControlName="walletDiscount">
+
+                                                </div>
+                                                <!-- End Col -->
+
+                                                <div class="col-auto">
+                                                    <a class="btn btn-white btn-xs btn-icon rounded-circle"
+                                                        type="button"
+                                                        (click)="handleMinus($event, i, 'walletDiscount', 0)">
+                                                        <i class="bi-dash"></i>
+                                                    </a>
+                                                    <a class=" btn btn-white btn-xs btn-icon rounded-circle"
+                                                        type="button"
+                                                        (click)="handlePlus($event, i, 'walletDiscount', 100)">
+                                                        <i class="bi-plus"></i>
+                                                    </a>
+                                                </div>
+                                                <!-- End Col -->
+                                            </div>
+                                            <!-- End Row -->
+                                        </div>
+                                        <!-- End Quantity -->
+                                    </div>
+                                    <div class="error-container">
+                                        <ng-container *ngFor="let validation of validations.walletDiscount">
+                                            <div class="error-message"
+                                                *ngIf="ticketCategories().at(i).get('walletDiscount')?.hasError(validation.type) 
+                                            && (ticketCategories().at(i).get('walletDiscount')?.dirty || ticketCategories().at(i).get('walletDiscount')?.touched)">
+                                                <small class="text-danger">{{ validation.message }}</small>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </th>
+                               
+                               
+
+                                <th class="table-column-ps-0">
+                                    <!-- Quantity -->
+                                    <div class="quantity-counter">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <input class="form-control form-control-quantity-counter"
+                                                    type="number" formControlName="qty">
+                                                <div class="error-container">
+                                                    <ng-container *ngFor="let validation of validations.qty">
+                                                        <div class="error-message"
+                                                            *ngIf="ticketCategories().at(i).get('qty')?.hasError(validation.type) 
+                                                            && (ticketCategories().at(i).get('qty')?.dirty || ticketCategories().at(i).get('qty')?.touched)">
+                                                            <small class="text-danger">{{ validation.message
+                                                                }}</small>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                            <!-- End Col -->
+
+                                            <div class="col-auto">
+                                                <a class="btn btn-white btn-xs btn-icon rounded-circle"
+                                                    type="button" (click)="handleMinus($event, i, 'qty', 1)">
+                                                    <i class="bi-dash"></i>
+                                                </a>
+                                                <a class=" btn btn-white btn-xs btn-icon rounded-circle"
+                                                    type="button" (click)="handlePlus($event, i, 'qty', maxQty)">
+                                                    <i class="bi-plus"></i>
+                                                </a>
+                                            </div>
+                                            <!-- End Col -->
+                                        </div>
+                                        <!-- End Row -->
+                                    </div>
+                                    <!-- End Quantity -->
+                                </th>
+
+                                
+                                <th class="table-column-ps-0">
+                                    <!-- Num of people on Ticket-->
+                                    <div class="quantity-counter">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <input class="form-control form-control-quantity-counter"
+                                                    type="number" value="1" formControlName="numOfPeople">
+                                                <div class="error-container">
+                                                    <ng-container *ngFor="let validation of validations.numOfPeople">
+                                                        <div class="error-message"
+                                                            *ngIf="ticketCategories().at(i).get('numOfPeople')?.hasError(validation.type) 
+                                                            && (ticketCategories().at(i).get('numOfPeople')?.dirty || ticketCategories().at(i).get('numOfPeople')?.touched)">
+                                                            <small class="text-danger">{{ validation.message
+                                                                }}</small>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                            <!-- End Col -->
+
+                                            <!-- <div class="col-auto">
+                                                <a class="btn btn-white btn-xs btn-icon rounded-circle"
+                                                    type="button" (click)="handleMinus($event, i, 'numOfPeople', 1)">
+                                                    <i class="bi-dash"></i>
+                                                </a>
+                                                <a class=" btn btn-white btn-xs btn-icon rounded-circle"
+                                                    type="button" (click)="handlePlus($event, i, 'numOfPeople', maxQty)">
+                                                    <i class="bi-plus"></i>
+                                                </a>
+                                            </div> -->
+                                            <!-- End Col -->
+                                        </div>
+                                        <!-- End Row -->
+                                    </div>
+                                    <!-- End Num of people on Ticket -->
+                                </th>
+                                <th class="table-column-ps-0">
+                                    <div class="btn-group" role="group" aria-label="Edit group">
+                                        <a type="button" class="btn btn-outline-danger" (click)="removeTicket(i)">
+                                            <i class="bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Table -->
+
+                <!-- Footer -->
+                <div class="card-footer">
+                    <a class="js-create-field btn btn-sm btn-ghost-secondary" type="button" (click)="addTicket()">
+                        <i class="bi-plus"></i> Add Category
+                    </a>
+                </div>
+                <!-- End Footer -->
+
+            </div>
             </div>
             <!-- End Col -->
         </div>
