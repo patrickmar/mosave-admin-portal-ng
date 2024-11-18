@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe(
         (res: any) => {
           this.response = res;
+          
           if (this.response.sn) {
             // Store the User data and generate an encrypted token.
             this.storageService

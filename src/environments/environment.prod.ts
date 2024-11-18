@@ -2,8 +2,8 @@ export const environment = {
   production: true,
   app: {
     baseUrl: 'https://moloyal.com/',
-    path: 'mosave/adminscript/api/',
-    imagePath: 'mosave/script/api/',
+    path: 'mosave-ng/adminscript/api/',
+    imagePath: 'mosave-ng/script/api/',
     allImagesPath: 'ticket_images/',
   },
   logo: '../../../assets/img/logo/logo.png',

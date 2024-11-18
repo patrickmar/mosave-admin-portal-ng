@@ -530,7 +530,7 @@ export class CreateComponent implements OnInit {
           //remove array from the form object
           //  const  {ticketCategories, start, end, ...newForm} = form;
           //  console.log(newForm);
-          //  console.log(form);
+            console.log(formData);
 
           Object.keys(form).forEach((key) => {
             Array.isArray(form[key])
@@ -553,6 +553,7 @@ export class CreateComponent implements OnInit {
           });
 
           try {
+            console.log(formData);
             forkJoin([
               this.dataService.createEventTicket(formData),
               // this.dataService.createEventTicket2(formData2),
